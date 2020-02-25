@@ -1,0 +1,34 @@
+a {
+    text-decoration: none
+}
+
+.scene {
+    width: 200px;
+    height: 215px;
+    perspective: 600px;
+}
+
+.card-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transition: transform 0.5s;
+    transform-style: preserve-3d;
+}
+.cardFace {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    backface-visibility: hidden;
+}
+  
+.cardFaceBack {
+    transform: rotateY( 180deg );
+}
+  
+.card-box.is-flipped {
+    transform: rotateY(180deg);
+}
+.progress-bar, .progress {
+    height: 20px !important;
+  }

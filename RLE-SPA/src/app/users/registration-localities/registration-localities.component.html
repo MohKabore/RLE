@@ -1,0 +1,132 @@
+<div class="container mt-5 animated fadeInDown">
+  <div class="d-flex justify-content-center">
+    <div class="spinner-border" role="status" *ngIf="regions.length===0">
+      <span class="sr-only">Loading...</span>
+    </div>
+
+    <div *ngIf="regions.length>0" class="row">
+
+      <div class="col-md-12" *ngFor="let region of regions; let i = index">
+        <mdb-accordion [multiple]="true">
+          <mdb-accordion-item [collapsed]="true">
+            <mdb-accordion-item-head>
+              <p class="text-center">{{region.name}}</p>
+            </mdb-accordion-item-head>
+            <mdb-accordion-item-body>
+              <h4><b>Quota Région : {{region.nbEmpNeeded}}</b></h4>
+              <hr>
+              <mdb-card>
+                <mdb-card-body class="row">
+                  <div class="col-md-12 mt-2" *ngFor="let dept of region.departments; let j = index">
+                    <mdb-card>
+                      <mdb-card-body>
+                        <mdb-accordion [multiple]="true">
+                          <mdb-accordion-item [collapsed]="true">
+                            <mdb-accordion-item-head>
+                              <p class="text-center">{{dept.name}}</p>
+
+                            </mdb-accordion-item-head>
+                            <mdb-accordion-item-body>
+                              <span><b>Quota Département</b>: {{dept.nbEmpNeeded}} <button type="button"
+                                  *ngIf="!dept.activeforInscription" (click)="updateDeparment(dept)" mdbBtn
+                                  color="primary" size="sm" mdbWavesEffect>activer</button>
+                                <button type="button" *ngIf="dept.activeforInscription" (click)="updateDeparment(dept)"
+                                  mdbBtn color="light" size="sm" mdbWavesEffect>désactiver</button>
+                              </span>
+                              <hr>
+
+                              <table mdbTable #tableEl="mdbTable" stickyHeader="true" hover="true" striped="true"
+                                class="z-depth-1">
+                                <thead class="sticky-top">
+                                  <tr>
+                                    <th>#</th>
+                                    <th>sous-préfecture / commune</th>
+                                    <th>quota opérateur</th>
+                                    <th>etat(inscription)</th>
+                                    <th>#</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <tr mdbTableCol *ngFor="let city of dept.cities; let k = index">
+                                    <th>{{i+1}}</th>
+                                    <td>{{city.name}}</td>
+                                    <td>{{city.nbEmpNeeded}}</td>
+                                    <td>
+                                      <button title="désactiver" (click)="updateCityState(city)" type="button" *ngIf="city.activeforInscription" size="sm" mdbBtn color="light" mdbWavesEffect>
+                                        <i class="fa fa-times"></i>
+                                      </button>
+
+                                      <button title="activer"  (click)="updateCityState(city)" type="button" *ngIf="!city.activeforInscription" size="sm" mdbBtn color="light" mdbWavesEffect>
+                                        <i class="fa fa-check"></i>
+                                      </button>
+                                    </td>
+                                    <td>
+                                      <button size="sm" type="button" mdbBtn color="primary"
+                                        (click)="basicModal.show();editCity(city, i, j,k)" mdbWavesEffect><i
+                                          class="fa fa-edit"></i></button>
+                                    </td>
+                                  </tr>
+                                </tbody>
+                              </table>
+
+                            </mdb-accordion-item-body>
+                          </mdb-accordion-item>
+
+                        </mdb-accordion>
+                      </mdb-card-body>
+                    </mdb-card>
+
+                  </div>
+                </mdb-card-body>
+              </mdb-card>
+              <div>
+
+              </div>
+
+
+            </mdb-accordion-item-body>
+          </mdb-accordion-item>
+
+        </mdb-accordion>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">EDITION</h4>
+      </div>
+      <div class="modal-body">
+        <mdb-card>
+          <mdb-card-body>
+            <form class="text-center" style="color: #757575;" [formGroup]="cityForm" *ngIf="show">
+
+              <div class="md-form">
+                <input type="text" id="nbEmpNeeded" class="form-control" formControlName="nbEmpNeeded" mdbInput>
+                <label for="name">quota</label>
+              </div>
+
+            </form>
+          </mdb-card-body>
+        </mdb-card>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+          (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
+        <button type="button" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
+          (click)="[basicModal.hide(),saveCity()]">enregistrer!</button>
+      </div>
+    </div>
+
+  </div>
+</div>

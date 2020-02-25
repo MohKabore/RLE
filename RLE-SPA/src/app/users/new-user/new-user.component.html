@@ -1,0 +1,228 @@
+<div class="animated jackInTheBox mt-4" *ngIf="waitDiv">
+  <mdb-card>
+    <mdb-card-body>
+      <h3>Veuillez patienter</h3>
+    </mdb-card-body>
+  </mdb-card>
+</div>
+<div class="row animated jackInTheBox mt-4" *ngIf="!waitDiv">
+  <div class="col-md-12">
+
+
+    <mdb-card class="p-2">
+      <mdb-card-body>
+        <mdb-card-title>
+          <h4 class="text-center"> <p class="text-title">ENREGISTREMENT MEMBRE DU PERSONNEL</p> </h4>
+        </mdb-card-title>
+        <form style="color: #757575;" [formGroup]="userForm">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="font-weight-300 mb-2  d-flex justify-content-center">photo de profil</div>
+              <div class="row">
+                <div class="col-md-12 d-flex justify-content-center mb-2">
+                  <div class="file-path-wrapper m-0 p-1">
+                    <img [src]="userPhotoUrl || '../../../assets/user.png'" style="width: 100px; height: 100px;"
+                      class="rounded-circle imgUpload" alt="">
+                  </div>
+                </div>
+                <div class="col-md-12 d-flex justify-content-center">
+                  <div class="m-0">
+                    <div class="file-field md-form m-0">
+                      <div mdbBtn color="light" size="sm" class="waves-light" mdbWavesEffect>
+                        <span>choisir la photo</span>
+                        <input type="file" accept='image/*' mdbFileSelect (change)="parentImgResult($event)">
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-10">
+              <div class="row">
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="lastName" formControlName="lastName"
+                      class="form-control" mdbInput>
+                    <label for="lastName">nom*</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="firstName" formControlName="firstName" mdbInput>
+                    <label for="firstName">prénom(s)*</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="gender" [options]="sexe" placeholder="sexe*" formControlName="gender"></mdb-select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                      <input type="text" class="form-control" id="dateofBirth" formControlName="dateOfBirth"
+                      [textMask]="{mask: birthDateMask}" mdbInput> 
+                    <label for="dateofBirth">date de naissance (JJ/MM/AAAA)</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="birthPlace" formControlName="birthPlace"
+                      class="form-control" mdbInput>
+                    <label for="birthPlace">Lieu de naissance</label>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="maritalStatusId" [options]="maritalStatus" placeholder="situation matrimonial"
+                      formControlName="maritalStatusId"></mdb-select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="nbChild" formControlName="nbChild" class="form-control"
+                      mdbInput>
+                    <label for="nbChild">Nombre d'enfant</label>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="email" formControlName="email" class="form-control"
+                      mdbInput>
+                    <label for="email">email</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="phoneNumber" [textMask]="{mask: phoneMask}"
+                      formControlName="phoneNumber" class="form-control" mdbInput>
+                    <label for="phoneNumber">cellulaire*</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="sphone" [textMask]="{mask: phoneMask}"
+                      formControlName="secondPhoneNumber" class="form-control" mdbInput>
+                    <label for="sphone">deuxieme Contact</label>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="cni" [textMask]="{mask: cniMask}" formControlName="cni"
+                      class="form-control" mdbInput>
+                    <label for="cni">Numero CNI</label>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="passport" formControlName="passport"
+                      class="form-control" mdbInput>
+                    <label for="passport">Numero Passpost</label>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="iddoc" formControlName="iddoc" class="form-control"
+                      mdbInput>
+                    <label for="iddoc">Autre Piece</label>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="typeEmpId" [options]="typeEmps" placeholder="Poste" formControlName="typeEmpId">
+                    </mdb-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="studyLevelId" [options]="studyLevels" placeholder="niveau d'étude"
+                      formControlName="studyLevelId">
+                    </mdb-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="educationalTrackId" [options]="educationTracks" placeholder="filière d'étude"
+                      formControlName="educationalTrackId">
+                    </mdb-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="regionId" [options]="regions" [disabled]="isMaintenancier" placeholder="region*" formControlName="regionId"
+                      (ngModelChange)="getDepartments()">
+                    </mdb-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="departmentId" [options]="depts" placeholder="département*"
+                      formControlName="departmentId" (ngModelChange)="getCities()">
+                    </mdb-select>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="resCityId" [options]="cities" placeholder="ville ou commune"
+                      formControlName="resCityId">
+                    </mdb-select>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+            <div class="col-md-12">
+              <hr>
+            </div>
+            <div class="col-md-12">
+              <div class="d-flex justify-content-center">
+                <button mdbBtn size="sm" color="primary" [disabled]="!userForm.valid"
+                  (click)="[basicModal.show(), verifyIfExist()]">enregistrer</button>
+              </div>
+            </div>
+          </div>
+        </form>
+
+      </mdb-card-body>
+    </mdb-card>
+
+  </div>
+</div>
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content" *ngIf="!waitForValidation">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
+      </div>
+      <div class="modal-body">
+        <b *ngIf="!userExist">Etes vous sûre de vouloir enregistrer ???</b>
+        <div *ngIf="userExist">
+          <p class="text-danger">Désolé ... Vous avez déjà fait un enregistrement dans cette localité au paravant</p>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+          (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
+        <button type="button" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
+          *ngIf="!userExist" (click)="[basicModal.hide(),saveUser()]">enregistrer!</button>
+      </div>
+    </div>
+
+  </div>
+</div>

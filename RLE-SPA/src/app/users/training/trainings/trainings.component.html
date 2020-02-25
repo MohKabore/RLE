@@ -1,0 +1,164 @@
+<div class="mt-3 justify-content-center align-items-center animated jackInTheBox">
+  <div class="d-flex justify-content-center">
+    <div class="col-md-10">
+      <div *ngIf="showRegions">
+        <mdb-card class="row mb-1">
+          <mdb-card-body>
+            <form [formGroup]="searchForm">
+              <div class="md-form">
+                <mdb-select [options]="regions" id="regionId" (ngModelChange)="getTrainings()" placeholder="Region"
+                  formControlName="regionId">
+                </mdb-select>
+              </div>
+            </form>
+          </mdb-card-body>
+        </mdb-card>
+      </div>
+      <div *ngIf="showTrainings">
+        <mdb-card class="row">
+          <mdb-card-body>
+            <div class="col-md-12">
+              <div *ngIf="!noResult && trainings.length===0">
+                <h3>patienter</h3>
+              </div>
+              <div *ngIf="noResult || trainings.length>0">
+                <button type="button" mdbBtn color="success" size="sm" mdbWavesEffect
+                  (click)="basicModal.show();showtrainingForm(null)">ajouter</button>
+                  <div class="col-md-12">
+                    <hr>
+                  </div>
+                  <div *ngIf="noResult">
+                    {{noResult}}
+                  </div>
+                  <div class="row" *ngIf="trainings.length>0">
+                    <div *ngFor="let tr of trainings" class="col-md-3 mt-1">
+    
+                      <mdb-card>
+                        <mdb-card-body class="text-center p-0">
+                          <p> <a  [routerLink]="['/formation/', tr.id]" 
+                              *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']"> <b>{{tr.name}} </b>
+                            </a> </p>
+                          <p style="font-size: 12px;">salle(s) : {{tr.totalClasses}} </p>
+                          <p style="font-size: 12px;">formateur(s) : {{tr.totalTrainers}} </p>
+                          <p style="font-size: 12px;">participant(s) : {{tr.totalParticipants}} </p>
+                          <hr>
+                          <p style="font-size: 12px;"> <button title="editer"
+                              (click)="basicModal.show();showtrainingForm(tr)" type="button" size="sm" mdbBtn
+                              color="success" mdbWavesEffect><i class="fas fa-edit"></i></button>
+                            <button *ngIf="tr.totalClasses===0" title="supprimer" type="button" (click)="deleteTraining(tr.id)"
+                              size="sm" mdbBtn color="danger" mdbWavesEffect><i class="fas fa-trash"></i></button></p>
+    
+    
+                        </mdb-card-body>
+                      </mdb-card>
+                    </div>
+                  </div>
+
+              </div>
+              
+            </div>
+
+          </mdb-card-body>
+        </mdb-card>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body" *ngIf="editionMode">
+        <div *ngIf="!trainingId">
+          <mdb-card>
+            <mdb-card-header class="info-color white-text text-center py-4">
+              <h5>
+                <strong *ngIf="editionMode==='add'">CREATION FORMATION</strong>
+                <strong *ngIf="editionMode==='edit'">MODIFICATION FORMATION</strong>
+              </h5>
+            </mdb-card-header>
+
+            <mdb-card-body class="px-lg-5 pt-0">
+              <form class="text-center" style="color: #757575;" [formGroup]="trainingForm">
+
+                <div class="md-form">
+                  <input type="text" id="name" class="form-control" formControlName="name" mdbInput>
+                  <label for="name">Nom de la formation</label>
+                </div>
+                <div class="md-form">
+                  <input type="text" id="description" class="form-control" formControlName="description" mdbInput>
+                  <label for="description">description de la formation</label>
+                </div>
+              </form>
+
+            </mdb-card-body>
+          </mdb-card>
+          <div class="modal-footer">
+            <hr>
+            <button type="button" size="sm" mdbBtn color="success" mdbWavesEffect [disabled]="!trainingForm.valid"
+              (click)="basicModal.hide();saveTraining(false)">enregistrer</button>
+            <button type="button" size="sm" [disabled]="!trainingForm.valid" mdbBtn color="success" mdbWavesEffect
+              (click)="saveTraining(true)" *ngIf="editionMode==='add'">enregistrer
+              & continuer</button>
+
+            <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+              (click)="basicModal.hide()">fermer</button>
+          </div>
+        </div>
+
+
+        <div *ngIf="trainingId" class="animated slideInRight">
+          <mdb-card>
+            <mdb-card-body class="px-lg-5 pt-0">
+              <h4><b>Enregistrement de salle de formation</b></h4>
+              <form class="text-center" style="color: #757575;" [formGroup]="trainngClassForm">
+                <div class="md-from form-sm">
+                  <mdb-select [options]="maints" id="trainerIds" formControlName="trainerIds" [multiple]="true"
+                    [highlightFirst]="false" placeholder="formateur(s)"></mdb-select>
+                  <label>formateur(s)</label>
+                </div>
+                <div class="md-form form-sm">
+                  <input type="text" id="name" class="form-control" formControlName="name" mdbInput>
+                  <label for="name">*Nom de la salle</label>
+                </div>
+                <div class="md-form form-sm">
+                  <mdb-select [options]="depts" id="departmentId" (ngModelChange)="getCities()"
+                    placeholder="département" formControlName="departmentId"></mdb-select>
+                </div>
+                <div class="md-form form-sm">
+                  <mdb-select [options]="cities" id="cityId" placeholder="ville ou commune" formControlName="cityId">
+                  </mdb-select>
+                </div>
+                <div class="md-form form-sm">
+                  <input type="text" class="form-control" id="startDate" formControlName="startDate"
+                    [textMask]="{mask: birthDateMask}" mdbInput>
+                  <label for="startDate">date du début* (JJ/MM/AAAA)</label>
+                </div>
+
+                <div class="md-form form-sm">
+                  <input type="text" class="form-control" id="endDate" formControlName="endDate"
+                    [textMask]="{mask: birthDateMask}" mdbInput>
+                  <label for="endDate">date de fin* (JJ/MM/AAAA)</label>
+                </div>
+              </form>
+
+            </mdb-card-body>
+            <div class="modal-footer">
+              <hr>
+              <button type="button" size="sm" mdbBtn color="success" mdbWavesEffect (click)="saveClass(false)"
+                [disabled]="!trainngClassForm.valid">enregistrer</button>
+              <button type="button" size="sm" mdbBtn color="success" mdbWavesEffect
+                (click)="saveClass(true);basicModal.hide();" [disabled]="!trainngClassForm.valid">enregistrer
+                & terminer</button>
+              <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+                (click)="basicModal.hide()">fermer</button>
+            </div>
+          </mdb-card>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

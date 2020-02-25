@@ -1,0 +1,158 @@
+<div class="container mt-5">
+
+  <table class="table-condensed mb-3 mt-2" style="width: 50%;">
+    <tr>
+      <td>Nom de la Salle</td>
+      <td>:</td>
+      <td>
+        <b> &nbsp;{{trainingClass?.name}} </b>
+      </td>
+    </tr>
+    <tr>
+      <td>Période</td>
+      <td>:</td>
+      <td>
+        <b> &nbsp;du {{trainingClass?.startDate | date : 'dd-MM-yyyy'}} au
+          {{trainingClass?.endDate | date : 'dd-MM-yyyy'}} </b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span *ngIf="trainingClass?.trainers.length===1">Formateur</span>
+        <span *ngIf="trainingClass?.trainers.length>1">Formateurs</span>
+      </td>
+      <td>:</td>
+      <td>
+        <b>&nbsp;<span *ngFor="let trainer of trainingClass?.trainers">{{trainer.lastName}}
+            {{trainer.firstName}} <span *ngIf="trainingClass.trainers.length>1"> - </span> </span>
+        </b>
+      </td>
+    </tr>
+    <tr>
+      <td>Total Participants</td>
+      <td>:</td>
+      <td>
+        <b> &nbsp;{{participants.length}} </b>
+      </td>
+    </tr>
+  </table>
+
+  <button type="button" size="sm" mdbBtn color="primary" [disabled]="participants.length===0" mdbWavesEffect (click)="basicModal.show();showDiv(true)">imprimer</button>
+  <button type="button" [disabled]="isSelected.length===0" size="sm" mdbBtn color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
+
+  <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="participants.length>0">
+    <thead>
+      <tr>
+        <th *ngFor="let head of headElements; let i = index" aria-controls="tableSortExample" scope="col"
+          [mdbTableSort]="participants" [sortBy]="headElements[i]">{{head | titlecase}}
+          <mdb-icon fas icon="sort"></mdb-icon>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let el of participants; let i = index">
+        <th scope="row"><mdb-checkbox [(ngModel)]="el.selected" (change)="select(el.id)">{{i+1}}</mdb-checkbox></th>
+        <td>{{el.lastName}}</td>
+        <td>{{el.firstName}}</td>
+        <td>{{el.phoneNumber}}</td>
+        <td>{{el.typeEmpName}}</td>
+        <td>{{el.regionName}}</td>
+        <td>{{el.departmentName}}</td>
+        <td>{{el.resCityName}}</td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
+
+<div class="container" id="test" *ngIf="show">
+  <table class="table-condensed mb-3 mt-2" style="width: 50%;">
+    <tr>
+      <td>Nom de la Salle</td>
+      <td>:</td>
+      <td>
+        <b> &nbsp;{{trainingClass.name}} </b>
+      </td>
+    </tr>
+    <tr>
+      <td>Période</td>
+      <td>:</td>
+      <td>
+        <b> &nbsp;du {{trainingClass.startDate | date : 'dd-MM-yyyy'}} au
+          {{trainingClass.endDate | date : 'dd-MM-yyyy'}} </b>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <span *ngIf="trainingClass.trainers.length===1">Formateur</span>
+        <span *ngIf="trainingClass.trainers.length>1">Formateurs</span>
+      </td>
+      <td>:</td>
+      <td>
+        <b>&nbsp;<span *ngFor="let trainer of trainingClass.trainers">{{trainer.lastName}}
+            {{trainer.firstName}} <span *ngIf="trainingClass.trainers.length>1"> - </span> </span>
+        </b>
+      </td>
+    </tr>
+  </table>
+
+
+  <table mdbTable class="z-depth-1">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nom</th>
+        <th>Prénom(s)</th>
+        <th>Contact</th>
+        <th>Region</th>
+        <th>Departement</th>
+        <th>Commune</th>
+        <th>Emargement</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let el of participants; let i = index">
+        <th scope="row">{{i+1}}</th>
+        <td><b>{{el.lastName}}</b></td>
+        <td><b>{{el.firstName}}</b></td>
+        <td><b>{{el.phoneNumber}}</b></td>
+        <td><b>{{el.regionName}}</b></td>
+        <td><b>{{el.departmentName}}</b></td>
+        <td><b>{{el.resCityName}}</b></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+
+
+</div>
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide(); hideDiv()">
+                    <span aria-hidden="true">×</span>
+                </button>
+                <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
+            </div>
+            <div class="modal-body">
+               
+                <h3 *ngIf="!showConfirmation">Imprimer cette liste ?</h3>
+                <h3 *ngIf="showConfirmation">confirmez-vous l'enregistrement du rétrait  ?</h3>
+                <div class="modal-footer">
+                    <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+                        (click)="basicModal.hide(); hideDiv()" mdbWavesEffect>annuler</button>
+                    <button type="button" *ngIf="!showConfirmation" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
+                        (click)="[basicModal.hide(),captureScreen()]">imprimer!</button>
+
+                        <button type="button" *ngIf="showConfirmation" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
+                        (click)="[basicModal.hide(),removeUsers()]">enregistrer!</button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

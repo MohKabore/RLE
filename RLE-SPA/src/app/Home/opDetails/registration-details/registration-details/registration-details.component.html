@@ -1,0 +1,98 @@
+<div class="container mt-5"> 
+  <div *ngIf="showRegions" class=" animated fadeInDown">
+    <mdb-card class="row mb-1">
+      <mdb-card-body>
+        <form [formGroup]="searchForm">
+          <div class="md-form">
+            <mdb-select [options]="regions" id="regionId" (ngModelChange)="getDetails()" placeholder="Region"
+              formControlName="regionId">
+            </mdb-select>
+          </div>
+        </form>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+</div>
+<div *ngIf="showDetails">
+  <div *ngIf="!noResult && !show">
+    <div class="d-flex justify-content-center">
+      <div class="spinner-border" role="status">
+        <span class="sr-only">Loading...</span>
+      </div>
+    </div>
+   </div>
+  <div *ngIf="noResult">
+   {{noResult}}
+  </div>
+  <div class="row  animated fadeInUp" *ngIf="show">
+    <div *ngFor="let dept of region.departments" class="col-md-12">
+      <mdb-card class="text-white mb-3" bgColor="bg-danger" *ngIf="dept.prctRegistered<50">
+        <mdb-card-header>
+          <h4 class="text-center">{{dept.name}} :{{dept.prctRegistered}}% ({{dept.totalRegistered}}/{{dept.nbEmpNeeded}})</h4> 
+        </mdb-card-header>
+        <table style="width: 30%;">
+          <tr *ngFor="let city of dept.cities">
+            <td>{{city.name}}</td>
+            <td>:</td>
+            <td>
+              {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.nbEmpNeeded}})
+            </td>
+          </tr>
+        </table>
+        <mdb-card-body>
+        </mdb-card-body>
+      </mdb-card>
+  
+      <mdb-card class="text-white mb-3" bgColor="bg-warning" *ngIf="dept.prctRegistered>=50 && dept.prctRegistered<75">
+        <mdb-card-header>
+          <h4 class="text-center">{{dept.name}} :{{dept.prctRegistered}}% ({{dept.totalRegistered}}/{{dept.nbEmpNeeded}})</h4> 
+        </mdb-card-header>
+        <table style="width: 30%;">
+          <tr *ngFor="let city of dept.cities">
+            <td>{{city.name}}</td>
+            <td>:</td>
+            <td>
+              {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.nbEmpNeeded}})
+            </td>
+          </tr>
+        </table>
+        <mdb-card-body>
+        </mdb-card-body>
+      </mdb-card>
+  
+      <mdb-card class="text-white mb-3" bgColor="bg-primary" *ngIf="dept.prctRegistered>=75 && dept.prctRegistered<100">
+        <mdb-card-header>
+          <h4 class="text-center">{{dept.name}} :{{dept.prctRegistered}}% ({{dept.totalRegistered}}/{{dept.nbEmpNeeded}})</h4> 
+        </mdb-card-header>
+        <table style="width: 30%;">
+          <tr *ngFor="let city of dept.cities">
+            <td>{{city.name}}</td>
+            <td>:</td>
+            <td>
+              {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.nbEmpNeeded}})
+            </td>
+          </tr>
+        </table>
+        <mdb-card-body>
+        </mdb-card-body>
+      </mdb-card>
+  
+      <mdb-card class="text-white mb-3" bgColor="bg-success" *ngIf="dept.prctRegistered>=100">
+        <mdb-card-header>
+          <h4 class="text-center">{{dept.name}} :{{dept.prctRegistered}}% ({{dept.totalRegistered}}/{{dept.nbEmpNeeded}})</h4> 
+        </mdb-card-header>
+        <table style="width: 30%;">
+          <tr *ngFor="let city of dept.cities">
+            <td>{{city.name}}</td>
+            <td>:</td>
+            <td>
+              {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.nbEmpNeeded}})
+            </td>
+          </tr>
+        </table>
+        <mdb-card-body>
+        </mdb-card-body>
+      </mdb-card>
+    </div>
+  </div>
+</div>

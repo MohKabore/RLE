@@ -1,0 +1,40 @@
+<div class="row justify-content-center align-items-center mt-5 animated zoomInDown" >
+  <!-- style="background-image: url(./assets/images/photo-wide-4.jpg)"> -->
+<div class="col-md-8">
+  <div class="auth-content z-depth-4 ">
+    <div class="card o-hidden">
+      <div class="row" style="height: 500px;">
+        <div class="col-md-6">
+          <div class="p-4">
+            <div class="auth-logo text-center mb-4">
+              <img src="assets/images/hat_logo.png" alt="" />
+            </div>
+            <h1 class="mb-3 text-25">connexion</h1>
+
+            <form class="text-center" style="color: #757575;" [formGroup]="signinForm" (ngSubmit)="signin()">
+              <div class="md-form">
+                <input type="text" id="firstName" class="form-control" formControlName="username" mdbInput />
+                <label for="firstName">identifiant</label>
+              </div>
+              <div class="md-form">
+                <input type="password" id="lastName" class="form-control" formControlName="password" mdbInput />
+                <label for="lastName">Mot de passe</label>
+              </div>
+              <div class="md-form">
+              <button [disabled]="!signinForm.valid" size="sm" mdbBtn color="primary" mdbWavesEffect>se connecter</button>
+
+              </div>
+            </form>
+
+            <div class="mt-3 text-center">
+              <a href="" class="text-muted" routerLink="/forgotPassword"><u>Mot de passe oublié</u></a>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-6 text-center "
+          style="background-size: cover;background-image: url(./assets/images/signinpic.jpg)"></div>
+      </div>
+    </div>
+  </div>
+</div>
+</div>

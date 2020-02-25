@@ -1,0 +1,145 @@
+<div *ngFor="let region of regions" class="animated bounceInDown">
+  <mdb-card class="mb-2">
+    <mdb-card-body>
+      <mdb-card-title>
+        <h4 class="text-center">{{region.name}}</h4>
+        <hr>
+        <!-- inscription -->
+        <div class="progress mb-2" *ngIf="region.prctRegistered<=25" style="height: 30px;">
+          <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctRegistered +'%'  }"
+            aria-valuemin="0" aria-valuemax="100"> <b
+            style="text-align: center; font-size: 22px;">Inscription : {{region.prctRegistered}}%
+            ({{region.totalRegistered}}/ {{region.nbEmpNeeded}})</b></div>
+        </div>
+        <div class="progress mb-2" *ngIf="region.prctRegistered>25 && region.prctRegistered<=50"
+          style="height: 30px;">
+          <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctRegistered +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Inscription : {{region.prctRegistered}}%
+              ({{region.totalRegistered}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+        <div class="progress mb-2" *ngIf="region.prctRegistered>50 && region.prctRegistered<=75"
+          style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctRegistered +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Inscription : {{region.prctRegistered}}%
+              ({{region.totalRegistered}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+        <div class="progress mb-2" *ngIf="region.prctRegistered>75" style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctRegistered +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Inscription : {{region.prctRegistered}}%
+              ({{region.totalRegistered}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+        <!-- preselection -->
+        <div class="progress mb-2" *ngIf="region.prctPreselected<=25" style="height: 30px;">
+          <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctPreselected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Pré-Selection : {{region.prctPreselected}}%
+              ({{region.totalPreSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+        <div class="progress mb-2" *ngIf="region.prctPreselected>25 && region.prctPreselected<=50"
+          style="height: 30px;">
+          <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctPreselected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Pré-Selection : {{region.prctPreselected}}%
+              ({{region.totalPreSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+        <div class="progress mb-2" *ngIf="region.prctPreselected>50 && region.prctPreselected<=75"
+          style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctPreselected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Pré-Selection : {{region.prctPreselected}}%
+              ({{region.totalPreSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+        <div class="progress mb-2" *ngIf="region.prctPreselected>75" style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctPreselected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Pré-Selection : {{region.prctPreselected}}%
+              ({{region.totalPreSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+        <!-- formation  -->
+
+        <div class="progress mb-2" *ngIf="region.prctOnTraining<=25" style="height: 30px;">
+          <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctOnTraining +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Formation : {{region.prctOnTraining}}%
+              ({{region.totalOnTraining}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+        <div class="progress mb-2" *ngIf="region.prctOnTraining>25 && region.prctOnTraining<=50"
+          style="height: 30px;">
+          <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctOnTraining +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Formation : {{region.prctOnTraining}}%
+              ({{region.totalOnTraining}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+        <div class="progress mb-2" *ngIf="region.prctOnTraining>50 && region.prctOnTraining<=75"
+          style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctOnTraining +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Formation : {{region.prctOnTraining}}%
+              ({{region.totalOnTraining}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+        <div class="progress mb-2" *ngIf="region.prctOnTraining>75" style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctOnTraining +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Formation : {{region.prctOnTraining}}%
+              ({{region.totalOnTraining}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+        <!-- selection  -->
+
+        <div class="progress mb-2" *ngIf="region.prctSelected<=25" style="height: 30px;">
+          <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctSelected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Selection : {{region.prctSelected}}%
+              ({{region.totalSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+        <div class="progress mb-2" *ngIf="region.prctSelected>25 && region.prctSelected<=50" style="height: 30px;">
+          <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctSelected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Selection : {{region.prctSelected}}%
+              ({{region.totalSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+        <div class="progress mb-2" *ngIf="region.prctSelected>50 && region.prctSelected<=75" style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctSelected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Selection : {{region.prctSelected}}%
+              ({{region.totalSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+        <div class="progress mb-2" *ngIf="region.prctSelected>75" style="height: 30px;">
+          <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+            style="text-align: center; font-size: 25px;" [ngStyle]="{'width': region.prctSelected +'%'  }"
+            aria-valuemin="0" aria-valuemax="100">
+            <b style="text-align: center; font-size: 22px;">Selection : {{region.prctSelected}}%
+              ({{region.totalSelected}} / {{region.nbEmpNeeded}})</b> </div>
+        </div>
+
+
+
+      </mdb-card-title>
+
+    </mdb-card-body>
+  </mdb-card>
+</div>

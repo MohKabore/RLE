@@ -1,0 +1,8 @@
+.vscode
+bin
+obj
+*.db
+appsettings.json
+Migrations/
+wwwroot
+requetes.sql

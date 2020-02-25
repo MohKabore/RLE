@@ -1,0 +1,38 @@
+<mdb-navbar #navbarid SideClass="navbar navbar-expand-md navbar-light white ie-nav fixed-top scrolling-navbar" [containerInside]="false">
+    <mdb-navbar-brand>
+        <div class="logo">
+            <img src="../../../assets/images/at.png" alt="" style="width: 150px;color: blue;">
+        </div>
+    </mdb-navbar-brand>
+    <links>
+        <ul class="navbar-nav mr-auto">
+                
+            <div >
+                <app-nav-admin (closeNav)="closeNav()"></app-nav-admin>
+            </div>
+        </ul>
+        <ul class="navbar-nav nav-flex-icons">
+            <!-- <li class="nav-item waves-light" mdbWavesEffect>
+                <a class="nav-link text-muted"><mdb-icon fab icon="facebook-f"></mdb-icon><mdb-icon far icon="address-book"></mdb-icon></a>
+            </li>
+            <li class="nav-item waves-light" mdbWavesEffect>
+                <a class="nav-link text-muted"><mdb-icon fab icon="twitter"></mdb-icon></a>
+            </li>
+            <li class="nav-item waves-light" mdbWavesEffect>
+                <a class="nav-link text-muted"><mdb-icon fab icon="instagram"></mdb-icon></a>
+            </li> -->
+            <li class="nav-item avatar dropdown btn-group" dropdown>
+                <a dropdownToggle type="button" class="nav-link dropdown-toggle waves-light" mdbWavesEffect>
+                  <img [src]="photoUrl || '../../../assets/user.png'" alt="" class="img-fluid rounded-circle z-depth-0">
+                </a>
+                <div class="dropdown-menu dropdown-menu-right dropdown dropdown-primary" role="menu">
+                    <div class="dropdown-header">
+                        <i class="i-Lock-User mr-1"></i><label class="text-capitalize">{{user.firstName}} {{user.lastName}}</label>
+                    </div>        
+                    <a class="dropdown-item waves-light" [routerLink]="['/userAccount']" mdbWavesEffect>mon compte</a>
+                    <a class="dropdown-item waves-light" (click)="logout()" mdbWavesEffect>se déconnecter</a>
+                </div>
+            </li>
+        </ul>
+    </links>
+</mdb-navbar>
