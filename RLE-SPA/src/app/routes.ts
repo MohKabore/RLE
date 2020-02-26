@@ -18,7 +18,7 @@ import { TrainingClassUsersComponent } from './users/training/training-class-use
 
 
 export const appRoutes: Routes = [
-    { path: 'preInscription', component: NewUserComponent },
+    // { path: 'preInscription', component: NewUserComponent },
     { path: 'signIn', component: SigninComponent },
     { path: 'confirmEmail/:code', component: ConfirmEmailComponent, resolve: { user: EmailConfirmResolver } },
     {

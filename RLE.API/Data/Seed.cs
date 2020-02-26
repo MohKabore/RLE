@@ -154,7 +154,7 @@ namespace RLE.API.Data
 
                 var typeEmps = new List<TypeEmp> {
                     new TypeEmp {Name ="Supervisor", WebHired = 0},
-                    new TypeEmp {Name ="Maintenancier", WebHired = 0},
+                    new TypeEmp {Name ="Formateur", WebHired = 0},
                     new TypeEmp {Name ="Opérateur", WebHired = 0},
                     new TypeEmp {Name ="Agent Collecte", WebHired = 0},
                     new TypeEmp {Name ="Agent Hotline", WebHired = 0},

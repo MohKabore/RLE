@@ -17,6 +17,12 @@
       </td>
     </tr>
     <tr>
+      <td>Localisation</td>
+      <td>:</td>
+      <td>
+        <b>{{trainingClass.departmentName}}/{{trainingClass.cityName}}</b>
+      </td>
+    <tr>
       <td>
         <span *ngIf="trainingClass?.trainers.length===1">Formateur</span>
         <span *ngIf="trainingClass?.trainers.length>1">Formateurs</span>
@@ -68,29 +74,36 @@
 
 <div class="container" id="test" *ngIf="show">
   <table class="table-condensed mb-3 mt-2" style="width: 50%;">
-    <tr>
-      <td>Nom de la Salle</td>
+    <tr >
+      <td> <span style="font-size: 23px;">Nom de la Salle</span> </td>
       <td>:</td>
       <td>
-        <b> &nbsp;{{trainingClass.name}} </b>
+        <b> &nbsp;<span style="font-size: 23px;">{{trainingClass.name}}</span> </b>
       </td>
     </tr>
     <tr>
-      <td>Période</td>
+      <td ><span style="font-size: 23px;">Période </span> </td>
       <td>:</td>
       <td>
-        <b> &nbsp;du {{trainingClass.startDate | date : 'dd-MM-yyyy'}} au
+        <b style="font-size: 23px;"> &nbsp;du {{trainingClass.startDate | date : 'dd-MM-yyyy'}} au
           {{trainingClass.endDate | date : 'dd-MM-yyyy'}} </b>
       </td>
     </tr>
     <tr>
+      <td><span style="font-size: 23px;">Localisation</span></td>
+      <td>:</td>
       <td>
-        <span *ngIf="trainingClass.trainers.length===1">Formateur</span>
-        <span *ngIf="trainingClass.trainers.length>1">Formateurs</span>
+        <b style="font-size: 23px;">{{trainingClass.departmentName}}/{{trainingClass.cityName}}</b>
+      </td>
+    </tr>
+    <tr  style="font-size: 23px;">
+      <td>
+        <span style="font-size: 23px;" *ngIf="trainingClass.trainers.length===1">Formateur</span>
+        <span style="font-size: 23px;"  *ngIf="trainingClass.trainers.length>1">Formateurs</span>
       </td>
       <td>:</td>
       <td>
-        <b>&nbsp;<span *ngFor="let trainer of trainingClass.trainers">{{trainer.lastName}}
+        <b>&nbsp;<span style="font-size: 23px;" *ngFor="let trainer of trainingClass.trainers">{{trainer.lastName}}
             {{trainer.firstName}} <span *ngIf="trainingClass.trainers.length>1"> - </span> </span>
         </b>
       </td>
@@ -98,28 +111,22 @@
   </table>
 
 
-  <table mdbTable class="z-depth-1">
+  <table mdbTable class="table-bordered"  class="z-depth-1" >
     <thead>
-      <tr>
+      <tr style="border-bottom: 1px solid black;">
         <th>#</th>
-        <th>Nom</th>
-        <th>Prénom(s)</th>
-        <th>Contact</th>
-        <th>Region</th>
-        <th>Departement</th>
-        <th>Commune</th>
-        <th>Emargement</th>
+        <th style="font-size:23px;">Nom</th>
+        <th style="font-size:23px;">Prénom(s)</th>
+        <th style="font-size:23px;">Contact(s)</th>
+        <th style="font-size:23px;">Emargement</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let el of participants; let i = index">
+      <tr *ngFor="let el of participants; let i = index" style="border-bottom: 1px solid black;">
         <th scope="row">{{i+1}}</th>
-        <td><b>{{el.lastName}}</b></td>
-        <td><b>{{el.firstName}}</b></td>
-        <td><b>{{el.phoneNumber}}</b></td>
-        <td><b>{{el.regionName}}</b></td>
-        <td><b>{{el.departmentName}}</b></td>
-        <td><b>{{el.resCityName}}</b></td>
+        <td><b style="font-size:23px;">{{el.lastName}}</b></td>
+        <td><b style="font-size:23px;"> {{el.firstName}}</b></td>
+        <td><b style="font-size:23px;">{{el.phoneNumber}} <span *ngIf="el.secondPhoneNumber"> / {{el.secondPhoneNumber}}</span></b></td>
         <td></td>
       </tr>
     </tbody>

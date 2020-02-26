@@ -18,7 +18,7 @@ export class CallSheetCardComponent implements OnInit {
 
   ngOnInit() {
     const cardWrapper = this.el.nativeElement.querySelectorAll('.card-wrapper');
-    this.renderer.setStyle(cardWrapper[0], 'height', '180px');
+    this.renderer.setStyle(cardWrapper[0], 'height', '200px');
 
     if (this.user.isSelected) {
       // const cardRotating = this.el.nativeElement.querySelectorAll('.card-rotating');

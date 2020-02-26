@@ -11,6 +11,7 @@ namespace RLE.API.Helpers
     public class AutoMapperProfiles : Profile
     {
         private readonly DataContext _context;
+        CultureInfo frC = new CultureInfo("fr-FR");
 
         public AutoMapperProfiles(DataContext context)
         {
@@ -34,7 +35,15 @@ namespace RLE.API.Helpers
             CreateMap<TrainingForUpdateDto, Training>();
             CreateMap<TrainingClassCreationDto, TrainingClass>();
             CreateMap<CityUpdateDto, City>();
-            CreateMap<TrainingClass, TrainingClassDetailDto> ();
+            CreateMap<TrainingClass, TrainingClassDetailDto>()
+            .ForMember(dest => dest.StartDate, opt =>
+            {
+                opt.MapFrom(src => src.StartDate.ToString("dd/MM/yyyy", frC));
+            })
+            .ForMember(dest => dest.EndDate, opt =>
+            {
+                opt.MapFrom(src => src.EndDate.ToString("dd/MM/yyyy", frC));
+            });
 
 
             // CreateMap<User, UserForAutoCompleteDto>()

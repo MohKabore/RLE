@@ -3,8 +3,8 @@
         <mdb-card-body>
             <mdb-card-title>
                 <h5 class="text-center">
-                    <b>{{trainingClass.name}} </b> du {{trainingClass.startDate | date : 'dd-MM-yyyy'}} au
-                    {{trainingClass.endDate | date : 'dd-MM-yyyy'}} <br>
+                    <b>{{trainingClass.name}} </b> du {{trainingClass.startDate}} au
+                    {{trainingClass.endDate }} <br>
                     <span *ngIf="trainingClass.trainers.length===1">Formateur : <span
                             *ngFor="let trainer of trainingClass.trainers">{{trainer.lastName}}
                             {{trainer.firstName}}</span></span>
@@ -43,12 +43,17 @@
 
                     <div class="col-md-3">
                         <div class="md-form form-sm  m-0">
-                            <button title="rechercher" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
-                                (click)="searchEmp()" title="effacer" [disabled]="!searchForm.value.departmentId && !searchForm.value.typeEmpId ">
+                            <button title="rechercher" title="rechercher" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
+                                (click)="searchEmp()"  [disabled]="!searchForm.value.departmentId && !searchForm.value.typeEmpId ">
                                 <i class="fa fa-search"></i>
                             </button>
-                            <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+                            <button type="button" title="effacer" size="sm" mdbBtn color="light" mdbWavesEffect
                                 (click)="initialize()"><i class="fa fa-trash"></i></button>
+
+                                <button type="button" title="retour" [routerLink]="['/formation/', trainingClass.trainingId]"  size="sm" mdbBtn color="light" mdbWavesEffect
+                                (click)="initialize()"><i class="fa fa-arrow-left"></i></button>
+
+
                         </div>
                     </div>
                 </div>
@@ -79,7 +84,7 @@
                         <div class="col-md-6">
                             <div class="md-form form-sm mt-2">
                                 <button [disabled]="isSelected.length===0" type="button" (click)="basicModal.show()"
-                                    mdbBtn color="primary" size="sm" mdbWavesEffect>enregistrer</button>
+                                    mdbBtn color="success" size="sm" mdbWavesEffect>enregistrer</button>
                             </div>
                         </div>
                     </div>
@@ -120,7 +125,7 @@
                 <div class="modal-footer">
                     <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
                         (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
-                    <button type="button" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
+                    <button type="button" mdbBtn color="success" size="sm" class="relative waves-light" mdbWavesEffect
                         (click)="[basicModal.hide(),save()]">enregistrer!</button>
                 </div>
             </div>

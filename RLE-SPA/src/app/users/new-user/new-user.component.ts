@@ -84,6 +84,7 @@ export class NewUserComponent implements OnInit {
   }
 
   verifyIfExist() {
+
     this.waitForValidation = true;
     this.userExist = false;
     const userdata = this.userForm.value;
@@ -96,9 +97,7 @@ export class NewUserComponent implements OnInit {
       }, error => {
         console.log(error);
       });
-    }
-
-    if (userdata.typeEmpId === this.maintenancierTypeId) {
+    } else if (userdata.typeEmpId === this.maintenancierTypeId) {
       this.authService.maintenancierExist(userdata).subscribe((res: boolean) => {
         if (res === true) {
           this.userExist = true;
@@ -108,6 +107,9 @@ export class NewUserComponent implements OnInit {
       }, error => {
         console.log(error);
       });
+    } else {
+      this.userExist = false;
+      this.waitForValidation = false;
     }
   }
 

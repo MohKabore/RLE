@@ -57,7 +57,8 @@ export class TrainingClassUsersComponent implements OnInit {
       const pdf = new jspdf('p', 'mm', 'a4');
       const position = 0;
       pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
-      pdf.save('MYPdf.pdf');
+      const titre = 'fiche_de_presence_' + this.trainingClass.name + '.pdf';
+      pdf.save(titre);
       this.show = false;
 
     });

@@ -1,11 +1,11 @@
-<div class="animated jackInTheBox mt-4" *ngIf="waitDiv">
+<div class="animated bounceInUp mt-5" *ngIf="waitDiv">
   <mdb-card>
     <mdb-card-body>
       <h3>Veuillez patienter</h3>
     </mdb-card-body>
   </mdb-card>
 </div>
-<div class="row animated jackInTheBox mt-4" *ngIf="!waitDiv">
+<div class="row container animated bounceInDown mt-4" *ngIf="!waitDiv">
   <div class="col-md-12">
 
 
@@ -186,7 +186,7 @@
             </div>
             <div class="col-md-12">
               <div class="d-flex justify-content-center">
-                <button mdbBtn size="sm" color="primary" [disabled]="!userForm.valid"
+                <button mdbBtn size="sm" color="success" [disabled]="!userForm.valid"
                   (click)="[basicModal.show(), verifyIfExist()]">enregistrer</button>
               </div>
             </div>
@@ -213,13 +213,13 @@
       <div class="modal-body">
         <b *ngIf="!userExist">Etes vous sûre de vouloir enregistrer ???</b>
         <div *ngIf="userExist">
-          <p class="text-danger">Désolé ... Vous avez déjà fait un enregistrement dans cette localité au paravant</p>
+          <p class="text-danger">Désolé ... certaines de vous informations importantes existent déja pour un profil enrégistré</p>
         </div>
       </div>
       <div class="modal-footer">
         <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
           (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
-        <button type="button" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
+        <button type="button" mdbBtn color="success" size="sm" class="relative waves-light" mdbWavesEffect
           *ngIf="!userExist" (click)="[basicModal.hide(),saveUser()]">enregistrer!</button>
       </div>
     </div>

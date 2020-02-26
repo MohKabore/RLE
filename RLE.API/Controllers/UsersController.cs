@@ -48,7 +48,7 @@ namespace RLE.API.Controllers
         {
             var users = new List<User>();
             string req = "select * from AspnetUsers where LastName + ' ' + firstName Like '%" + searchModel.EmpName + "%'" +
-            " and Active=0 and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
+            " and Active=0 and PreSelected=0 and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
             if (searchModel.RegionId != null)
                 req += "and RegionId =" + Convert.ToInt32(searchModel.RegionId);
             if (searchModel.DepartmentId != null)
@@ -156,13 +156,13 @@ namespace RLE.API.Controllers
                     UserHistoryTypeId = _config.GetValue<int>("AppSettings:PreSelectionHistorytypeId")
                 };
                 _repo.Add(uh);
-                if (await _repo.SaveAll())
+                
+
+            }
+             if (await _repo.SaveAll())
                     return Ok();
 
                 return BadRequest();
-
-            }
-            return Ok();
         }
 
         [HttpPost("AddTraining/{insertUserId}")]
@@ -235,8 +235,8 @@ namespace RLE.API.Controllers
                     CityId = classToCreate.CityId,
                     DepartmentId = classToCreate.DepartmentId,
                     RegionId = classToCreate.RegionId,
-                    StartDate = classToCreate.StartDate?.ToString("dd/MM/yyyy", frC),
-                    EndDate = classToCreate.EndDate?.ToString("dd/MM/yyyy", frC),
+                    StartDate = classToCreate.StartDate.ToString("dd/MM/yyyy", frC),
+                    EndDate = classToCreate.EndDate.ToString("dd/MM/yyyy", frC),
                     Trainers = _mapper.Map<List<UserForListDto>>(trainers)
                 };
                 return Ok(classToReturn);
@@ -393,8 +393,8 @@ namespace RLE.API.Controllers
                         DepartmentId = trClass.DepartmentId,
                         RegionId = trClass.RegionId,
                         TrainerIds = trainers.Select(a => a.Id).ToList(),
-                        StartDate = trClass.StartDate?.ToString("dd/MM/yyyy", frC),
-                        EndDate = trClass.EndDate?.ToString("dd/MM/yyyy", frC),
+                        StartDate = trClass.StartDate.ToString("dd/MM/yyyy", frC),
+                        EndDate = trClass.EndDate.ToString("dd/MM/yyyy", frC),
                         // Participants = new List<UserForListDto>(),
                         Trainers = _mapper.Map<List<UserForListDto>>(trainers),
                         TotalTrainers = trainers.Count()
@@ -456,8 +456,8 @@ namespace RLE.API.Controllers
                         TrainingId = trainingClass.TrainingId,
                         DepartmentId = trainingClass.DepartmentId,
                         RegionId = trainingClass.RegionId,
-                        StartDate = trainingClass.StartDate?.ToString("dd/MM/yyyy", frC),
-                        EndDate = trainingClass.EndDate?.ToString("dd/MM/yyyy", frC),
+                        StartDate = trainingClass.StartDate.ToString("dd/MM/yyyy", frC),
+                        EndDate = trainingClass.EndDate.ToString("dd/MM/yyyy", frC),
                         Trainers = _mapper.Map<List<UserForListDto>>(trainers)
                     };
                     return Ok(classToReturn);
@@ -579,7 +579,7 @@ namespace RLE.API.Controllers
                             Id = city.Id,
                             Name = city.Name,
                             Code = city.Code,
-                            TotalRegistered = operators.Where(a => a.PreSelected == false).Count(),
+                            TotalRegistered = operators.Count(),
                             TotalPreSelected = operators.Where(a => a.PreSelected == true).Count(),
                             TotalOnTraining = operators.Where(a => a.OnTraining == true).Count(),
                             TotalSelected = operators.Where(a => a.Selected == true).Count(),
@@ -818,7 +818,7 @@ namespace RLE.API.Controllers
         [HttpGet("TrainingClassDetails/{trainingClassId}")]
         public async Task<IActionResult> TrainingClassDetails(int trainingClassId)
         {
-            var tr = await _context.TrainingClasses.Include(a => a.Training).FirstOrDefaultAsync(a => a.Id == trainingClassId);
+            var tr = await _context.TrainingClasses.Include(a => a.Department).Include(a => a.City).Include(a => a.Training).Include(a => a.Training).FirstOrDefaultAsync(a => a.Id == trainingClassId);
             if (tr != null)
             {
                 var trClass = _mapper.Map<TrainingClassDetailDto>(tr);

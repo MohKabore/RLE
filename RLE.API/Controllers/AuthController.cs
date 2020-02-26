@@ -153,16 +153,16 @@ namespace RLE.API.Controllers
         //     }
         //     return BadRequest("email non trouvé. Veuillez réessayer");
 
-         // }
+        // }
         [HttpGet("RegionsList")]
-        public  async Task<IActionResult> RegionsList()
+        public async Task<IActionResult> RegionsList()
         {
-            var districts = await _context.Districts.Include(d=>d.Regions)
-                                                .ThenInclude(d=>d.Departments)
-                                                .ThenInclude(d=>d.Cities)
-                                                .ThenInclude(d=>d.Municipalities)
-                                                .ThenInclude(d=>d.EnrolmentCenters)
-                                                .OrderBy(d=>d.Name)
+            var districts = await _context.Districts.Include(d => d.Regions)
+                                                .ThenInclude(d => d.Departments)
+                                                .ThenInclude(d => d.Cities)
+                                                .ThenInclude(d => d.Municipalities)
+                                                .ThenInclude(d => d.EnrolmentCenters)
+                                                .OrderBy(d => d.Name)
                                                 .ToListAsync();
             // var regionToReturn = new List<Region>();
             // foreach (var region in regions)
@@ -614,7 +614,7 @@ namespace RLE.API.Controllers
         //     return Ok(await _repo.EmailExist(email));
         // }
 
-    
+
 
 
         //     [HttpPost("{userId}/AddPhotoForUser")]
@@ -755,7 +755,7 @@ namespace RLE.API.Controllers
         //         return Ok(await _context.Fichiers.ToListAsync());
         //     }
 
-            [HttpGet("{userName}/VerifyUserName")]
+        [HttpGet("{userName}/VerifyUserName")]
         public async Task<IActionResult> VerifyUserName(string userName)
         {
             return Ok(await _repo.UserNameExist(userName));
@@ -839,7 +839,7 @@ namespace RLE.API.Controllers
             return Ok(typeEmps);
         }
 
-         [HttpGet("GetInscTypeEmps")]
+        [HttpGet("GetInscTypeEmps")]
         public async Task<IActionResult> GetInscTypeEmps()
         {
             var typeEmps = await _context.TypeEmps
@@ -863,7 +863,7 @@ namespace RLE.API.Controllers
         {
             var regions = await _context.Regions
                                     .OrderBy(a => a.Name)
-                                    .Where(a=>a.ActiveforInscription == true)
+                                    .Where(a => a.ActiveforInscription == true)
                                     .ToListAsync();
             return Ok(regions);
         }
@@ -905,7 +905,7 @@ namespace RLE.API.Controllers
             return Ok(depts);
         }
 
-          [HttpGet("GetInscDepartments/{regionId}")]
+        [HttpGet("GetInscDepartments/{regionId}")]
         public async Task<IActionResult> GetInscDepartments(int regionId)
         {
             var depts = await _context.Departments
@@ -955,11 +955,12 @@ namespace RLE.API.Controllers
 
         }
 
-          [HttpPost("AddUser/{insertUserId}")]
+        [HttpPost("AddUser/{insertUserId}")]
         public async Task<IActionResult> AddUser(UserForRegisterDto userForRegisterDto, int insertUserId)
         {
             var userName = Guid.NewGuid();
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
+            userToCreate.PreSelected = true;
             userToCreate.UserName = userName.ToString();
             userToCreate.ValidationCode = userName.ToString();
             var result = await _userManager.CreateAsync(userToCreate, password);
@@ -970,13 +971,13 @@ namespace RLE.API.Controllers
             if (result.Succeeded)
             {
                 var uh = new UserHistory
-                        {
-                            InsertUserId = insertUserId,
-                            UserId = userToCreate.Id,
-                            UserHistoryTypeId = _config.GetValue<int>("AppSettings:AddUserHistorytypeId")
-                        };
-                        _repo.Add(uh);
-                        await _repo.SaveAll();
+                {
+                    InsertUserId = insertUserId,
+                    UserId = userToCreate.Id,
+                    UserHistoryTypeId = _config.GetValue<int>("AppSettings:AddUserHistorytypeId")
+                };
+                _repo.Add(uh);
+                await _repo.SaveAll();
 
                 return Ok(userToCreate.Id);
             }
@@ -1038,12 +1039,18 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> OperatorExist(UserForVerification userToVerify)
         {
             var user = await _context.Users
-            .FirstOrDefaultAsync(a => a.TypeEmpId == typeOperatorId && a.FirstName.ToLower() == userToVerify.FirstName.ToLower()
-                                    && a.ResCityId == userToVerify.ResCityId && a.Gender == userToVerify.Gender && a.PhoneNumber == userToVerify.PhoneNumber);
+            .FirstOrDefaultAsync(a => a.TypeEmpId == typeOperatorId && a.PhoneNumber == userToVerify.PhoneNumber);
             if (user != null)
                 return Ok(true);
+            else
+            {
+                user = await _context.Users.FirstOrDefaultAsync(a => a.TypeEmpId == typeOperatorId && a.FirstName.ToLower() == userToVerify.FirstName.ToLower()
+                                   && a.ResCityId == userToVerify.ResCityId && a.Gender == userToVerify.Gender);
+                if (user != null)
+                    return Ok(true);
 
-            return Ok(false);
+                return Ok(false);
+            }
         }
 
         [HttpPost("MaintenancierExist")]

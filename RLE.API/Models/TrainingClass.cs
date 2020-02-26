@@ -15,8 +15,8 @@ namespace RLE.API.Models
         public int TrainingId { get; set; }
         public DateTime? EtastartDate { get; set; }
         public DateTime? EtaendDate { get; set; }
-        public DateTime? StartDate { get; set; }
-        public DateTime? EndDate { get; set; }
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
         public byte Status { get; set; }
         public byte Active { get; set; }
 
