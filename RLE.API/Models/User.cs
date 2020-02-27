@@ -86,6 +86,7 @@ namespace RLE.API.Models
         public bool Trained { get; set; }
         // compte supprimé ou activé
         public bool Active { get; set; }
+        public bool Reserved { get; set; }
         public bool OnTraining { get; set; }
         public ICollection<Photo> Photos { get; set; }
 

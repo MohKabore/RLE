@@ -156,13 +156,13 @@ namespace RLE.API.Controllers
                     UserHistoryTypeId = _config.GetValue<int>("AppSettings:PreSelectionHistorytypeId")
                 };
                 _repo.Add(uh);
-                
+
 
             }
-             if (await _repo.SaveAll())
-                    return Ok();
+            if (await _repo.SaveAll())
+                return Ok();
 
-                return BadRequest();
+            return BadRequest();
         }
 
         [HttpPost("AddTraining/{insertUserId}")]
@@ -328,9 +328,9 @@ namespace RLE.API.Controllers
                     Name = tr.Name,
                     Description = tr.Description,
                     Id = tr.Id,
-                    TotalClasses = tr.TrainingClasses.Count()
+                    TotalClasses = tr.TrainingClasses.Where(a=>a.Active==true).Count()
                 };
-                var classIds = tr.TrainingClasses.Select(a => a.Id);
+                var classIds = tr.TrainingClasses.Where(a=>a.Active == true).Select(a => a.Id);
                 var trIds = await _context.TrainerClasses.Where(a => classIds.Contains(a.TrainingClassId))
                                                 .Select(a => a.TrainerId)
                                                 .Distinct()
@@ -365,7 +365,7 @@ namespace RLE.API.Controllers
                     RegionName = training.Region.Name,
                     TrainingClasses = new List<TrainingClassDetailDto>()
                 };
-                var trainingClasses = await _context.TrainingClasses.Where(a => a.TrainingId == trainingId)
+                var trainingClasses = await _context.TrainingClasses.Where(a => a.TrainingId == trainingId && a.Active == true)
                                                                 .Include(a => a.Region)
                                                                 .Include(a => a.Department)
                                                                 .Include(a => a.City)
@@ -834,7 +834,7 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> TrainingClassParticipants(int trainingClassId)
         {
             var participants = await _context.EmployeeClasses.Where(a => a.TrainingClassId == trainingClassId).ToListAsync();
-            var userIds = participants.Select(a=>a.EmployeeId).ToList();
+            var userIds = participants.Select(a => a.EmployeeId).ToList();
             var users = await _context.Users.Include(p => p.TypeEmp)
                                                        .Include(p => p.Region)
                                                        .Include(p => p.Department)
@@ -847,6 +847,29 @@ namespace RLE.API.Controllers
                 return Ok(usersToReturn);
             }
             return BadRequest();
+        }
+
+        [HttpPut("{trainingClassId}/DeleteTrainingClass/{insertUserId}")]
+        public async Task<IActionResult> DeleteTrainingClass(int trainingClassId, int insertUserId)
+        {
+            var trainingClass = await _context.TrainingClasses.FirstOrDefaultAsync(p=>p.Id == trainingClassId);
+            if(trainingClass != null) {
+                trainingClass.Active = false;
+                var uh = new UserHistory
+                {
+                    InsertUserId = insertUserId,
+                    TrainingClassId = trainingClassId,
+                    TrainingId = trainingClass.TrainingId,
+                    UserHistoryTypeId = _config.GetValue<int>("AppSettings:DeleteTrainingClassHistorytypeId")
+                };
+                _repo.Add(uh);
+                if(await _repo.SaveAll())
+                return Ok();
+
+                return BadRequest();
+
+            }
+            return NotFound();
         }
 
     }

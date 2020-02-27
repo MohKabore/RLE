@@ -15,6 +15,7 @@ namespace RLE.API.Dtos
             ValidatedCode = false;
             Trained = false;
             OnTraining = false;
+            Reserved = false;
         }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -69,6 +70,7 @@ namespace RLE.API.Dtos
         public bool Active { get; set; }
 
         public bool Trained { get; set; }
+        public bool Reserved { get; set; }
 
     }
 }

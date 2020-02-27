@@ -18,7 +18,7 @@ namespace RLE.API.Models
         public DateTime StartDate { get; set; }
         public DateTime EndDate { get; set; }
         public byte Status { get; set; }
-        public byte Active { get; set; }
+        public bool Active { get; set; }
 
         public  City City { get; set; }
         public  Department Department { get; set; }

@@ -151,5 +151,14 @@ export class TrainingDetailsComponent implements OnInit {
     });
   }
 
+  deleteTrainingClass(trainingClassId, idx) {
+    if (confirm('voulez-vous vraiment supprimez cette salle ?')) {
+      this.userService.deleteTrainingClass(trainingClassId, this.currentUserId).subscribe(() => {
+        this.training.trainingClasses.splice(idx, 1);
+        this.alertify.success('suppression terminé...');
+      });
+    }
+  }
+
 
 }

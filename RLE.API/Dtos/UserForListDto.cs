@@ -43,5 +43,6 @@ namespace RLE.API.Dtos
         // compte supprimé ou activé
         public bool Active { get; set; }
         public bool OnTraining { get; set; }
+        
     }
 }

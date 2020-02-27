@@ -229,4 +229,8 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/TrainingClassParticipants/' + trainingClassId);
   }
 
+  deleteTrainingClass(trainingClassid,  insertUserId) {
+    return this.http.put(this.baseUrl + 'users/' + trainingClassid + '/DeleteTrainingClass/' + insertUserId, {});
+  }
+
 }

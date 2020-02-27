@@ -45,7 +45,7 @@
 
   <button type="button" size="sm" mdbBtn color="primary" [disabled]="participants.length===0" mdbWavesEffect (click)="basicModal.show();showDiv(true)">imprimer</button>
   <button type="button" [disabled]="isSelected.length===0" size="sm" mdbBtn color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
-
+  <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect [routerLink]="['/formation/', trainingClass.trainingId]" > <i class="fa fa-arrow-left"></i> </button>
   <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="participants.length>0">
     <thead>
       <tr>
