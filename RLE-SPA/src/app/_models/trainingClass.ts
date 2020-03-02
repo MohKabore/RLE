@@ -11,6 +11,8 @@ export class TrainingClass {
   startDate: string;
   endDate: string;
   cityId: number;
+  status: number;
+  Active: boolean;
   cityName; string;
   totalTrainers: number;
   totalParticipants: number;

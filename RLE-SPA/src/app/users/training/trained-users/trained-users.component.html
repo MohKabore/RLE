@@ -1,0 +1,81 @@
+<div class="container mt-5 animated bounceInDown">
+
+    <mdb-card class="row">
+        <mdb-card-body>
+            <form style="color: #757575;" [formGroup]="searchForm">
+                <div class="row">
+
+                    <div class="col-md-2" *ngIf="regions.length>0">
+                        <div class="md-form form-sm m-0">
+                            <mdb-select id="regionId" [options]="regions" placeholder="region"
+                                formControlName="regionId" (ngModelChange)="getTrainings()">
+                            </mdb-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="md-form form-sm m-0">
+                            <mdb-select id="trainingId" [options]="trainings" placeholder="formation"
+                                formControlName="trainingId" (ngModelChange)="getTrainingClasses()">
+                            </mdb-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="md-form form-sm  m-0">
+                            <mdb-select id="trainingClassId" [options]="trainingClasses"
+                                placeholder="salle de formation" formControlName="trainingClassId">
+                            </mdb-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="md-form form-sm  m-0">
+                            <button title="rechercher" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
+                                (click)="searchEmp()" title="effacer"
+                                [disabled]="!searchForm.value.typeEmpId && !searchForm.value.regionId && !searchForm.value.departmentid && !searchForm.value.resCityId">
+                                <i class="fa fa-search"></i>
+                            </button>
+                            <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+                                (click)="initialize()"><i class="fa fa-trash"></i></button>
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </mdb-card-body>
+    </mdb-card>
+
+    <div class="mt-2 animated bounceInUp" *ngIf="showEmps">
+        <button type="button" size="sm" mdbBtn color="success" (click)="selectUsers()" [disabled]="isSelected.length===0" mdbWavesEffect>sélectionner</button>
+        <button type="button" size="sm" mdbBtn color="light" (click)="removeSelectedUsers()" [disabled]="isSelected.length==0" mdbWavesEffect>désélectionner</button>
+        <button type="button" size="sm" mdbBtn color="primary" (click)="reserveUsers()" [disabled]="isSelected.length===0" mdbWavesEffect>réserviste</button>
+        <button type="button" size="sm" mdbBtn color="light" (click)="removeReservedUsers()" [disabled]="isSelected.length===0" mdbWavesEffect>non-réserviste</button>
+       <p><b>{{totalSelected}} </b> sélectionné(s)</p>
+       <p><b>{{totalReserved}} </b> en reserve</p>
+       
+        <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="users.length>0">
+            <thead>
+                <tr>
+                    <th *ngFor="let head of headElements; let i = index" aria-controls="tableSortExample" scope="col"
+                        [mdbTableSort]="users" [sortBy]="headElements[i]">{{head | titlecase}}
+                        <mdb-icon fas icon="sort"></mdb-icon>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let el of users; let i = index"  [ngClass]="{'alert alert-success': el.selected , 'alert alert-primary': el.reserved }">
+                    <th scope="row">
+                        <mdb-checkbox  (change)="select(el.id)">{{i+1}}</mdb-checkbox>
+                    </th>
+                    <td>{{el.lastName}}</td>
+                    <td>{{el.firstName}}</td>
+                    <td>{{el.phoneNumber}}</td>
+                    <td>{{el.typeEmpName}}</td>
+                    <td>{{el.regionName}}</td>
+                    <td>{{el.departmentName}}</td>
+                    <td>{{el.resCityName}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>

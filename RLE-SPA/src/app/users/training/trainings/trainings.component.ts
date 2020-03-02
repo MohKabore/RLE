@@ -153,8 +153,8 @@ export class TrainingsComponent implements OnInit {
     this.trainngClassForm = this.fb.group({
       name: ['', Validators.required],
       trainerIds: [null, Validators.required],
-      departmentId: [null],
-      cityId: [null],
+      departmentId: [null, Validators.required],
+      cityId: [null,  Validators.required],
       startDate: [null, Validators.required],
       endDate: [null, Validators.required]
     });

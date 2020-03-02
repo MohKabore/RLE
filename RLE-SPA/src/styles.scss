@@ -1,16 +1,34 @@
-/* You can add global styles to this file, and also import other style files */
+
+
+@import '~ng-uikit-pro-standard/assets/scss/core/mixins';
+@import '~ng-uikit-pro-standard/assets/scss/core/colors';
+@import '~ng-uikit-pro-standard/assets/scss/core/variables';
+@import '~ng-uikit-pro-standard/assets/scss/core/variables-pro';
+@import '~ng-uikit-pro-standard/assets/scss/core/msc/skins-pro';
+  @each $skin,
+  $data in $skins {
+    .#{$skin}-skin {
+
+      .custom-class {
+        background-color: map-get($data, skin-primary-color) !important;
+      }
+
+    }
+  }
+  /* You can add global styles to this file, and also import other style files */
 @import '../node_modules/bootstrap/dist/css/bootstrap.min.css';
 /* @import '../node_modules/bootswatch/dist/united/bootstrap.min.css'; */
 // @import '../node_modules/font-awesome/css/font-awesome.min.css';
 @import '../node_modules/alertifyjs/build/css/themes/bootstrap.min.css';
 
 
-@import "~ng-uikit-pro-standard/assets/scss/core/colors";
-@import "~ng-uikit-pro-standard/assets/scss/core/variables";
-@import "~ng-uikit-pro-standard/assets/scss/core/variables-pro";
+// @import "~ng-uikit-pro-standard/assets/scss/core/colors";
+// @import "~ng-uikit-pro-standard/assets/scss/core/variables";
+// @import "~ng-uikit-pro-standard/assets/scss/core/variables-pro";
 
 @import "~ng-uikit-pro-standard/assets/scss/addons-pro/_timelines-pro.scss";
 @import "~ng-uikit-pro-standard/assets/scss/addons-pro/_timeline-pro.scss";
+
 
 #wrapper {
   width: 95%;

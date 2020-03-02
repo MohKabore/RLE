@@ -15,6 +15,7 @@ import { RegistrationDetailsComponent } from './Home/opDetails/registration-deta
 import { RegistrationLocalitiesComponent } from './users/registration-localities/registration-localities.component';
 import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
 import { TrainingClassUsersComponent } from './users/training/training-class-users/training-class-users.component';
+import { TrainedUsersComponent } from './users/training/trained-users/trained-users.component';
 
 
 export const appRoutes: Routes = [
@@ -31,6 +32,7 @@ export const appRoutes: Routes = [
             { path: 'preSelection', component: PreSelectionComponent, data: { roles: [ 'Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'inscription', component: NewUserComponent, data: { roles: [ 'Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
             , resolve: { training: TrainingDetailResolver }},
             { path: 'addParticipant/:id', component: PreSelectedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }},

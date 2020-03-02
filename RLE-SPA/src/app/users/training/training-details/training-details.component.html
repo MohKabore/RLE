@@ -60,7 +60,7 @@
               <td>:</td>
               <td>
                 <b>
-                  {{class.regionName}}<span *ngIf="class.departmentId">/{{class.departmentName}}</span>
+                <span *ngIf="class.departmentId">{{class.departmentName}}</span>
                   <span *ngIf="class.cityId">/{{class.cityName}}</span>
                 </b>
               </td>
@@ -100,13 +100,15 @@
             <tr>
               <td class="text-center" colspan="3">
                 <hr>
-                <button type="button" [routerLink]="['/addParticipant/', class.id]"
-                  *appHasRole="['Admin', 'Maintenancier', 'AgentHotline']" title="ajouter participant" size="sm" mdbBtn
-                  color="success" mdbWavesEffect><i class="fa fa-plus"></i></button>
+                <button *ngIf="class.status===0" type="button" [routerLink]="['/addParticipant/', class.id]"  title="ajouter participant" size="sm" mdbBtn
+                  color="success" mdbWavesEffect  ><i class="fa fa-plus"></i></button>
                 <button type="button" [routerLink]="['/participants/', class.id]" title="liste des participants"
                   size="sm" mdbBtn color="light" mdbWavesEffect><i class="fa fa-user"></i></button>
-                <button type="button" title="modifier" (click)="basicModal.show();showModal(class)" size="sm" mdbBtn
+                <button *ngIf="class.status===0" type="button" title="modifier" (click)="basicModal.show();showModal(class)" size="sm" mdbBtn
                   color="success" mdbWavesEffect><i class="fa fa-edit"></i></button>
+                  <button type="button" *ngIf="class.totalParticipants>0 && class.status===0"
+                  title="cloturer la formation" size="sm"  (click)="closeTraining(class.id,i)" mdbBtn color="primary" mdbWavesEffect><i
+                    class="fas fa-hourglass-end"></i></button>
                 <button type="button" *ngIf="class.totalParticipants===0" (click)="deleteTrainingClass(class.id,i)"
                   title="ajouter supprimer" size="sm" mdbBtn color="danger" mdbWavesEffect><i
                     class="fa fa-trash"></i></button>

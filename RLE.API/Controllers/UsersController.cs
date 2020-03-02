@@ -234,6 +234,7 @@ namespace RLE.API.Controllers
                     CityName = classToCreate.City?.Name,
                     CityId = classToCreate.CityId,
                     DepartmentId = classToCreate.DepartmentId,
+
                     RegionId = classToCreate.RegionId,
                     StartDate = classToCreate.StartDate.ToString("dd/MM/yyyy", frC),
                     EndDate = classToCreate.EndDate.ToString("dd/MM/yyyy", frC),
@@ -314,6 +315,16 @@ namespace RLE.API.Controllers
             return Ok(maints);
         }
 
+        [HttpGet("{regionId}/RegionTrainings")]
+        public async Task<IActionResult> RegionTrainings(int regionId)
+        {
+            var trainings = await _context.Trainings.Where(a => a.RegionId == regionId && a.Active == 1)
+                                                    .Include(a => a.TrainingClasses)
+                                                    .ToListAsync();
+            return Ok(trainings);
+        }
+
+
         [HttpGet("{regionId}/GetTrainingClassesByRegionId")]
         public async Task<IActionResult> GetTrainingClassesByRegionId(int regionId)
         {
@@ -328,9 +339,10 @@ namespace RLE.API.Controllers
                     Name = tr.Name,
                     Description = tr.Description,
                     Id = tr.Id,
-                    TotalClasses = tr.TrainingClasses.Where(a=>a.Active==true).Count()
+                    RegionId = Convert.ToInt32(tr.RegionId),
+                    TotalClasses = tr.TrainingClasses.Where(a => a.Active == true).Count()
                 };
-                var classIds = tr.TrainingClasses.Where(a=>a.Active == true).Select(a => a.Id);
+                var classIds = tr.TrainingClasses.Where(a => a.Active == true).Select(a => a.Id);
                 var trIds = await _context.TrainerClasses.Where(a => classIds.Contains(a.TrainingClassId))
                                                 .Select(a => a.TrainerId)
                                                 .Distinct()
@@ -348,6 +360,48 @@ namespace RLE.API.Controllers
             }
 
             return Ok(trainingstoReturn);
+        }
+
+        [HttpGet("{trainingId}/ClosedTrainingClasses")]
+        public async Task<IActionResult> ClosedTrainingClasses(int trainingId)
+        {
+            var trClass = await _context.TrainingClasses.Where(a => a.TrainingId == trainingId && a.Active == true && a.Status == 1)
+                                                                .Include(a => a.Region)
+                                                                .Include(a => a.Department)
+                                                                .Include(a => a.City)
+                                                                .ToListAsync();
+            if (trClass.Count() > 0)
+            {
+                var trainingClasses = new List<TrainingClassDetailDto>();
+                CultureInfo frC = new CultureInfo("fr-FR");
+                foreach (var trC in trClass)
+                {
+                    // liste des formateurs
+                    var trDetail = new TrainingClassDetailDto
+                    {
+                        Id = trC.Id,
+                        Name = trC.Name,
+                        TrainingId = trC.TrainingId,
+                        RegionName = trC.Region.Name,
+                        DepartmentName = trC.Department?.Name,
+                        CityName = trC.City?.Name,
+                        CityId = trC.CityId,
+                        Active = trC.Active,
+                        Status = trC.Status,
+                        DepartmentId = trC.DepartmentId,
+                        RegionId = trC.RegionId,
+                        StartDate = trC.StartDate.ToString("dd/MM/yyyy", frC),
+                        EndDate = trC.EndDate.ToString("dd/MM/yyyy", frC),
+                        // Participants = new List<UserForListDto>()
+                        // Trainers = _mapper.Map<List<UserForListDto>>(trainers),
+                        // TotalTrainers = trainers.Count()
+                    };
+                    trainingClasses.Add(trDetail);
+                }
+                return Ok(trainingClasses);
+            }
+            return NotFound();
+
         }
         [HttpGet("{trainingId}/GetTrainingDetails")]
         public async Task<IActionResult> GetTrainingDetails(int trainingId)
@@ -390,6 +444,8 @@ namespace RLE.API.Controllers
                         DepartmentName = trClass.Department?.Name,
                         CityName = trClass.City?.Name,
                         CityId = trClass.CityId,
+                        Active = trClass.Active,
+                        Status = trClass.Status,
                         DepartmentId = trClass.DepartmentId,
                         RegionId = trClass.RegionId,
                         TrainerIds = trainers.Select(a => a.Id).ToList(),
@@ -402,6 +458,9 @@ namespace RLE.API.Controllers
                     trainingToReturn.TotalClasses = +1;
                     trainingToReturn.TrainingClasses.Add(trDetail);
                 }
+                var tt = trainingToReturn.TrainingClasses.Select(t => t.TrainerIds).Distinct();
+                trainingToReturn.TotalTrainers = tt.ToList().Distinct().Count();
+                trainingToReturn.TotalParticipants = trainingToReturn.TrainingClasses.Sum(a => a.TotalParticipants);
                 return Ok(trainingToReturn);
             }
 
@@ -836,11 +895,13 @@ namespace RLE.API.Controllers
             var participants = await _context.EmployeeClasses.Where(a => a.TrainingClassId == trainingClassId).ToListAsync();
             var userIds = participants.Select(a => a.EmployeeId).ToList();
             var users = await _context.Users.Include(p => p.TypeEmp)
-                                                       .Include(p => p.Region)
-                                                       .Include(p => p.Department)
-                                                       .Include(p => p.ResCity)
-                                                       .Where(t => userIds.Contains(t.Id))
-                                                       .ToListAsync();
+                                                        .Include(p => p.Region)
+                                                        .Include(p => p.Department)
+                                                        .Include(p => p.ResCity)
+                                                        .Where(p => userIds.Contains(p.Id))
+                                                        .OrderBy(p => p.LastName)
+                                                        .ThenBy(p => p.FirstName)
+                                                        .ToListAsync();
             if (users.Count() > 0)
             {
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
@@ -852,8 +913,9 @@ namespace RLE.API.Controllers
         [HttpPut("{trainingClassId}/DeleteTrainingClass/{insertUserId}")]
         public async Task<IActionResult> DeleteTrainingClass(int trainingClassId, int insertUserId)
         {
-            var trainingClass = await _context.TrainingClasses.FirstOrDefaultAsync(p=>p.Id == trainingClassId);
-            if(trainingClass != null) {
+            var trainingClass = await _context.TrainingClasses.FirstOrDefaultAsync(p => p.Id == trainingClassId);
+            if (trainingClass != null)
+            {
                 trainingClass.Active = false;
                 var uh = new UserHistory
                 {
@@ -863,14 +925,173 @@ namespace RLE.API.Controllers
                     UserHistoryTypeId = _config.GetValue<int>("AppSettings:DeleteTrainingClassHistorytypeId")
                 };
                 _repo.Add(uh);
-                if(await _repo.SaveAll())
-                return Ok();
+                if (await _repo.SaveAll())
+                    return Ok();
 
                 return BadRequest();
 
             }
             return NotFound();
         }
+        [HttpPut("{trainingClassId}/CloseTrainingClass/{insertUserId}")]
+        public async Task<IActionResult> CloseTrainingClass(int trainingClassId, int insertUserId)
+        {
+            var trainingClass = await _context.TrainingClasses.FirstOrDefaultAsync(t => t.Id == trainingClassId);
+            if (trainingClass != null)
+            {
+                var participants = await _context.EmployeeClasses.Include(e => e.Employee)
+                                                                 .Where(c => c.TrainingClassId == trainingClassId)
+                                                                 .Select(c => c.Employee)
+                                                                 .ToListAsync();
+                foreach (var user in participants)
+                {
+                    user.Trained = true;
+                    _repo.Update(user);
+                }
+
+                trainingClass.Status = 1;
+                _repo.Update(trainingClass);
+                var uh = new UserHistory
+                {
+                    InsertUserId = insertUserId,
+                    TrainingClassId = trainingClassId,
+                    TrainingId = trainingClass.TrainingId,
+                    UserHistoryTypeId = _config.GetValue<int>("AppSettings:CloseTrainingClassHistorytypeId")
+                };
+                _repo.Add(uh);
+                if (await _repo.SaveAll())
+                    return Ok();
+
+                return BadRequest();
+            }
+            return NotFound();
+        }
+
+        [HttpGet("TrainedUsers/{regionId}/{trainingId}/{trainingClassId}")]
+        public async Task<IActionResult> TrainedUsers(int regionId, int? trainingId, int? trainingClassId)
+        {
+            var employeeClasses = await _context.EmployeeClasses.Include(t => t.TrainingClass)
+                                                                .Include(t => t.Employee)
+                                                                .Include(t => t.Employee.Region)
+                                                                .Include(t => t.Employee.Department)
+                                                                .Include(t => t.Employee.ResCity)
+                                                                .Where(t => t.TrainingClass.RegionId == regionId && t.Employee.Trained == true)
+                                                                .ToListAsync();
+            if (trainingClassId != null)
+            {
+                var users = employeeClasses.Where(t => t.TrainingClassId == trainingClassId)
+                                            .Select(t => t.Employee);
+                var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+                return Ok(usersToReturn);
+            }
+            else if (trainingId != null)
+            {
+                var users = employeeClasses.Where(t => t.TrainingClass.TrainingId == trainingId)
+                                                        .Select(t => t.Employee);
+                var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+                return Ok(usersToReturn);
+            }
+
+            else
+            {
+                var users = employeeClasses.Select(t => t.Employee);
+                var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+                return Ok(usersToReturn);
+            }
+        }
+
+        [HttpPost("SelectUsers/{insertUserId}")]
+        public async Task<IActionResult> SelectUsers(List<int> userIds, int insertUserId)
+        {
+            foreach (var userId in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userId);
+                if (user != null)
+                    user.Selected = true;
+                _repo.Update(user);
+                var uh = new UserHistory
+                {
+                    InsertUserId = insertUserId,
+                    UserId = userId,
+                    // TrainingClassId = trainingClassId,
+                    UserHistoryTypeId = _config.GetValue<int>("AppSettings:SelectUserHistorytypeId")
+                };
+                _repo.Add(uh);
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+            return BadRequest();
+        }
+
+        [HttpPost("UnSelectUsers/{insertUserId}")]
+        public async Task<IActionResult> UnSelectUsers(List<int> userIds, int insertUserId)
+        {
+            foreach (var userId in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userId);
+                if (user != null)
+                    user.Selected = false;
+                _repo.Update(user);
+                var uh = new UserHistory
+                {
+                    InsertUserId = insertUserId,
+                    UserId = userId,
+                    // TrainingClassId = trainingClassId,
+                    UserHistoryTypeId = _config.GetValue<int>("AppSettings:UnSelectUserHistorytypeId")
+                };
+                _repo.Add(uh);
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+            return BadRequest();
+        }
+
+        [HttpPost("ReserveUsers/{insertUserId}")]
+        public async Task<IActionResult> ReserveUsers(List<int> userIds, int insertUserId)
+        {
+            foreach (var userId in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userId);
+                if (user != null)
+                    user.Reserved = true;
+                _repo.Update(user);
+                var uh = new UserHistory
+                {
+                    InsertUserId = insertUserId,
+                    UserId = userId,
+                    // TrainingClassId = trainingClassId,
+                    UserHistoryTypeId = _config.GetValue<int>("AppSettings:ReserveUserHistorytypeId")
+                };
+                _repo.Add(uh);
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+            return BadRequest();
+        }
+
+        [HttpPost("UnReserveUsers/{insertUserId}")]
+        public async Task<IActionResult> UnReserveUsers(List<int> userIds, int insertUserId)
+        {
+            foreach (var userId in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userId);
+                if (user != null)
+                    user.Reserved = false;
+                _repo.Update(user);
+                var uh = new UserHistory
+                {
+                    InsertUserId = insertUserId,
+                    UserId = userId,
+                    // TrainingClassId = trainingClassId,
+                    UserHistoryTypeId = _config.GetValue<int>("AppSettings:UnReserveUserHistorytypeId")
+                };
+                _repo.Add(uh);
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+            return BadRequest();
+        }
 
     }
+
 }

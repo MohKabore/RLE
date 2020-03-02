@@ -132,6 +132,7 @@ export class PreSelectedUsersComponent implements OnInit {
 
   searchEmp() {
     const searchValues = this.searchForm.value;
+    searchValues.regionId = this.regionId;
     this.users = [];
     this.noResult = '';
     this.usersDiv = true;

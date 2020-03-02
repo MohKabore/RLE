@@ -986,6 +986,44 @@ namespace RLE.API.Controllers
 
         }
 
+        [HttpPost("AddImportedUsers/{insertUserId}")]
+        public async Task<IActionResult> AddImportedUsers(List<UserForRegisterDto> usersForRegisterDto, int insertUserId)
+        {
+            foreach (var userForRegisterDto in usersForRegisterDto)
+            {
+                var userName = Guid.NewGuid();
+                var userToCreate = _mapper.Map<User>(userForRegisterDto);
+                userToCreate.PreSelected = true;
+                userToCreate.Selected = false;
+                userToCreate.UserName = userName.ToString();
+                userToCreate.ValidationCode = userName.ToString();
+                var result = await _userManager.CreateAsync(userToCreate, password);
+
+
+                // var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+
+                if (result.Succeeded)
+                {
+                    var uh = new UserHistory
+                    {
+                        InsertUserId = insertUserId,
+                        UserId = userToCreate.Id,
+                        UserHistoryTypeId = _config.GetValue<int>("AppSettings:AddUserHistorytypeId")
+                    };
+                    _repo.Add(uh);
+                }
+
+
+            }
+
+            if(await _repo.SaveAll())
+            return Ok();
+
+
+            return BadRequest();
+
+        }
+
 
         [HttpPost("{userId}/AddPhotoForUser")]
         public async Task<IActionResult> AddPhotoForUser(int userId,

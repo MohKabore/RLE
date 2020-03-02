@@ -47,6 +47,7 @@ import { RegistrationDetailsComponent } from './Home/opDetails/registration-deta
 import { RegistrationLocalitiesComponent } from './users/registration-localities/registration-localities.component';
 import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
 import { TrainingClassUsersComponent } from './users/training/training-class-users/training-class-users.component';
+import { TrainedUsersComponent } from './users/training/trained-users/trained-users.component';
 registerLocaleData(fr);
 
 export function tokenGetter() {
@@ -71,7 +72,8 @@ export function tokenGetter() {
     RegistrationDetailsComponent,
     RegistrationLocalitiesComponent,
     PreSelectedUsersComponent,
-    TrainingClassUsersComponent
+    TrainingClassUsersComponent,
+    TrainedUsersComponent
   ],
   imports: [
     CommonModule,

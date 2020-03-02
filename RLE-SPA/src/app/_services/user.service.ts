@@ -149,8 +149,20 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/' + trainingid + '/GetTrainingDetails');
   }
 
+  getTrainedUsers(regionId, trainingId, trainingClassId) {
+    return this.http.get(this.baseUrl + 'users/TrainedUsers/' + regionId + '/' + trainingId + '/' + trainingClassId);
+  }
+
+  getClosedTrainingClasses(trainingid: number) {
+    return this.http.get(this.baseUrl + 'users/' + trainingid + '/ClosedTrainingClasses');
+  }
+
   getTrainingsBYRegionId(regionId: number) {
     return this.http.get(this.baseUrl + 'users/' + regionId + '/GetTrainingClassesByRegionId');
+  }
+
+  getRegionTrainings(regionId: number) {
+    return this.http.get(this.baseUrl + 'users/' + regionId + '/RegionTrainings');
   }
   searchEmps(params) {
     return this.http.post(this.baseUrl + 'users/SearchNewEmps', params);
@@ -229,8 +241,28 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/TrainingClassParticipants/' + trainingClassId);
   }
 
-  deleteTrainingClass(trainingClassid,  insertUserId) {
+  deleteTrainingClass(trainingClassid, insertUserId) {
     return this.http.put(this.baseUrl + 'users/' + trainingClassid + '/DeleteTrainingClass/' + insertUserId, {});
+  }
+
+  closeTrainingClass(trainingClassid, insertUserId) {
+    return this.http.put(this.baseUrl + 'users/' + trainingClassid + '/CloseTrainingClass/' + insertUserId, {});
+  }
+
+  selectUsers(userIds, insertUserId) {
+    return this.http.post(this.baseUrl + 'users/SelectUsers/'  + insertUserId, userIds);
+  }
+
+  unSelectUsers(userIds, insertUserId) {
+    return this.http.post(this.baseUrl + 'users/UnSelectUsers/'  + insertUserId, userIds);
+  }
+
+  reserveUsers(userIds, insertUserId) {
+    return this.http.post(this.baseUrl + 'users/ReserveUsers/'  + insertUserId, userIds);
+  }
+
+  unReserveUsers(userIds, insertUserId) {
+    return this.http.post(this.baseUrl + 'users/UnReserveUsers/'  + insertUserId, userIds);
   }
 
 }

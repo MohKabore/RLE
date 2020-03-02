@@ -139,7 +139,12 @@ namespace RLE.API.Data
                     new UserHistoryType{Name="Modification Salle formation"},// position 9
                     new UserHistoryType{Name="Suppression Salle de formation"},// position 10
                     new UserHistoryType{Name="Ajouter utilisateur a une salle de formation"},// position 11
-                    new UserHistoryType{Name="Rétirer utilisateur a une salle de formation"}// position 10
+                    new UserHistoryType{Name="Rétirer utilisateur a une salle de formation"},// position 12
+                    new UserHistoryType{Name="Cloturer a une salle de formation"},// position 13
+                    new UserHistoryType{Name="Selectionnner Utilisateur"},// position 14
+                    new UserHistoryType{Name="DeSelectionner itulisateur"},// position 15
+                    new UserHistoryType{Name="Reserver Utilisateur"},// position 16
+                    new UserHistoryType{Name="Annuler reservation Utilisateur"}// position 17
                 };
                 context.AddRange(uht);
 

@@ -48,6 +48,7 @@ export class User {
   roles?: string[];
   preSelected: boolean;
   selected: boolean;
+  reserved: boolean;
   active: boolean;
 
 

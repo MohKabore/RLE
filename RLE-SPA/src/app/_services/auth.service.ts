@@ -348,4 +348,9 @@ export class AuthService {
     return this.http.post(this.baseUrl + 'MaintenancierExist', maintenancier);
   }
 
+  addImportedUsers(usersToSave, currentUserId) {
+    return this.http.post(this.baseUrl + 'AddImportedUsers/' + currentUserId, usersToSave);
+  }
+
+
 }

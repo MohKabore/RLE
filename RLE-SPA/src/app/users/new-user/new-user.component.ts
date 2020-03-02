@@ -4,6 +4,8 @@ import { Utils } from 'src/app/shared/utils';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
+import * as XLSX from 'xlsx';
+
 
 
 @Component({
@@ -16,6 +18,7 @@ export class NewUserComponent implements OnInit {
   birthDateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   cniMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/];
   userForm: FormGroup;
+  searchForm: FormGroup;
   user: any;
   regions: any = [];
   depts: any = [];
@@ -38,6 +41,12 @@ export class NewUserComponent implements OnInit {
   isMaintenancier = false;
   isHotliner = false;
   regionId: number;
+  importedUsers: any = [];
+  showExport = false;
+  headElements = ['#', 'nom', 'Prenoms', 'Contact 1', 'Contact 2', 'Email'];
+  isSelected: any = [];
+
+
 
   constructor(private fb: FormBuilder, private authService: AuthService, private alertify: AlertifyService) { }
 
@@ -81,6 +90,15 @@ export class NewUserComponent implements OnInit {
       passport: [''],
       iddoc: ['']
     });
+  }
+
+  select(e) {
+    const idx = this.isSelected.indexOf(e);
+    if (idx === -1) {
+      this.isSelected = [...this.isSelected, e];
+    } else {
+      this.isSelected.splice(idx);
+    }
   }
 
   verifyIfExist() {
@@ -181,10 +199,36 @@ export class NewUserComponent implements OnInit {
     });
   }
 
+  getExportDepartments() {
+    this.depts = [];
+    this.cities = [];
+    if (!this.isMaintenancier) {
+      this.regionId = this.searchForm.value.regionId;
+    }
+    this.authService.getInscDeptsByRegionid(this.regionId).subscribe((res: any[]) => {
+      for (let i = 0; i < res.length; i++) {
+        const element = { value: res[i].id, label: res[i].name };
+        this.depts = [...this.depts, element];
+      }
+    });
+  }
+
+
 
   getCities() {
     this.cities = [];
     const departmentId = this.userForm.value.departmentId;
+    this.authService.getInscCitiesByDeptid(departmentId).subscribe((res: any[]) => {
+      for (let i = 0; i < res.length; i++) {
+        const element = { value: res[i].id, label: res[i].name };
+        this.cities = [...this.cities, element];
+      }
+    });
+  }
+
+  getExportCities() {
+    this.cities = [];
+    const departmentId = this.searchForm.value.departmentId;
     this.authService.getInscCitiesByDeptid(departmentId).subscribe((res: any[]) => {
       for (let i = 0; i < res.length; i++) {
         const element = { value: res[i].id, label: res[i].name };
@@ -262,6 +306,38 @@ export class NewUserComponent implements OnInit {
 
 
   }
+  saveImportedUsers() {
+    if (confirm('voulez-vous vraiment enregistrer ses informations?')) {
+      this.waitDiv = true;
+      const dataToSave = this.importedUsers.filter(s => s.selected === true);
+      const formData = this.searchForm.value;
+      for (let i = 0; i < dataToSave.length; i++) {
+        const element = dataToSave[i];
+        element.typeEmpId = formData.typeEmpId;
+        element.regionId = formData.regionId;
+        element.departmentId = formData.departmentId;
+        element.resCityId = formData.resCityId;
+      }
+      this.authService.addImportedUsers(dataToSave, this.authService.decodedToken.nameid).subscribe((userid: number) => {
+        this.alertify.success('enregistrement terminé...');
+        this.importedUsers = this.importedUsers.filter(a => a.selected === false);
+        this.isSelected = [];
+        this.userForm.reset();
+        if (this.isMaintenancier) {
+          // this.getDepartments();
+          this.createUserForms();
+        } else {
+          this.getRegions();
+
+        }
+        this.waitDiv = false;
+      });
+    }
+
+
+  }
+
+
 
   addPhoto(userId) {
     const formData = new FormData();
@@ -277,6 +353,62 @@ export class NewUserComponent implements OnInit {
     });
   }
 
+  onFileChange(ev) {
+    let workBook = null;
+    let jsonData = null;
+    const reader = new FileReader();
+    const file = ev.target.files[0];
+    reader.onload = (event) => {
+      const data = reader.result;
+      workBook = XLSX.read(data, { type: 'binary' });
+      jsonData = workBook.SheetNames.reduce((initial, name) => {
+        const sheet = workBook.Sheets[name];
+        initial[name] = XLSX.utils.sheet_to_json(sheet);
+        return initial;
+      }, {});
+
+      this.importedUsers = [];
+      const d = jsonData;
+      // debugger;
+      for (let i = 0; i < d.at.length; i++) {
+        const la_ligne = d.at[i];
+        const element: any = {};
+        element.lastName = la_ligne.nom;
+        element.firstName = la_ligne.prenoms,
+          element.phoneNumber = la_ligne.contact1,
+          element.secondPhoneNumber = la_ligne.contact2,
+          element.email = la_ligne.email;
+        element.selected = false;
+
+        this.importedUsers = [...this.importedUsers, element];
+      }
+      this.showExport = true;
+      if (this.authService.isMaintenancier()) {
+        this.getDepartments();
+      } else {
+        this.getRegions();
+      }
+      this.createSearchForms();
+
+      // this.setDownload(dataString);
+    };
+    reader.readAsBinaryString(file);
+  }
+
+  createSearchForms() {
+    this.searchForm = this.fb.group({
+      resCityId: [null, Validators.required],
+      departmentId: [null, Validators.required],
+      regionId: [this.regionId],
+      typeEmpId: [null, Validators.required],
+      empName: ['']
+    });
+  }
+
+  cancel() {
+    this.showExport = false;
+    this.isSelected = [];
+  }
 
 
 }

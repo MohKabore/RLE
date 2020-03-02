@@ -6,14 +6,27 @@
   </mdb-card>
 </div>
 <div class="row container animated bounceInDown mt-4" *ngIf="!waitDiv">
-  <div class="col-md-12">
+
+  <div class="col-md-12" *ngIf="!showExport">
 
 
     <mdb-card class="p-2">
       <mdb-card-body>
         <mdb-card-title>
-          <h4 class="text-center"> <p class="text-title">ENREGISTREMENT MEMBRE DU PERSONNEL</p> </h4>
+          <h4 class="text-center">
+            <p class="text-title">ENREGISTREMENT MEMBRE DU PERSONNEL</p>
+          </h4>
         </mdb-card-title>
+        <form>
+          <div class="file-field md-form">
+            <div mdbBtn color="primary" size="sm" class="waves-light" mdbWavesEffect>
+              <span>importer</span>
+              <input type="file" mdbFileSelect (change)="onFileChange($event)" accept=".xlsx, .xls">
+            </div>
+
+          </div>
+        </form>
+        <hr>
         <form style="color: #757575;" [formGroup]="userForm">
           <div class="row">
             <div class="col-md-2">
@@ -59,8 +72,8 @@
                 </div>
                 <div class="col-md-3">
                   <div class="md-form form-sm mt-2 mb-0">
-                      <input type="text" class="form-control" id="dateofBirth" formControlName="dateOfBirth"
-                      [textMask]="{mask: birthDateMask}" mdbInput> 
+                    <input type="text" class="form-control" id="dateofBirth" formControlName="dateOfBirth"
+                      [textMask]="{mask: birthDateMask}" mdbInput>
                     <label for="dateofBirth">date de naissance (JJ/MM/AAAA)</label>
                   </div>
                 </div>
@@ -157,8 +170,8 @@
 
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="regionId" [options]="regions" [disabled]="isMaintenancier" placeholder="region*" formControlName="regionId"
-                      (ngModelChange)="getDepartments()">
+                    <mdb-select id="regionId" [options]="regions" [disabled]="isMaintenancier" placeholder="region*"
+                      formControlName="regionId" (ngModelChange)="getDepartments()">
                     </mdb-select>
                   </div>
                 </div>
@@ -197,7 +210,90 @@
     </mdb-card>
 
   </div>
+
+  <div class="col-md-12 animated bounceInUp mt-5" *ngIf="showExport">
+    <mdb-card class="row">
+      <mdb-card-body>
+        <form style="color: #757575;" [formGroup]="searchForm">
+          <div class="row">
+            <div class="col-md-2">
+              <div class="md-form form-sm m-0">
+                <mdb-select id="typeEmpId2" [options]="typeEmps" placeholder="Poste" formControlName="typeEmpId">
+                </mdb-select>
+              </div>
+            </div>
+            <div class="col-md-2" *ngIf="regions.length>0">
+              <div class="md-form form-sm m-0">
+                <mdb-select id="regionId2" [options]="regions" [disabled]="isMaintenancier" placeholder="region"
+                  formControlName="regionId" (ngModelChange)="getExportDepartments()">
+                </mdb-select>
+              </div>
+            </div>
+  
+            <div class="col-md-2">
+              <div class="md-form form-sm m-0">
+                <mdb-select id="departmentId2" [options]="depts" placeholder="département" formControlName="departmentId"
+                  (ngModelChange)="getExportCities()">
+                </mdb-select>
+              </div>
+            </div>
+  
+            <div class="col-md-2">
+              <div class="md-form form-sm  m-0">
+                <mdb-select id="resCityId2" [options]="cities" placeholder="ville ou commune" formControlName="resCityId">
+                </mdb-select>
+              </div>
+            </div>
+  
+            <div class="col-md-4">
+              <div class="md-form form-sm  m-0">
+                <button title="enregistrer" (click)="saveImportedUsers()" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
+                  [disabled]=" !searchForm.valid || isSelected.length===0">ajouter </button>
+                <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="cancel()">annuler</button>
+              </div>
+            </div>
+  
+          </div>
+        </form>
+      </mdb-card-body>
+    </mdb-card>
+  
+
+    <mdb-card class="mt-2">
+      <mdb-card-body>
+        <span>-{{importedUsers.length}} ligne(s) trouvée(s)</span> <br>
+        <span>-{{isSelected.length}} ligne(s) sélectionnée(s)</span>
+        
+          <table style="width: 100%;" id="tableSortExample" mdbTable mdbTableScroll scrollY="true" maxHeight="400" bordered="true" class="z-depth-1 mt-1">
+            <thead>
+              <tr>
+                <th *ngFor="let head of headElements; let i = index" aria-controls="tableSortExample" scope="col"
+                  [mdbTableSort]="importedUsers" [sortBy]="headElements[i]">{{head | titlecase}}
+                  <!-- <mdb-icon fas icon="sort"></mdb-icon> -->
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let el of importedUsers; let i = index">
+                <th scope="row">
+                  <mdb-checkbox [(ngModel)]="el.selected" (change)="select(i)">{{i+1}}</mdb-checkbox>
+                </th>
+                <td>{{el.lastName}}</td>
+                <td>{{el.firstName}}</td>
+                <td>{{el.phoneNumber}}</td>
+                <td>{{el.secondPhoneNumber}}</td>
+                <td>{{el.Email}}</td>
+              </tr>
+            </tbody>
+          </table>
+      </mdb-card-body>
+    </mdb-card>
+  
+  </div>
 </div>
+
+
+
 
 
 <div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
@@ -213,7 +309,8 @@
       <div class="modal-body">
         <b *ngIf="!userExist">Etes vous sûre de vouloir enregistrer ???</b>
         <div *ngIf="userExist">
-          <p class="text-danger">Désolé ... certaines de vous informations importantes existent déja pour un profil enrégistré</p>
+          <p class="text-danger">Désolé ... certaines de vous informations importantes existent déja pour un profil
+            enrégistré</p>
         </div>
       </div>
       <div class="modal-footer">

@@ -13,6 +13,7 @@
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/detailInscription']" *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']" >Point Inscription</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/preSelection']" *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']" >pré-selection</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/formations']" *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']" >formations</a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/trainingResult']" *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']" >point formations</a>
       </div>
     </li>
     

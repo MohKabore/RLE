@@ -160,5 +160,14 @@ export class TrainingDetailsComponent implements OnInit {
     }
   }
 
+  closeTraining(trainingClassId, idx) {
+    if (confirm('voulez-vous vraiment cloturer cette salle ?')) {
+      this.userService.closeTrainingClass(trainingClassId, this.currentUserId).subscribe(() => {
+        this.training.trainingClasses[idx].status = 1;
+        this.alertify.success('formation cloturée...');
+      });
+    }
+  }
+
 
 }
