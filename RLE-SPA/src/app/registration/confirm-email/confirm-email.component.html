@@ -8,7 +8,7 @@
     </mdb-card>
   </div>
   <div class="d-flex justify-content-center animated jackInTheBox mt-4" *ngIf="!waitDiv">
-    <div class="col-md-6">
+    <div class="col-md-8">
       <mdb-card>
         <mdb-card-header class="info-color white-text text-center py-4">
           <h5>
@@ -21,30 +21,56 @@
             <div class="col-md12"><hr></div>
           </h5>
           <form style="color: #757575;" [formGroup]="loginForm" (ngSubmit)="submitForm()">
-            <div class="md-form">
-              <input type="text" class="form-control" (blur)="userNameVerification()" id="userName" formControlName="userName" class="form-control"
-                mdbInput>
-              <label for="userName">nom d'utilisateur</label>
-              <span *ngIf="userNameExist" class="text-danger">nom d'utilisateur déja utilisé... Veuillez reéssayer un autre</span>  </div>
-            <div class="md-form">
-              <input type="password" mdbValidate id="password" minlength="4" (change)="updateConfirmValidator()" formControlName="password" class="form-control" mdbInput>
-              <label for="password">mot de passe</label>  
-              <span *ngIf="loginForm.get('password').dirty && loginForm.get('password').errors" class="text-danger">le mot de passe doit comporter au moins 4 caractères.</span>
-            </div>
-            <div class="md-form">
-              <input type="password" class="form-control" mdbValidate id="checkPassword" formControlName="checkPassword" class="form-control" mdbInput>
-              <label for="checkPassword">confirmer le mot de passe</label>
-  
-              <div class="text-danger" *ngIf="loginForm.get('checkPassword').dirty && loginForm.get('checkPassword').errors">
-                <span *ngIf="loginForm.get('checkPassword').hasError('required')">confirmer le mot de passe!</span>
-                <span *ngIf="loginForm.get('checkPassword').hasError('confirm')">
-                  les deux mots de passe que vous entrez sont differents!
-                </span>
+            <div class="row">
+              <div class="col-md-4">
+                <div class="font-weight-300 mb-2  d-flex justify-content-center">photo de profil</div>
+                <div class="row">
+                  <div class="col-md-12 d-flex justify-content-center mb-2">
+                    <div class="file-path-wrapper m-0 p-1">
+                      <img [src]="userPhotoUrl || '../../../assets/user.png'" style="width: 100px; height: 100px;"
+                        class="rounded-circle imgUpload" alt="">
+                    </div>
+                  </div>
+                  <div class="col-md-12 d-flex justify-content-center">
+                    <div class="m-0">
+                      <div class="file-field md-form m-0">
+                        <div mdbBtn color="light" size="sm" class="waves-light" mdbWavesEffect>
+                          <span>choisir la photo</span>
+                          <input type="file" accept='image/*' mdbFileSelect (change)="parentImgResult($event)">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-8">
+                <div class="md-form">
+                  <input type="text" class="form-control" (blur)="userNameVerification()" id="userName" formControlName="userName" class="form-control"
+                    mdbInput>
+                  <label for="userName">nom d'utilisateur</label>
+                  <span *ngIf="userNameExist" class="text-danger">nom d'utilisateur déja utilisé... Veuillez reéssayer un autre</span>  </div>
+                <div class="md-form">
+                  <input type="password" mdbValidate id="password" minlength="4" (change)="updateConfirmValidator()" formControlName="password" class="form-control" mdbInput>
+                  <label for="password">mot de passe</label>  
+                  <span *ngIf="loginForm.get('password').dirty && loginForm.get('password').errors" class="text-danger">le mot de passe doit comporter au moins 4 caractères.</span>
+                </div>
+                <div class="md-form">
+                  <input type="password" class="form-control" mdbValidate id="checkPassword" formControlName="checkPassword" class="form-control" mdbInput>
+                  <label for="checkPassword">confirmer le mot de passe</label>
+      
+                  <div class="text-danger" *ngIf="loginForm.get('checkPassword').dirty && loginForm.get('checkPassword').errors">
+                    <span *ngIf="loginForm.get('checkPassword').hasError('required')">confirmer le mot de passe!</span>
+                    <span *ngIf="loginForm.get('checkPassword').hasError('confirm')">
+                      les deux mots de passe que vous entrez sont differents!
+                    </span>
+                  </div>
+                </div>
+                <div class="md-form d-flex justify-content-center">
+                  <button type="submit" [disabled]="!loginForm.valid || userNameExist" size="sm" mdbBtn color="primary" mdbWavesEffect>Enregistrer</button>
+                </div>
               </div>
             </div>
-            <div class="md-form d-flex justify-content-center">
-              <button type="submit" [disabled]="!loginForm.valid || userNameExist" size="sm" mdbBtn color="primary" mdbWavesEffect>Enregistrer</button>
-            </div>
+           
           </form>
         </mdb-card-body>
       </mdb-card>

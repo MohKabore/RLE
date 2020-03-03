@@ -782,11 +782,16 @@ namespace RLE.API.Controllers
                 user.Hired = true;
                 user.ValidationDate = DateTime.Now;
                 var res = await _userManager.UpdateAsync(user);
-
+                var roleName = "";
+                if(user.TypeEmpId == 1)
+                roleName = "admin";
+                else {
                 var role = await _context.Roles.FirstOrDefaultAsync(a => a.Id == user.TypeEmpId);
+                roleName = role.Name;
+                }
                 var appUser = await _userManager.Users
                     .FirstOrDefaultAsync(u => u.NormalizedUserName == user.UserName);
-                _userManager.AddToRoleAsync(appUser, role.Name).Wait();
+                _userManager.AddToRoleAsync(appUser, roleName).Wait();
 
                 if (res.Succeeded)
                 {

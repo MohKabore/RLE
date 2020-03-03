@@ -48,7 +48,7 @@ namespace RLE.API.Controllers
         {
             var users = new List<User>();
             string req = "select * from AspnetUsers where LastName + ' ' + firstName Like '%" + searchModel.EmpName + "%'" +
-            " and Active=0 and PreSelected=0 and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
+            " and Active=0  and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
             if (searchModel.RegionId != null)
                 req += "and RegionId =" + Convert.ToInt32(searchModel.RegionId);
             if (searchModel.DepartmentId != null)
@@ -118,7 +118,7 @@ namespace RLE.API.Controllers
                     {
                         toEmail = user.Email,
                         subject = "Création de compte RLE ALbatros Technologies",
-                        content = $"veuillez creer votre compte au lien suiant : <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicker ici</a>.",
+                        content = $"veuillez creer votre compte au lien suivant : <a href='{HtmlEncoder.Default.Encode(callbackUrl)}'>clicker ici</a>.",
                     };
                     var res = await _repo.SendEmail(emailForm);
                     if (res == true)

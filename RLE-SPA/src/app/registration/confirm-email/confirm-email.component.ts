@@ -18,6 +18,9 @@ export class ConfirmEmailComponent implements OnInit {
   loginForm: FormGroup;
   userNameExist = false;
   waitDiv = false;
+  userPhotoUrl = '';
+  file: File = null;
+
 
 
   constructor(private authService: AuthService, private fb: FormBuilder, private route: ActivatedRoute,
@@ -49,6 +52,31 @@ export class ConfirmEmailComponent implements OnInit {
 
   }
 
+  parentImgResult(event) {
+    this.file = <File>event.target.files[0];
+
+    // recuperation de l'url de la photo
+    const reader = new FileReader();
+    reader.onload = (e: any) => {
+      this.userPhotoUrl = e.target.result;
+    };
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  addPhoto(userId) {
+    const formData = new FormData();
+    formData.append('file', this.file, this.file.name);
+    this.authService.addUserPhoto(userId, formData).subscribe(() => {
+      this.userPhotoUrl = '';
+     // this.alertify.success('enregistrement terminé...');
+      // this.userForm.reset();
+      // this.waitDiv = false;
+    }, error => {
+      console.log(error);
+      this.waitDiv = false;
+    });
+  }
+
   resultMode(val: boolean) {
     if (val) {
       this.alertify.success('votre mot de passe a bien été enregistré');
@@ -76,6 +104,9 @@ export class ConfirmEmailComponent implements OnInit {
   submitForm(): void {
     this.waitDiv = true;
     this.authService.setUserLoginPassword(this.user.id, this.loginForm.value).subscribe(() => {
+      if (this.userPhotoUrl) {
+        this.addPhoto(this.user.id);
+      }
       // this.passwordSetingResult.emit(true);
       this.alertify.success('enregistrement terminé...');
       this.router.navigate(['home']);
