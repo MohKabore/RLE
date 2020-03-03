@@ -20,7 +20,7 @@
       <td>Localisation</td>
       <td>:</td>
       <td>
-        <b>{{trainingClass.departmentName}}/{{trainingClass.cityName}}</b>
+        <b>{{trainingClass?.departmentName}}/{{trainingClass?.cityName}}</b>
       </td>
     <tr>
       <td>
@@ -43,10 +43,13 @@
     </tr>
   </table>
 
-  <button type="button" size="sm" mdbBtn color="primary" [disabled]="participants.length===0" mdbWavesEffect (click)="basicModal.show();showDiv(true)">imprimer</button>
-  <button type="button" *ngIf="trainingClass.status===0" [disabled]="isSelected.length===0" size="sm" mdbBtn color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
-  <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect [routerLink]="['/formation/', trainingClass.trainingId]" > <i class="fa fa-arrow-left"></i> </button>
- 
+  <button type="button" size="sm" mdbBtn color="primary" [disabled]="participants.length===0" mdbWavesEffect
+    (click)="basicModal.show();showDiv(true)">imprimer</button>
+  <button type="button" *ngIf="trainingClass?.status===0" [disabled]="isSelected.length===0" size="sm" mdbBtn
+    color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
+  <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+    [routerLink]="['/formation/', trainingClass?.trainingId]"> <i class="fa fa-arrow-left"></i> </button>
+
   <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="participants.length>0">
     <thead>
       <tr>
@@ -58,7 +61,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let el of participants; let i = index">
-        <th scope="row"><mdb-checkbox [(ngModel)]="el.selected" (change)="select(el.id)">{{i+1}}</mdb-checkbox></th>
+        <th scope="row">
+          <mdb-checkbox [(ngModel)]="el.selected" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
+        </th>
         <td>{{el.lastName}}</td>
         <td>{{el.firstName}}</td>
         <td>{{el.phoneNumber}}</td>
@@ -75,59 +80,60 @@
 
 <div class="container" id="test" *ngIf="show">
   <table class="table-condensed mb-3 mt-2" style="width: 50%;">
-    <tr >
+    <tr>
       <td> <span style="font-size: 23px;">Nom de la Salle</span> </td>
       <td>:</td>
       <td>
-        <b> &nbsp;<span style="font-size: 23px;">{{trainingClass.name}}</span> </b>
+        <b> &nbsp;<span style="font-size: 23px;">{{trainingClass?.name}}</span> </b>
       </td>
     </tr>
     <tr>
-      <td ><span style="font-size: 23px;">Période </span> </td>
+      <td><span style="font-size: 23px;">Période </span> </td>
       <td>:</td>
       <td>
-        <b style="font-size: 23px;"> &nbsp;du {{trainingClass.startDate | date : 'dd-MM-yyyy'}} au
-          {{trainingClass.endDate | date : 'dd-MM-yyyy'}} </b>
+        <b style="font-size: 23px;"> &nbsp;du {{trainingClass?.startDate | date : 'dd-MM-yyyy'}} au
+          {{trainingClass?.endDate | date : 'dd-MM-yyyy'}} </b>
       </td>
     </tr>
     <tr>
       <td><span style="font-size: 23px;">Localisation</span></td>
       <td>:</td>
       <td>
-        <b style="font-size: 23px;">{{trainingClass.departmentName}}/{{trainingClass.cityName}}</b>
+        <b style="font-size: 23px;">{{trainingClass?.departmentName}}/{{trainingClass?.cityName}}</b>
       </td>
     </tr>
-    <tr  style="font-size: 23px;">
+    <tr style="font-size: 23px;">
       <td>
-        <span style="font-size: 23px;" *ngIf="trainingClass.trainers.length===1">Formateur</span>
-        <span style="font-size: 23px;"  *ngIf="trainingClass.trainers.length>1">Formateurs</span>
+        <span style="font-size: 23px;" *ngIf="trainingClass?.trainers.length===1">Formateur</span>
+        <span style="font-size: 23px;" *ngIf="trainingClass?.trainers.length>1">Formateurs</span>
       </td>
       <td>:</td>
       <td>
-        <b>&nbsp;<span style="font-size: 23px;" *ngFor="let trainer of trainingClass.trainers">{{trainer.lastName}}
-            {{trainer.firstName}} <span *ngIf="trainingClass.trainers.length>1"> - </span> </span>
+        <b>&nbsp;<span style="font-size: 23px;" *ngFor="let trainer of trainingClass?.trainers">{{trainer.lastName}}
+            {{trainer.firstName}} <span *ngIf="trainingClass?.trainers.length>1"> - </span> </span>
         </b>
       </td>
     </tr>
   </table>
 
 
-  <table mdbTable class="table-bordered"  class="z-depth-1" >
+  <table mdbTable class="table-bordered" class="z-depth-1">
     <thead>
       <tr style="border-bottom: 1px solid black;">
         <th>#</th>
-        <th style="font-size:23px;">Nom</th>
-        <th style="font-size:23px;">Prénom(s)</th>
-        <th style="font-size:23px;">Contact(s)</th>
-        <th style="font-size:23px;">Emargement</th>
+        <th style="font-size:20px;">Nom</th>
+        <th style="font-size:20px;">Prénom(s)</th>
+        <th style="font-size:20px;">Contact(s)</th>
+        <th style="font-size:20px;">Emargement</th>
       </tr>
     </thead>
     <tbody>
       <tr *ngFor="let el of participants; let i = index" style="border-bottom: 1px solid black;">
         <th scope="row">{{i+1}}</th>
-        <td><b style="font-size:23px;">{{el.lastName}}</b></td>
-        <td><b style="font-size:23px;"> {{el.firstName}}</b></td>
-        <td><b style="font-size:23px;">{{el.phoneNumber}} <span *ngIf="el.secondPhoneNumber"> / {{el.secondPhoneNumber}}</span></b></td>
+        <td><b style="font-size:20px;">{{el.lastName}}</b></td>
+        <td><b style="font-size:20px;"> {{el.firstName}}</b></td>
+        <td><b style="font-size:20px;">{{el.phoneNumber}} <span *ngIf="el.secondPhoneNumber"> /
+              {{el.secondPhoneNumber}}</span></b></td>
         <td></td>
       </tr>
     </tbody>
@@ -137,30 +143,30 @@
 </div>
 
 <div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide(); hideDiv()">
-                    <span aria-hidden="true">×</span>
-                </button>
-                <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
-            </div>
-            <div class="modal-body">
-               
-                <h3 *ngIf="!showConfirmation">Imprimer cette liste ?</h3>
-                <h3 *ngIf="showConfirmation">confirmez-vous l'enregistrement du rétrait  ?</h3>
-                <div class="modal-footer">
-                    <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
-                        (click)="basicModal.hide(); hideDiv()" mdbWavesEffect>annuler</button>
-                    <button type="button" *ngIf="!showConfirmation" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
-                        (click)="[basicModal.hide(),captureScreen()]">imprimer!</button>
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide(); hideDiv()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
+      </div>
+      <div class="modal-body">
 
-                        <button type="button" *ngIf="showConfirmation" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect
-                        (click)="[basicModal.hide(),removeUsers()]">enregistrer!</button>
-                </div>
-            </div>
+        <h3 *ngIf="!showConfirmation">Imprimer cette liste ?</h3>
+        <h3 *ngIf="showConfirmation">confirmez-vous l'enregistrement du rétrait ?</h3>
+        <div class="modal-footer">
+          <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+            (click)="basicModal.hide(); hideDiv()" mdbWavesEffect>annuler</button>
+          <button type="button" *ngIf="!showConfirmation" mdbBtn color="primary" size="sm" class="relative waves-light"
+            mdbWavesEffect (click)="[basicModal.hide(),captureScreen()]">imprimer!</button>
 
+          <button type="button" *ngIf="showConfirmation" mdbBtn color="primary" size="sm" class="relative waves-light"
+            mdbWavesEffect (click)="[basicModal.hide(),removeUsers()]">enregistrer!</button>
         </div>
+      </div>
+
     </div>
+  </div>
 </div>

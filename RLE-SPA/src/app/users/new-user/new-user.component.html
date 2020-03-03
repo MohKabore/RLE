@@ -263,18 +263,27 @@
       <mdb-card-body>
         <span>-{{importedUsers.length}} ligne(s) trouvée(s)</span> <br>
         <span>-{{isSelected.length}} ligne(s) sélectionnée(s)</span>
+        <div class="row">
+          <div class="col-md-6">
+            <div class="md-form form-sm mt-2">
+                <input mdbInput type="text" id="form1" [formControl]="searchControl"
+                    class="form-control mr-2">
+                <label for="form1" class="">rechercher</label>
+            </div>
+        </div>
+        </div>
         
           <table style="width: 100%;" id="tableSortExample" mdbTable mdbTableScroll scrollY="true" maxHeight="400" bordered="true" class="z-depth-1 mt-1">
             <thead>
               <tr>
                 <th *ngFor="let head of headElements; let i = index" aria-controls="tableSortExample" scope="col"
-                  [mdbTableSort]="importedUsers" [sortBy]="headElements[i]">{{head | titlecase}}
+                  [mdbTableSort]="filteredUsers" [sortBy]="headElements[i]">{{head | titlecase}}
                   <!-- <mdb-icon fas icon="sort"></mdb-icon> -->
                 </th>
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let el of importedUsers; let i = index">
+              <tr *ngFor="let el of filteredUsers; let i = index">
                 <th scope="row">
                   <mdb-checkbox [(ngModel)]="el.selected" (change)="select(i)">{{i+1}}</mdb-checkbox>
                 </th>

@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
+import { FormBuilder, FormGroup, FormControl } from '@angular/forms';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { UserService } from 'src/app/_services/user.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { User } from 'src/app/_models/user';
+import { debounceTime } from 'rxjs/operators';
 
 @Component({
   selector: 'app-trained-users',
@@ -14,13 +15,16 @@ export class TrainedUsersComponent implements OnInit {
   searchForm: FormGroup;
   currentUserId: number;
   regions: any = [];
-  users: User[];
+  users: any[];
+  filteredUsers: any[];
   trainings: any = [];
   trainingClasses: any = [];
   showEmps = false;
   isSelected: any = [];
   totalReserved = 0;
   totalSelected = 0;
+  searchControl: FormControl = new FormControl();
+
 
 
   headElements = ['id', 'nom', 'Prenoms', 'Contact', 'Poste', 'Region', 'Departement', 'Ville'];
@@ -37,6 +41,9 @@ export class TrainedUsersComponent implements OnInit {
       this.getRegions();
     }
     this.createSearchForms();
+    this.searchControl.valueChanges.pipe(debounceTime(200)).subscribe(value => {
+      this.filerData(value);
+    });
   }
 
 
@@ -46,6 +53,28 @@ export class TrainedUsersComponent implements OnInit {
       trainingId: [null],
       trainingClassId: [null]
     });
+  }
+
+  filerData(val) {
+    if (val) {
+      val = val.toLowerCase();
+    } else {
+      return this.filteredUsers = [...this.users];
+    }
+    const columns = Object.keys(this.users[0]);
+    if (!columns.length) {
+      return;
+    }
+
+    const rows = this.users.filter(function (d) {
+      for (let i = 0; i <= columns.length; i++) {
+        const column = columns[i];
+        if (d[column] && d[column].toString().toLowerCase().indexOf(val) > -1) {
+          return true;
+        }
+      }
+    });
+    this.filteredUsers = rows;
   }
 
   getTrainings() {
@@ -83,7 +112,10 @@ export class TrainedUsersComponent implements OnInit {
   initialize() {
     this.showEmps = false;
     this.trainingClasses = [];
-    this.trainings = [];
+    if (!this.authService.isMaintenancier()) {
+      this.trainings = [];
+
+    }
     this.searchForm.reset();
   }
   getRegions() {
@@ -97,12 +129,15 @@ export class TrainedUsersComponent implements OnInit {
 
   searchEmp() {
     this.users = [];
+    this.filteredUsers = [];
     this.showEmps = false;
     this.totalSelected = 0;
     this.totalSelected = 0;
     const formData = this.searchForm.value;
-    this.userService.getTrainedUsers(this.regionId, formData.trainingId, formData.trainingClassId).subscribe((res: User[]) => {
+    formData.regionId = this.regionId;
+    this.userService.getTrainedUsers(formData).subscribe((res: User[]) => {
       this.users = res;
+      this.filteredUsers = res;
       this.totalSelected = res.filter(a => a.selected === true).length;
       this.totalReserved = res.filter(a => a.reserved === true).length;
       this.showEmps = true;
@@ -124,7 +159,15 @@ export class TrainedUsersComponent implements OnInit {
   removeSelectedUsers() {
     if (confirm('confirmez-vous la désélection ??')) {
       this.userService.unSelectUsers(this.isSelected, this.currentUserId).subscribe((res) => {
-        this.searchEmp();
+        // this.searchEmp();
+        for (let i = 0; i < this.isSelected.length; i++) {
+          const elt = this.isSelected[i];
+          let curUser = this.users.find(a => a.id === elt);
+          curUser.selected = false;
+          curUser.selectionne = false;
+          this.totalSelected = this.totalSelected - 1;
+        }
+        this.filteredUsers = this.users;
         this.isSelected = [];
         this.alertify.success('enregistrement terminé...');
       });
@@ -134,7 +177,15 @@ export class TrainedUsersComponent implements OnInit {
   selectUsers() {
     if (confirm('confirmez-vous la selection ??')) {
       this.userService.selectUsers(this.isSelected, this.currentUserId).subscribe((res) => {
-        this.searchEmp();
+        // this.searchEmp();
+        for (let i = 0; i < this.isSelected.length; i++) {
+          const elt = this.isSelected[i];
+          let curUser = this.users.find(a => a.id === elt);
+          curUser.selectionne = false;
+          curUser.selected = true;
+          this.totalSelected = this.totalSelected + 1;
+        }
+        this.filteredUsers = this.users;
         this.isSelected = [];
         this.alertify.success('enregistrement terminé...');
       });
@@ -145,7 +196,15 @@ export class TrainedUsersComponent implements OnInit {
   reserveUsers() {
     if (confirm('confirmez-vous la mise en reserve ??')) {
       this.userService.reserveUsers(this.isSelected, this.currentUserId).subscribe((res) => {
-        this.searchEmp();
+        // this.searchEmp();
+        for (let i = 0; i < this.isSelected.length; i++) {
+          const elt = this.isSelected[i];
+          let curUser = this.users.find(a => a.id === elt);
+          curUser.selectionne = false;
+          curUser.reserved = true;
+          this.totalReserved = this.totalReserved + 1;
+        }
+        this.filteredUsers = this.users;
         this.isSelected = [];
         this.alertify.success('enregistrement terminé...');
       });
@@ -155,7 +214,15 @@ export class TrainedUsersComponent implements OnInit {
   removeReservedUsers() {
     if (confirm('confirmez-vous la selection ??')) {
       this.userService.unReserveUsers(this.isSelected, this.currentUserId).subscribe((res) => {
-        this.searchEmp();
+        // this.searchEmp();
+        for (let i = 0; i < this.isSelected.length; i++) {
+          const elt = this.isSelected[i];
+          let curUser = this.users.find(a => a.id === elt);
+          curUser.reserved = false;
+          curUser.selectionne = false;
+          this.totalReserved = this.totalReserved - 1;
+        }
+        this.filteredUsers = this.users;
         this.isSelected = [];
         this.alertify.success('enregistrement terminé...');
       });

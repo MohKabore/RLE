@@ -149,8 +149,8 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/' + trainingid + '/GetTrainingDetails');
   }
 
-  getTrainedUsers(regionId, trainingId, trainingClassId) {
-    return this.http.get(this.baseUrl + 'users/TrainedUsers/' + regionId + '/' + trainingId + '/' + trainingClassId);
+  getTrainedUsers(searchModel) {
+    return this.http.post(this.baseUrl + 'users/TrainedUsers', searchModel);
   }
 
   getClosedTrainingClasses(trainingid: number) {

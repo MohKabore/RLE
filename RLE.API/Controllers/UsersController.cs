@@ -967,34 +967,40 @@ namespace RLE.API.Controllers
             return NotFound();
         }
 
-        [HttpGet("TrainedUsers/{regionId}/{trainingId}/{trainingClassId}")]
-        public async Task<IActionResult> TrainedUsers(int regionId, int? trainingId, int? trainingClassId)
+        [HttpPost("TrainedUsers")]
+        public async Task<IActionResult> TrainedUsers(TrainedUserSearchDto model)
         {
             var employeeClasses = await _context.EmployeeClasses.Include(t => t.TrainingClass)
                                                                 .Include(t => t.Employee)
                                                                 .Include(t => t.Employee.Region)
                                                                 .Include(t => t.Employee.Department)
                                                                 .Include(t => t.Employee.ResCity)
-                                                                .Where(t => t.TrainingClass.RegionId == regionId && t.Employee.Trained == true)
+                                                                .Where(t => t.TrainingClass.RegionId == model.RegionId && t.Employee.Trained == true)
                                                                 .ToListAsync();
-            if (trainingClassId != null)
+            if (model.TrainingClassId != null)
             {
-                var users = employeeClasses.Where(t => t.TrainingClassId == trainingClassId)
-                                            .Select(t => t.Employee);
+                var users = employeeClasses.Where(t => t.TrainingClassId == Convert.ToInt32(model.TrainingClassId))
+                                            .Select(t => t.Employee)
+                                            .OrderBy(t=>t.LastName)
+                                            .ThenBy(t=>t.FirstName);
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
                 return Ok(usersToReturn);
             }
-            else if (trainingId != null)
+            else if (model.TrainingId != null)
             {
-                var users = employeeClasses.Where(t => t.TrainingClass.TrainingId == trainingId)
-                                                        .Select(t => t.Employee);
+                var users = employeeClasses.Where(t => t.TrainingClass.TrainingId == Convert.ToInt32(model.TrainingId))
+                                                        .Select(t => t.Employee)
+                                                        .OrderBy(t=>t.LastName)
+                                                        .ThenBy(t=>t.FirstName);
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
                 return Ok(usersToReturn);
             }
 
             else
             {
-                var users = employeeClasses.Select(t => t.Employee);
+                var users = employeeClasses.Select(t => t.Employee)
+                                            .OrderBy(t=>t.LastName)
+                                            .ThenBy(t=>t.FirstName);
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
                 return Ok(usersToReturn);
             }

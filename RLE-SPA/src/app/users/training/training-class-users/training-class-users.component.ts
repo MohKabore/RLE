@@ -29,7 +29,6 @@ export class TrainingClassUsersComponent implements OnInit {
   ngOnInit() {
 
     this.route.params.subscribe(params => {
-      console.log(params);
       this.trainingClassid = params.id;
       this.getTrainingClassParticipants();
       this.getTrainingClassDetails(this.trainingClassid);
@@ -48,14 +47,29 @@ export class TrainingClassUsersComponent implements OnInit {
     this.show = true;
     const data = document.getElementById('test');
     html2canvas(data).then(canvas => {
-      const imgWidth = 208;
-      const pageHeight = 295;
-      const imgHeight = canvas.height * imgWidth / canvas.width;
-      const heightLeft = imgHeight;
+      // const imgWidth = 208;
+      // const pageHeight = 295;
+      // const imgHeight = canvas.height * imgWidth / canvas.width;
+      // const heightLeft = imgHeight;
 
       const contentDataURL = canvas.toDataURL('image/png')
       const pdf = new jspdf('p', 'mm', 'a4');
-      const position = 0;
+      let position = 0;
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = canvas.height * imgWidth / canvas.width;
+      let heightLeft = imgHeight;
+
+
+      pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
       pdf.addImage(contentDataURL, 'PNG', 0, position, imgWidth, imgHeight);
       const titre = 'fiche_de_presence_' + this.trainingClass.name + '.pdf';
       pdf.save(titre);
@@ -89,7 +103,6 @@ export class TrainingClassUsersComponent implements OnInit {
 
   getTrainingClassDetails(id) {
     this.userService.getTrainingClassDetails(id).subscribe((res: TrainingClass) => {
-      console.log(res);
       this.trainingClass = res;
     }, error => {
       console.log(error);

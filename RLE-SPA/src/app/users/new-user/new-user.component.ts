@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Utils } from 'src/app/shared/utils';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
 import * as XLSX from 'xlsx';
+import { debounceTime } from 'rxjs/operators';
 
 
 
@@ -42,9 +43,12 @@ export class NewUserComponent implements OnInit {
   isHotliner = false;
   regionId: number;
   importedUsers: any = [];
+  filteredUsers: any = [];
   showExport = false;
   headElements = ['#', 'nom', 'Prenoms', 'Contact 1', 'Contact 2', 'Email'];
   isSelected: any = [];
+  searchControl: FormControl = new FormControl();
+
 
 
 
@@ -66,6 +70,9 @@ export class NewUserComponent implements OnInit {
     this.getMaritalStatus();
     this.getTypeEmps();
     this.createUserForms();
+    this.searchControl.valueChanges.pipe(debounceTime(200)).subscribe(value => {
+      this.filerData(value);
+    });
   }
 
   createUserForms() {
@@ -321,6 +328,9 @@ export class NewUserComponent implements OnInit {
       this.authService.addImportedUsers(dataToSave, this.authService.decodedToken.nameid).subscribe((userid: number) => {
         this.alertify.success('enregistrement terminé...');
         this.importedUsers = this.importedUsers.filter(a => a.selected === false);
+        this.filteredUsers = this.importedUsers;
+        this.searchForm.reset();
+        // this.searchForm.setValue(null);
         this.isSelected = [];
         this.userForm.reset();
         if (this.isMaintenancier) {
@@ -335,6 +345,28 @@ export class NewUserComponent implements OnInit {
     }
 
 
+  }
+
+  filerData(val) {
+    if (val) {
+      val = val.toLowerCase();
+    } else {
+      return this.filteredUsers = [...this.importedUsers];
+    }
+    const columns = Object.keys(this.importedUsers[0]);
+    if (!columns.length) {
+      return;
+    }
+
+    const rows = this.importedUsers.filter(function (d) {
+      for (let i = 0; i <= columns.length; i++) {
+        const column = columns[i];
+        if (d[column] && d[column].toString().toLowerCase().indexOf(val) > -1) {
+          return true;
+        }
+      }
+    });
+    this.filteredUsers = rows;
   }
 
 
@@ -368,6 +400,7 @@ export class NewUserComponent implements OnInit {
       }, {});
 
       this.importedUsers = [];
+      this.filteredUsers = [];
       const d = jsonData;
       // debugger;
       for (let i = 0; i < d.at.length; i++) {
@@ -382,6 +415,7 @@ export class NewUserComponent implements OnInit {
 
         this.importedUsers = [...this.importedUsers, element];
       }
+      this.filteredUsers = this.importedUsers;
       this.showExport = true;
       if (this.authService.isMaintenancier()) {
         this.getDepartments();

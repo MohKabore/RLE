@@ -47,13 +47,27 @@
     </mdb-card>
 
     <div class="mt-2 animated bounceInUp" *ngIf="showEmps">
-        <button type="button" size="sm" mdbBtn color="success" (click)="selectUsers()" [disabled]="isSelected.length===0" mdbWavesEffect>sélectionner</button>
-        <button type="button" size="sm" mdbBtn color="light" (click)="removeSelectedUsers()" [disabled]="isSelected.length==0" mdbWavesEffect>désélectionner</button>
-        <button type="button" size="sm" mdbBtn color="primary" (click)="reserveUsers()" [disabled]="isSelected.length===0" mdbWavesEffect>réserviste</button>
-        <button type="button" size="sm" mdbBtn color="light" (click)="removeReservedUsers()" [disabled]="isSelected.length===0" mdbWavesEffect>non-réserviste</button>
-       <p><b>{{totalSelected}} </b> sélectionné(s)</p>
-       <p><b>{{totalReserved}} </b> en reserve</p>
-       
+        <button type="button" size="sm" mdbBtn color="success" (click)="selectUsers()"
+            [disabled]="isSelected.length===0" mdbWavesEffect>sélectionner</button>
+        <button type="button" size="sm" mdbBtn color="light" (click)="removeSelectedUsers()"
+            [disabled]="isSelected.length==0" mdbWavesEffect>désélectionner</button>
+        <button type="button" size="sm" mdbBtn color="primary" (click)="reserveUsers()"
+            [disabled]="isSelected.length===0" mdbWavesEffect>réserviste</button>
+        <button type="button" size="sm" mdbBtn color="light" (click)="removeReservedUsers()"
+            [disabled]="isSelected.length===0" mdbWavesEffect>non-réserviste</button>
+        <p><b>{{totalSelected}} </b> sélectionné(s)</p>
+        <p><b>{{totalReserved}} </b> en reserve</p>
+    
+     <div class="row">
+        <div class="col-md-6">
+            <div class="md-form form-sm mt-2">
+                <input mdbInput type="text" id="form1" [formControl]="searchControl"
+                    class="form-control mr-2">
+                <label for="form1" class="">rechercher</label>
+            </div>
+        </div>
+     </div>
+
         <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="users.length>0">
             <thead>
                 <tr>
@@ -64,9 +78,10 @@
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let el of users; let i = index"  [ngClass]="{'alert alert-success': el.selected , 'alert alert-primary': el.reserved }">
+                <tr *ngFor="let el of filteredUsers; let i = index"
+                    [ngClass]="{'alert alert-success': el.selected , 'alert alert-primary': el.reserved }">
                     <th scope="row">
-                        <mdb-checkbox  (change)="select(el.id)">{{i+1}}</mdb-checkbox>
+                        <mdb-checkbox [(ngModel)]="el.selectionne" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
                     </th>
                     <td>{{el.lastName}}</td>
                     <td>{{el.firstName}}</td>
