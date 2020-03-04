@@ -783,11 +783,12 @@ namespace RLE.API.Controllers
                 user.ValidationDate = DateTime.Now;
                 var res = await _userManager.UpdateAsync(user);
                 var roleName = "";
-                if(user.TypeEmpId == 1)
-                roleName = "admin";
-                else {
-                var role = await _context.Roles.FirstOrDefaultAsync(a => a.Id == user.TypeEmpId);
-                roleName = role.Name;
+                if (user.TypeEmpId == 1)
+                    roleName = "admin";
+                else
+                {
+                    var role = await _context.Roles.FirstOrDefaultAsync(a => a.Id == user.TypeEmpId);
+                    roleName = role.Name;
                 }
                 var appUser = await _userManager.Users
                     .FirstOrDefaultAsync(u => u.NormalizedUserName == user.UserName);
@@ -975,6 +976,19 @@ namespace RLE.API.Controllers
 
             if (result.Succeeded)
             {
+                var userId = userToCreate.Id;
+                    if (userId < 10)
+                    {
+                        userToCreate.Idnum = "0000" + userId;
+                    }
+                    else if (userId >= 10 && userId < 100)
+                        userToCreate.Idnum = "000" + userId;
+                    else if (userId >= 100 && userId < 1000)
+                        userToCreate.Idnum = "00" + userId;
+                    else if (userId >= 1000 && userId < 10000)
+                        userToCreate.Idnum = "0" + userId;
+                    else
+                        userToCreate.Idnum = userId.ToString();
                 var uh = new UserHistory
                 {
                     InsertUserId = insertUserId,
@@ -1004,11 +1018,24 @@ namespace RLE.API.Controllers
                 userToCreate.ValidationCode = userName.ToString();
                 var result = await _userManager.CreateAsync(userToCreate, password);
 
-
                 // var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
 
                 if (result.Succeeded)
                 {
+                    var userId = userToCreate.Id;
+                    if (userId < 10)
+                    {
+                        userToCreate.Idnum = "0000" + userId;
+                    }
+                    else if (userId >= 10 && userId < 100)
+                        userToCreate.Idnum = "000" + userId;
+                    else if (userId >= 100 && userId < 1000)
+                        userToCreate.Idnum = "00" + userId;
+                    else if (userId >= 1000 && userId < 10000)
+                        userToCreate.Idnum = "0" + userId;
+                    else
+                        userToCreate.Idnum = userId.ToString();
+                    _repo.Update(userToCreate);
                     var uh = new UserHistory
                     {
                         InsertUserId = insertUserId,
@@ -1021,8 +1048,8 @@ namespace RLE.API.Controllers
 
             }
 
-            if(await _repo.SaveAll())
-            return Ok();
+            if (await _repo.SaveAll())
+                return Ok();
 
 
             return BadRequest();
@@ -1050,7 +1077,7 @@ namespace RLE.API.Controllers
                     {
                         File = new FileDescription(file.Name, stream),
                         Transformation = new Transformation()
-                            .Width(500).Height(500).Crop("fill").Gravity("face")
+                            .Width(300).Height(500).Crop("fill").Gravity("face")
                     };
 
                     uploadResult = _cloudinary.Upload(uploadParams);
