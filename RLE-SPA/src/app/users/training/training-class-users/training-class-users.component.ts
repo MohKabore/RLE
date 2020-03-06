@@ -7,6 +7,7 @@ import { User } from 'src/app/_models/user';
 import * as jspdf from 'jspdf';
 import html2canvas from 'html2canvas';
 import { TrainingClass } from 'src/app/_models/trainingClass';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-training-class-users',
@@ -21,10 +22,17 @@ export class TrainingClassUsersComponent implements OnInit {
   isSelected: any = [];
   showConfirmation = false;
 
+  qrcodename: string;
+  title = 'generate-qrcode';
+  elementType: 'url' | 'canvas' | 'img' = 'url';
+  value: string;
+  display = false;
+  href: string;
+  defauLink = environment.defaultLink;
+
   headElements = ['id', 'nom', 'Prenoms', 'Contact', 'Poste', 'Region', 'Departement', 'Ville'];
 
-  constructor(private authService: AuthService, private route: ActivatedRoute,
-    private alertify: AlertifyService, private router: Router, private userService: UserService) { }
+  constructor(private authService: AuthService, private route: ActivatedRoute, private alertify: AlertifyService, private router: Router, private userService: UserService) { }
 
   ngOnInit() {
 
@@ -32,6 +40,7 @@ export class TrainingClassUsersComponent implements OnInit {
       this.trainingClassid = params.id;
       this.getTrainingClassParticipants();
       this.getTrainingClassDetails(this.trainingClassid);
+      this.generateQRCode();
     });
 
   }
@@ -121,5 +130,12 @@ export class TrainingClassUsersComponent implements OnInit {
     }, error => {
       console.log(error);
     });
+  }
+
+  generateQRCode() {
+    this.qrcodename = this.defauLink + 'trainingClassResult/' + this.trainingClassid;
+  }
+  downloadImage() {
+    this.href = document.getElementsByTagName('img')[0].src;
   }
 }

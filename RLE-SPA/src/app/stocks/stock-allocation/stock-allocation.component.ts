@@ -29,13 +29,6 @@ export class StockAllocationComponent implements OnInit {
   cieStoreId = environment.ceiStoreId;
   showRegion = false;
 
-  qrcodename: string;
-  title = 'generate-qrcode';
-  elementType: 'url' | 'canvas' | 'img' = 'url';
-  value: string;
-  display = false;
-  href: string;
-  
   constructor(private fb: FormBuilder, private router: Router, private stockService: StockService, private authService: AuthService, private alertify: AlertifyService) { }
 
   ngOnInit() {
@@ -130,18 +123,6 @@ export class StockAllocationComponent implements OnInit {
     });
   }
 
-  generateQRCode() {
-    if (this.qrcodename === '') {
-      this.display = false;
-      alert('Please enter the name');
-      return;
-    } else {
-      this.value = this.qrcodename;
-      this.display = true;
-    }
-  }
-  downloadImage() {
-    this.href = document.getElementsByTagName('img')[0].src;
-  }
+  
 
 }

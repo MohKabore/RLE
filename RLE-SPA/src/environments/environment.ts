@@ -16,7 +16,8 @@ export const environment = {
   ],
   atStoreId: 1,
   morhphoStoreId: 2,
-  ceiStoreId: 3
+  ceiStoreId: 3,
+  defaultLink : 'http://localhost:4200/'
 };
 
 /*

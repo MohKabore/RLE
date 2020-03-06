@@ -1,5 +1,4 @@
 <div class="container mt-5 animated bounceInUp">
-
   <table class="table-condensed mb-3 mt-2" style="width: 50%;">
     <tr>
       <td>Nom de la Salle</td>
@@ -79,41 +78,49 @@
 </div>
 
 <div class="container" id="test" *ngIf="show">
-  <table class="table-condensed mb-3 mt-2" style="width: 50%;">
+  <table class="table-condensed mt-1" style="width: 100%;  border-collapse: collapse; border-spacing: 0;">
     <tr>
-      <td> <span style="font-size: 23px;">Nom de la Salle</span> </td>
-      <td>:</td>
-      <td>
-        <b> &nbsp;<span style="font-size: 23px;">{{trainingClass?.name}}</span> </b>
+      <td valign="top" rowspan="4"   style="width:50%;"   class="text-left" >
+        <img style="width:40%; height: 50%;" class="mt-0"src="../../../../assets/images/at.png" alt="">
+        <ngx-qrcode class ="mb-5"id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "qrcodename">    
+        </ngx-qrcode>
       </td>
+      <td style="width:15%"> <span style="font-size: 20px;">Nom de la Salle</span> </td>
+      <td style="width:5%">:</td>
+      <td style="width:30%">
+        <b> &nbsp;<span style="font-size: 20px;">{{trainingClass?.name}}</span> </b>
+      </td>
+      
     </tr>
     <tr>
-      <td><span style="font-size: 23px;">Période </span> </td>
+      <td><span style="font-size: 20px;">Période </span> </td>
       <td>:</td>
       <td>
-        <b style="font-size: 23px;"> &nbsp;du {{trainingClass?.startDate | date : 'dd-MM-yyyy'}} au
+        <b style="font-size: 20px;"> &nbsp;du {{trainingClass?.startDate | date : 'dd-MM-yyyy'}} au
           {{trainingClass?.endDate | date : 'dd-MM-yyyy'}} </b>
       </td>
+
     </tr>
     <tr>
-      <td><span style="font-size: 23px;">Localisation</span></td>
+      <td><span style="font-size: 20px;">Localisation</span></td>
       <td>:</td>
       <td>
-        <b style="font-size: 23px;">{{trainingClass?.departmentName}}/{{trainingClass?.cityName}}</b>
+        <b style="font-size: 20px;">{{trainingClass?.departmentName}}/{{trainingClass?.cityName}}</b>
       </td>
     </tr>
-    <tr style="font-size: 23px;">
+    <tr style="font-size: 20px;">
       <td>
-        <span style="font-size: 23px;" *ngIf="trainingClass?.trainers.length===1">Formateur</span>
-        <span style="font-size: 23px;" *ngIf="trainingClass?.trainers.length>1">Formateurs</span>
+        <span style="font-size: 20px;" *ngIf="trainingClass?.trainers.length===1">Formateur</span>
+        <span style="font-size: 20px;" *ngIf="trainingClass?.trainers.length>1">Formateurs</span>
       </td>
       <td>:</td>
       <td>
-        <b>&nbsp;<span style="font-size: 23px;" *ngFor="let trainer of trainingClass?.trainers">{{trainer.lastName}}
+        <b>&nbsp;<span style="font-size: 20px;" *ngFor="let trainer of trainingClass?.trainers">{{trainer.lastName}}
             {{trainer.firstName}} <span *ngIf="trainingClass?.trainers.length>1"> - </span> </span>
         </b>
       </td>
     </tr>
+    
   </table>
 
 

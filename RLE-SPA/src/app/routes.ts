@@ -38,6 +38,7 @@ export const appRoutes: Routes = [
             { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            // { path: 'trainingClassResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'stockEntry', component: StockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             {
