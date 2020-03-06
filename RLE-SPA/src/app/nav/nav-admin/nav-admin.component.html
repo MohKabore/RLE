@@ -16,6 +16,17 @@
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/trainingResult']" *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']" >point formations</a>
       </div>
     </li>
+
+    <li class="nav-item dropdown btn-group" dropdown *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">
+      <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
+        stocks  
+      </a>
+      <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/stockEntry']" *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']" >entrée stock</a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/stockAllocation']" *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']" >allocation stock</a>
+       
+      </div>
+    </li>
     
   </ul>
   

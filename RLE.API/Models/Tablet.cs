@@ -8,7 +8,7 @@ namespace RLE.API.Models
     
         public int Id { get; set; }
         public int? StoreId { get; set; }
-        public decimal Imei { get; set; }
+        public string Imei { get; set; }
         public byte Status { get; set; }
         public bool Active { get; set; }
         public bool Type { get; set; }

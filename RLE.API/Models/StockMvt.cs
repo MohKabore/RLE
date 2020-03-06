@@ -22,6 +22,8 @@ namespace RLE.API.Models
         public  InventOpType InventOpType { get; set; }
         public  User ToEmployee { get; set; }
         public  Store ToStore { get; set; }
+        public int InsertUserId { get; set; }
+        public User InsertUser { get; set; }
         // public  ICollection<StockMvtInventOp> StockMvtInventOp { get; set; }
     }
 }

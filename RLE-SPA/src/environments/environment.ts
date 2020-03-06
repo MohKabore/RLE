@@ -9,11 +9,14 @@ export const environment = {
   operatortypeId: 3,
   hotlinetypeId: 5,
   maintenancierTypeId: 2,
-  registrationPct: 1.3,
-  preSelectionPct: 1.2,
-  onTrainingPct: 1.2,
-  selectionPct: 1.1,
-  byDeadLineTypeId: true
+  mainStores: [
+    { value: 1, label: 'MAG AT' },
+    { value: 2, label: 'MAG MORPHO' },
+    { value: 3, label: 'MAG CEI' }
+  ],
+  atStoreId: 1,
+  morhphoStoreId: 2,
+  ceiStoreId: 3
 };
 
 /*

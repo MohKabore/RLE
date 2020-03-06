@@ -58,6 +58,7 @@
     "ngx-img-cropper": "0.10.4",
     "ngx-pagination": "3.2.1",
     "ngx-perfect-scrollbar": "6.3.1",
+    "ngx-qrcode2": "0.0.9",
     "ngx-quill": "4.0.0",
     "ngx-toastr": "9.1.0",
     "popper.js": "1.14.4",

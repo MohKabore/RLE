@@ -48,6 +48,11 @@ import { RegistrationLocalitiesComponent } from './users/registration-localities
 import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
 import { TrainingClassUsersComponent } from './users/training/training-class-users/training-class-users.component';
 import { TrainedUsersComponent } from './users/training/trained-users/trained-users.component';
+import { NotFoundComponent } from './Home/not-found/not-found.component';
+import { StockAllocationComponent } from './stocks/stock-allocation/stock-allocation.component';
+import { ErrorComponent } from './Home/error/error.component';
+import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
+import { NgxQRCodeModule } from 'ngx-qrcode2';
 registerLocaleData(fr);
 
 export function tokenGetter() {
@@ -73,7 +78,11 @@ export function tokenGetter() {
     RegistrationLocalitiesComponent,
     PreSelectedUsersComponent,
     TrainingClassUsersComponent,
-    TrainedUsersComponent
+    TrainedUsersComponent,
+    NotFoundComponent,
+    StockAllocationComponent,
+    ErrorComponent,
+  TabletsAllocationComponent
   ],
   imports: [
     CommonModule,
@@ -83,6 +92,7 @@ export function tokenGetter() {
     NgxDatatableModule,
     ReactiveFormsModule,
     HttpClientModule,
+    NgxQRCodeModule,
     // InMemoryWebApiModule.forRoot(InMemoryDataService, {passThruUnknownUrl: true}),
     SharedModule,
     TextMaskModule,

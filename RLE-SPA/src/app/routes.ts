@@ -16,6 +16,10 @@ import { RegistrationLocalitiesComponent } from './users/registration-localities
 import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
 import { TrainingClassUsersComponent } from './users/training/training-class-users/training-class-users.component';
 import { TrainedUsersComponent } from './users/training/trained-users/trained-users.component';
+import { NotFoundComponent } from './Home/not-found/not-found.component';
+import { StockAllocationComponent } from './stocks/stock-allocation/stock-allocation.component';
+import { ErrorComponent } from './Home/error/error.component';
+import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
 
 
 export const appRoutes: Routes = [
@@ -27,22 +31,27 @@ export const appRoutes: Routes = [
         runGuardsAndResolvers: 'always',
         canActivate: [AuthGuard],
         children: [
+            { path: 'error', component: ErrorComponent },
             { path: 'assignAccount', component: AssignAccountComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
             { path: 'registrationLocalilties', component: RegistrationLocalitiesComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
-            { path: 'preSelection', component: PreSelectionComponent, data: { roles: [ 'Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'inscription', component: NewUserComponent, data: { roles: [ 'Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'preSelection', component: PreSelectionComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
-            , resolve: { training: TrainingDetailResolver }},
-            { path: 'addParticipant/:id', component: PreSelectedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }},
-            { path: 'participants/:id', component: TrainingClassUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }},
-            { path: 'detailInscription', component: RegistrationDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }},
+            { path: 'stockEntry', component: StockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            {
+                path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
+                , resolve: { training: TrainingDetailResolver }
+            },
+            { path: 'addParticipant/:id', component: PreSelectedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'participants/:id', component: TrainingClassUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'detailInscription', component: RegistrationDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             // { path: '', component: HomeComponent, resolve: { regions: HomeResolver } }
-            { path: 'home', component: HomeComponent},
+            { path: 'home', component: HomeComponent },
             { path: '', component: HomeComponent }
 
         ]
     },
-    { path: '**', redirectTo: '', pathMatch: 'full' }
+    { path: '**', component: NotFoundComponent, pathMatch: 'full' }
 ];

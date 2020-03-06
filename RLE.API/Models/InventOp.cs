@@ -5,7 +5,10 @@ namespace RLE.API.Models
 {
     public partial class InventOp
     {
-      
+      public InventOp()
+      {
+          InsertDate = DateTime.Now;
+      }
 
         public int Id { get; set; }
         public int TabletId { get; set; }

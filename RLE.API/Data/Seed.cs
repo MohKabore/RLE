@@ -155,7 +155,21 @@ namespace RLE.API.Data
                     new Quota {Name = "Selection", Percentage = 10},
                 };
                 context.AddRange(quotas);
+                
+                var storetypes = new List<StoreType> {
+                    new StoreType {Name = "Magasin"},
+                    new StoreType {Name = "Client"},
+                    new StoreType {Name = "Personnel"}
+                };
+                context.AddRange(storetypes);
 
+                var stores = new List<Store> {
+                new Store {Name = "MAG AT"},
+                new Store {Name = "MAG MORPHO"},
+                new Store {Name = "MAG CEI"},
+                };
+
+                context.AddRange(stores);
 
                 var typeEmps = new List<TypeEmp> {
                     new TypeEmp {Name ="Supervisor", WebHired = 0},
