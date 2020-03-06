@@ -44,6 +44,8 @@ namespace RLE.API.Dtos
         public bool Active { get; set; }
         public bool OnTraining { get; set; }
         public bool Reserved { get; set; }
+        public int Step { get; set; }
+        public string Details { get; set; }
         
     }
 }

@@ -53,6 +53,8 @@ import { StockAllocationComponent } from './stocks/stock-allocation/stock-alloca
 import { ErrorComponent } from './Home/error/error.component';
 import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
 import { NgxQRCodeModule } from 'ngx-qrcode2';
+import { TrainingClassResultComponent } from './users/training/training-class-result/training-class-result.component';
+import { EmployeesComponent } from './users/employees/employees.component';
 registerLocaleData(fr);
 
 export function tokenGetter() {
@@ -82,7 +84,9 @@ export function tokenGetter() {
     NotFoundComponent,
     StockAllocationComponent,
     ErrorComponent,
-  TabletsAllocationComponent
+  TabletsAllocationComponent,
+  TrainingClassResultComponent,
+  EmployeesComponent
   ],
   imports: [
     CommonModule,

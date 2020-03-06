@@ -8,7 +8,23 @@
         <img src="{{user.photoUrl || '../../../assets/user.png'}}" alt="" class="rounded-circle img-responsive">
       </div>
       <!--Content-->
-      <div class="card-body pt-3">
+      <div *ngIf="!showStatus" class="card-body pt-3">
+
+        <mdb-card-title>
+          <p class="text-12 m-0">{{user.lastName| uppercase}} {{user.firstName| lowercase}}</p>
+          <div style="font-size: 12px;">
+            <p class="text-15 m-0"> {{user.typeEmpName}}</p>
+            <p class="text-15 m-0" style="font-size: 8px;"> {{user.regionName}} <span *ngIf="user.departmentId">/{{user.departmentName}} </span>
+              <span *ngIf="user.resCityId">/{{user.resCityName}}</span></p>
+            <p class="text-15 m-0"  style="font-size: 10px;">{{user.phoneNumber}} <span
+                *ngIf="user.secondPhoneNumber">/{{user.secondPhoneNumber}} </span></p>
+            <p *ngIf="user.preSelected=== false && user.email">{{user.email}}</p>
+          </div>
+        </mdb-card-title>
+
+      </div>
+
+      <div *ngIf="showStatus===true" class="card-body pt-3"  [ngClass]="{'alert alert-success': user.selected , 'alert alert-primary': user.reserved }">
 
         <mdb-card-title>
           <p class="text-12 m-0">{{user.lastName| uppercase}} {{user.firstName| lowercase}}</p>
@@ -28,8 +44,8 @@
   <!--/.Front Side-->
 
   <!--Back Side-->
-  <a class="rotate-btn" data-card="card-1" (click)="cards.toggle();addSelection(index, user.id)">
-    <div class="back tp-box_side tp-box_back pic-blured" style="padding: 0px;">
+  <a   class="rotate-btn" data-card="card-1" (click)="cards.toggle();addSelection(index, user.id)">
+    <div *ngIf="!showStatus" class="back tp-box_side tp-box_back pic-blured" style="padding: 0px;">
       <!--Avatar-->
       <div class="avatar">
         <img src="{{user.photoUrl || '../../../assets/user.png'}}" alt="" class="rounded-circle img-responsive">
@@ -42,6 +58,21 @@
         <p class="text-22 mt-2"><b>séléctionné</b></p>
       </div>
     </div>
+    <div *ngIf="showStatus" [ngClass]="{'alert alert-success': user.selected , 'alert alert-primary': user.reserved }" class="back tp-box_side tp-box_back pic-blured" style="padding: 0px;">
+      <!--Avatar-->
+      <div class="avatar">
+        <img src="{{user.photoUrl || '../../../assets/user.png'}}" alt="" class="rounded-circle img-responsive">
+      </div>
+      <!--Content-->
+      <div class="card-body pt-3">
+        <h6>{{user.lastName}} {{user.firstName}}</h6>
+      </div>
+      <div class="centered">
+        <p class="text-22 mt-2"><b>coché</b></p>
+      </div>
+    </div>
   </a>
+
+ 
   <!--/.Back Side-->
 </mdb-flipping-card>

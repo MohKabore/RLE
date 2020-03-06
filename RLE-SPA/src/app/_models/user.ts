@@ -51,5 +51,7 @@ export class User {
   reserved: boolean;
   active: boolean;
 
+  step: number;
+
 
 }

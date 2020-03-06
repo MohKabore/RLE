@@ -20,6 +20,8 @@ import { NotFoundComponent } from './Home/not-found/not-found.component';
 import { StockAllocationComponent } from './stocks/stock-allocation/stock-allocation.component';
 import { ErrorComponent } from './Home/error/error.component';
 import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
+import { TrainingClassResultComponent } from './users/training/training-class-result/training-class-result.component';
+import { EmployeesComponent } from './users/employees/employees.component';
 
 
 export const appRoutes: Routes = [
@@ -35,10 +37,11 @@ export const appRoutes: Routes = [
             { path: 'assignAccount', component: AssignAccountComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
             { path: 'registrationLocalilties', component: RegistrationLocalitiesComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
             { path: 'preSelection', component: PreSelectionComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'employees', component: EmployeesComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            // { path: 'trainingClassResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'trainingClassResult/:id', component: TrainingClassResultComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'stockEntry', component: StockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             {

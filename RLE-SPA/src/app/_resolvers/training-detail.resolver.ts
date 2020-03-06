@@ -13,7 +13,7 @@ export class TrainingDetailResolver implements Resolve<any> {
         return this.userService.getTrainingDetails(route.params['id']).pipe(
             catchError(error => {
                 this.alertify.error(error);
-                this.router.navigate(['/Home']);
+                this.router.navigate(['/home']);
                 return of(null);
             })
         );

@@ -32,7 +32,7 @@ export class TrainingClassUsersComponent implements OnInit {
 
   headElements = ['id', 'nom', 'Prenoms', 'Contact', 'Poste', 'Region', 'Departement', 'Ville'];
 
-  constructor(private authService: AuthService, private route: ActivatedRoute, private alertify: AlertifyService, private router: Router, private userService: UserService) { }
+  constructor(private authService: AuthService, private route: ActivatedRoute, private alertify: AlertifyService, private userService: UserService) { }
 
   ngOnInit() {
 

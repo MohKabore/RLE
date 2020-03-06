@@ -55,18 +55,17 @@
             [disabled]="isSelected.length===0" mdbWavesEffect>réserviste</button>
         <button type="button" size="sm" mdbBtn color="light" (click)="removeReservedUsers()"
             [disabled]="isSelected.length===0" mdbWavesEffect>non-réserviste</button>
-        <p><b>{{totalSelected}} </b> sélectionné(s)</p>
-        <p><b>{{totalReserved}} </b> en reserve</p>
-    
-     <div class="row">
-        <div class="col-md-6">
-            <div class="md-form form-sm mt-2">
-                <input mdbInput type="text" id="form1" [formControl]="searchControl"
-                    class="form-control mr-2">
-                <label for="form1" class="">rechercher</label>
+        <p><b>{{totalSelected}} </b> sélectionné(s), {{totalReserved}} en reserve, {{users.length}} participant(s)</p>
+        <p><b></b> en reserve</p>
+
+        <div class="row">
+            <div class="col-md-6">
+                <div class="md-form form-sm mt-2">
+                    <input mdbInput type="text" id="form1" [formControl]="searchControl" class="form-control mr-2">
+                    <label for="form1" class="">rechercher</label>
+                </div>
             </div>
         </div>
-     </div>
 
         <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="users.length>0">
             <thead>

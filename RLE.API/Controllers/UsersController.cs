@@ -981,8 +981,8 @@ namespace RLE.API.Controllers
             {
                 var users = employeeClasses.Where(t => t.TrainingClassId == Convert.ToInt32(model.TrainingClassId))
                                             .Select(t => t.Employee)
-                                            .OrderBy(t=>t.LastName)
-                                            .ThenBy(t=>t.FirstName);
+                                            .OrderBy(t => t.LastName)
+                                            .ThenBy(t => t.FirstName);
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
                 return Ok(usersToReturn);
             }
@@ -990,8 +990,8 @@ namespace RLE.API.Controllers
             {
                 var users = employeeClasses.Where(t => t.TrainingClass.TrainingId == Convert.ToInt32(model.TrainingId))
                                                         .Select(t => t.Employee)
-                                                        .OrderBy(t=>t.LastName)
-                                                        .ThenBy(t=>t.FirstName);
+                                                        .OrderBy(t => t.LastName)
+                                                        .ThenBy(t => t.FirstName);
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
                 return Ok(usersToReturn);
             }
@@ -999,8 +999,8 @@ namespace RLE.API.Controllers
             else
             {
                 var users = employeeClasses.Select(t => t.Employee)
-                                            .OrderBy(t=>t.LastName)
-                                            .ThenBy(t=>t.FirstName);
+                                            .OrderBy(t => t.LastName)
+                                            .ThenBy(t => t.FirstName);
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
                 return Ok(usersToReturn);
             }
@@ -1097,6 +1097,104 @@ namespace RLE.API.Controllers
                 return Ok();
             return BadRequest();
         }
+
+        [HttpGet("TrainingClassStatus/{trainingClassId}")]
+        public async Task<IActionResult> TrainingClassStatus(int trainingClassId)
+        {
+            var trainingClass = await _context.TrainingClasses.FirstOrDefaultAsync(r => r.Id == trainingClassId);
+            if (trainingClass != null)
+                return Ok(trainingClass.Status);
+
+            return NotFound();
+        }
+
+        [HttpGet("VerifytrainerClass/{trainerId}/{trainingClassId}")]
+        public async Task<IActionResult> TrainingClassStatus(int trainerId, int trainingClassId)
+        {
+            var trainerClass = await _context.TrainerClasses.FirstOrDefaultAsync(r => r.TrainingClassId == trainingClassId && r.TrainerId == trainerId);
+            if (trainerClass != null)
+                return Ok(true);
+
+            return Ok(false);
+        }
+        [HttpPost("SearchEmployees")]
+        public async Task<IActionResult> SearchEmployees(EmpSearchModelDto searchModel)
+        {
+            var users = new List<User>();
+            string req = "select * from AspnetUsers  where Id <> 1 and LastName + ' ' + firstName Like '%" + searchModel.EmpName + "%'";
+            if (searchModel.TypeEmpId != null)
+                req += " and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
+            if (searchModel.RegionId != null)
+                req += "and RegionId =" + Convert.ToInt32(searchModel.RegionId);
+            if (searchModel.DepartmentId != null)
+                req += "and DepartmentId =" + Convert.ToInt32(searchModel.DepartmentId);
+            if (searchModel.ResCityId != null)
+                req += "and ResCityId =" + Convert.ToInt32(searchModel.ResCityId);
+
+            users = await _context.Users.Include(a => a.TypeEmp)
+                                        .Include(a => a.Photos)
+                                        .Include(a => a.Region)
+                                        .Include(a => a.Department)
+                                        .Include(a => a.ResCity)
+                                        .Include(a => a.StudyLevel)
+                                        .Include(a => a.EducationalTrack)
+                                        .FromSql(req)
+                                        .OrderBy(a => a.LastName)
+                                        .ThenBy(a => a.FirstName)
+                                        .ToListAsync();
+
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+
+            return Ok(usersToReturn);
+        }
+
+        [HttpGet("EmployeeDetails/{userId}")]
+        public async Task<IActionResult> EmployeeDetails(int userId)
+        {
+            CultureInfo frC = new CultureInfo("fr-FR");
+            var user = await _context.Users.Include(a=>a.Region)
+                                            .Include(a=>a.TypeEmp)
+                                            .Include(a=>a.Department)
+                                            .Include(a=>a.ResCity)
+                                            .Include(a=>a.Municipality)
+                                            .Include(a=>a.EnrolmentCenter)
+                                            .Include(a=>a.Tablet)
+                                            .FirstOrDefaultAsync(u => u.Id == userId);
+            {
+                var userToReturn = _mapper.Map<UserForListDto>(user);
+                if (userToReturn.Step == 1)
+                    userToReturn.Details = "Pré-sélectionné(e)";
+                else
+                {
+                    var trainingClass = (await _context.EmployeeClasses.Include(a => a.TrainingClass)
+                                                                        .Include(a => a.TrainingClass.Region)
+                                                                        .Include(a => a.TrainingClass.Department)
+                                                                        .Include(a => a.TrainingClass.City)
+                                                                        .Include(a => a.TrainingClass.Training)
+                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId)).TrainingClass; if (userToReturn.Step == 2)
+                        userToReturn.Details = "Programmé(e) pour formation.";
+                    if (userToReturn.Step == 3)
+                        userToReturn.Details = "Formé(e):";
+                    if (userToReturn.Step == 4 && userToReturn.Reserved == true)
+                        userToReturn.Details = "Réserviste:";
+                    if (userToReturn.Step == 4 && userToReturn.Selected == true)
+                        userToReturn.Details = "Sélectionné(e):";
+                    if (userToReturn.Step >= 4 && userToReturn.Active == true)
+                        userToReturn.Details = "En activité:";
+
+                    if (trainingClass != null)
+                    {
+                        userToReturn.Details +=" ("+ trainingClass.Training.Name + " du " + trainingClass.StartDate.ToString("dd/MM/yyyy", frC)
+                         + ". Lieu de la formation " + trainingClass.Department.Name + " - " + trainingClass.City.Name + ")";
+                    }
+                }
+                return Ok(userToReturn);
+            }
+            return NotFound();
+
+
+        }
+
 
     }
 

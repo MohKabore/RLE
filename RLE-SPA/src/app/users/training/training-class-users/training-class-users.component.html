@@ -48,6 +48,8 @@
     color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
   <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
     [routerLink]="['/formation/', trainingClass?.trainingId]"> <i class="fa fa-arrow-left"></i> </button>
+    <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+    [routerLink]="['/trainingClassResult/', trainingClass?.id]"  *ngIf="trainingClass?.status===1"> point de la formation</button>
 
   <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="participants.length>0">
     <thead>

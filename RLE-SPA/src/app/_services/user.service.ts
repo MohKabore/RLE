@@ -132,6 +132,10 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/SearchUsers', data);
   }
 
+  searchEmployees(data: any) {
+    return this.http.post(this.baseUrl + 'users/SearchEmployees', data);
+  }
+
   // recuperation de toutes les villes
   getAllCities() {
     return this.http.get(this.baseUrl + 'users/GetAllCities');
@@ -250,19 +254,30 @@ export class UserService {
   }
 
   selectUsers(userIds, insertUserId) {
-    return this.http.post(this.baseUrl + 'users/SelectUsers/'  + insertUserId, userIds);
+    return this.http.post(this.baseUrl + 'users/SelectUsers/' + insertUserId, userIds);
   }
 
   unSelectUsers(userIds, insertUserId) {
-    return this.http.post(this.baseUrl + 'users/UnSelectUsers/'  + insertUserId, userIds);
+    return this.http.post(this.baseUrl + 'users/UnSelectUsers/' + insertUserId, userIds);
   }
 
   reserveUsers(userIds, insertUserId) {
-    return this.http.post(this.baseUrl + 'users/ReserveUsers/'  + insertUserId, userIds);
+    return this.http.post(this.baseUrl + 'users/ReserveUsers/' + insertUserId, userIds);
   }
 
   unReserveUsers(userIds, insertUserId) {
-    return this.http.post(this.baseUrl + 'users/UnReserveUsers/'  + insertUserId, userIds);
+    return this.http.post(this.baseUrl + 'users/UnReserveUsers/' + insertUserId, userIds);
   }
 
+  verifytrainingClassStatus(trainingClassId) {
+    return this.http.get(this.baseUrl + 'users/TrainingClassStatus/' + trainingClassId);
+  }
+
+  veriftTrainerClass(trainerId, trainingClassId) {
+    return this.http.get(this.baseUrl + 'users/VerifytrainerClass/' + trainerId + '/' + trainingClassId);
+  }
+
+  getEmployeeDetails(userId) {
+    return this.http.get(this.baseUrl + 'users/EmployeeDetails/' + userId);
+  }
 }

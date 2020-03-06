@@ -27,6 +27,12 @@ namespace RLE.API.Helpers
                 .ForMember(dest => dest.Age, opt =>
                 {
                     opt.MapFrom(d => d.DateOfBirth.CalculateAge());
+                })
+                .ForMember(dest => dest.Step, opt =>
+                {
+                    opt.MapFrom(src =>
+                    Convert.ToInt32(src.PreSelected) + Convert.ToInt32(src.Selected) + Convert.ToInt32(src.OnTraining)
+                        + Convert.ToInt32(src.Trained) + Convert.ToInt32(src.Hired) + Convert.ToInt32(src.Reserved));
                 });
 
             CreateMap<PhotoForCreationDto, Photo>();

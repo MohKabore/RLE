@@ -1,0 +1,205 @@
+<div class="container mt-5 animated bounceInDown">
+    <div class="d-flex justify-content-center">
+        <div class="col-md-12" *ngIf="!showDetails">
+            <mdb-card class="row">
+                <mdb-card-body>
+                    <form style="color: #757575;" [formGroup]="searchForm">
+                        <div class="row">
+                            <div class="col-md-2">
+                                <div class="md-form form-sm m-0">
+                                    <mdb-select id="typeEmpId" [options]="typeEmps" placeholder="Poste"
+                                        formControlName="typeEmpId">
+                                    </mdb-select>
+                                </div>
+                            </div>
+                            <div class="col-md-2">
+                                <div class="md-form form-sm m-0">
+                                    <mdb-select id="regionId" [options]="regions" placeholder="region"
+                                        formControlName="regionId" (ngModelChange)="getDepartments()">
+                                    </mdb-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="md-form form-sm m-0">
+                                    <mdb-select id="departmentId" [options]="depts" placeholder="département"
+                                        formControlName="departmentId" (ngModelChange)="getCities()">
+                                    </mdb-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-2">
+                                <div class="md-form form-sm  m-0">
+                                    <mdb-select id="resCityId" [options]="cities" placeholder="ville ou commune"
+                                        formControlName="resCityId">
+                                    </mdb-select>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <div class="md-form form-sm  m-0">
+                                    <button title="rechercher" type="button" mdbBtn size="sm" color="success"
+                                        mdbWavesEffect (click)="searchEmp()" title="rechercher">
+                                        <i class="fa fa-search"></i>
+                                    </button>
+                                    <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+                                        (click)="initialize()"><i class="fa fa-trash"></i></button>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="md-form form-sm m-0">
+                                    <div class="md-form">
+                                        <input mdbInput type="text" id="lastName" formControlName="empName"
+                                            class="form-control">
+                                        <label for="lastName">nom et ou prénom(s)</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </mdb-card-body>
+            </mdb-card>
+            <mdb-card class="row mt-2" *ngIf="usersDiv">
+                <mdb-card-body>
+                    <div *ngIf="!noResult && users.length===0">
+                        <div class="text-center">
+                            <div class="spinner-border" role="status">
+                                <span class="sr-only">Loading...</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div *ngIf="noResult">
+                        <h3><b>{{noResult}}</b></h3>
+                    </div>
+
+                </mdb-card-body>
+                <div *ngIf=" users.length>0" class="row">
+                    <div class="col-md-12">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="md-form form-sm mt-2">
+                                    <input mdbInput type="text" id="form1" [formControl]="searchControl"
+                                        class="form-control mr-2">
+                                    <label for="form1" class="">rechercher</label>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <p>{{filteredUsers.length}} personne(s) trouvée(s)</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row"
+                        [ngClass]="{'list-horizontal': viewMode === 'list', 'list-grid': viewMode === 'grid'}">
+                        <!-- SINGLE LIST ITEM -->
+                        <div *ngFor="let user of filteredUsers | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index"
+                            class="list-item"
+                            [ngClass]="{'col-md-12': viewMode === 'list', 'col-md-3': viewMode === 'grid'}"
+                            [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+                            <div class="card o-hidden mb-4 d-flex"
+                                [ngClass]="{'flex-row': viewMode === 'list', 'flex-column': viewMode === 'grid'}">
+                                <div class="list-thumb d-flex">
+                                    <!-- TUMBNAIL -->
+                                    <img class="image" [src]="user.photoUrl || '../../../assets/user.png'"
+                                        alt="{{user.lastName}} - {{user.firstName}}">
+                                </div>
+                                <div class="flex-grow-1"
+                                    [ngClass]="{'pl-2 d-flex': viewMode === 'list', 'd-bock': viewMode === 'grid'}">
+                                    <div class="card-body align-self-center d-flex flex-column justify-content-between align-items-lg-center"
+                                        [ngClass]="{'flex-lg-row': viewMode === 'list'}">
+                                        <!-- OTHER DATA -->
+                                        <div class="w-40 w-sm-100">
+                                            <a (click)="getdetails(user.id)">
+                                                <div class="item-title m-0 text-primary"><b>{{user.lastName}}
+                                                        {{user.firstName}}</b></div>
+                                            </a>
+                                            <span style="font-size: 12px;">{{user.phoneNumber}}</span> <span
+                                                *ngIf="user.secondPhoneNumber"
+                                                style="font-size: 12px;">/{{user.secondPhoneNumber}}</span>
+                                        </div>
+                                        <p class="m-0 text-muted text-small w-15 w-sm-100">{{user.typeEmpName}}</p>
+                                        <p class="m-0 text-muted text-small w-15 w-sm-100">
+                                            {{user.regionName}}-{{user.departmentName}}- {{user.resCityName}}
+                                        </p>
+                                        <p class="m-0 text-muted text-small w-15 w-sm-100  d-lg-block item-badges">
+                                            <span *ngIf="user.step===1">pré-selectionné(e)</span>
+                                            <span *ngIf="user.step===2">Prevu pour formation</span>
+                                            <span *ngIf="user.step===3">formé(e)</span>
+                                            <span *ngIf="user.step===4">
+                                                <span *ngIf="user.reserved===true">Réserviste</span>
+                                                <span *ngIf="user.selected===true">Sélectionné(e)</span>
+                                            </span>
+                                            <span *ngIf="user.active">en activité</span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- PAGINATION CONTROL -->
+                        <div class="col-md-12 mt-3" *ngIf="users?.length">
+                            <pagination-controls (pageChange)="page = $event" previousLabel="" nextLabel="">
+                            </pagination-controls>
+                        </div>
+                    </div>
+
+                </div>
+            </mdb-card>
+        </div>
+    </div>
+    <div *ngIf="showDetails" class="row">
+        <div class="col-md-4 animated bounceInLeft">
+
+
+            <mdb-card class="testimonial-card">
+                <div class="card-up peach-gradient" *ngIf="user?.step===1">
+                </div>
+                <div class="card-up purple-gradient" *ngIf="user?.step===2">
+                </div>
+                <div class="card-up aqua-gradient" *ngIf="user?.step===3">
+                </div>
+                <div class="card-up blue-gradient" *ngIf="user?.reserved ===true">
+                </div>
+                <div class="card-up green accent-2" *ngIf=" user?.step===4 && user?.selected===true">
+                </div>
+                <div class="card-up aqua-gradient" *ngIf="user?.active===true">
+                </div>
+
+                <div class="avatar mx-auto">
+                    <img width="100%" [src]="user?.photoUrl || '../../../assets/user.png'" alt="" class="rounded-circle">
+                </div>
+
+                <mdb-card-body>
+                    <!--Name-->
+                    <mdb-card-title>
+                        <h4>{{user?.lastName}} {{user?.firstName}}</h4>
+                        <b>{{user?.typeEmpName}}</b>
+
+                    </mdb-card-title>
+                    <hr>
+                    <!--Quotation-->
+                    <div style="font-size: 12px;">
+                        <p>matricule: <b>{{user?.idnum}}</b></p>
+                        <p>Contact(s): <b>{{user?.phoneNumber}} <span
+                                    *ngIf="user?.secondPhoneNumber">/{{user?.secondPhoneNumber}}</span></b></p>
+                    </div>
+
+                </mdb-card-body>
+            </mdb-card>
+        </div>
+        <div class="col-md-8 animated bounceInRight">
+            <mdb-card>
+                <mdb-card-body style="width: 100%;">
+                    <p class="text-right"><button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+                            (click)="returnToList()">retour</button></p>
+                    <p>Localisation : <b>{{user?.regionName}}/{{user?.departmentName}}/{{user?.resCityName}}</b></p>
+                    <p>Status : <b style="font-size: 12px;">{{user.details}}</b></p>
+                </mdb-card-body>
+            </mdb-card>
+
+
+
+        </div>
+    </div>
+
+
+</div>

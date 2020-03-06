@@ -9,6 +9,7 @@ import { User } from 'src/app/_models/user';
 })
 export class CallSheetCardComponent implements OnInit {
   @Input() user: any;
+  @Input() showStatus: boolean;
   @Input() index: number;
   @Output() setSelection = new EventEmitter<any>();
   firstClick = true;
