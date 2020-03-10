@@ -32,6 +32,8 @@
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/employees']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier']">membre du personnel</a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/assignment']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">affectation opérateur</a>
       
 
     </div>
@@ -45,8 +47,12 @@
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/stockEntry']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">entrée stock</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/stockAllocation']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">allocation stock</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">transfert stock</a>
 
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/approSphare']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">appro Sphare</a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/backTablet']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">retour tablette</a>
     </div>
   </li>
 

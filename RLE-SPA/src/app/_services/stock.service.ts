@@ -18,8 +18,24 @@ export class StockService {
     return this.http.get(this.baseUrl + 'StoreTablets/' + storeId);
   }
 
+  getMaintainerTablets(maintainerid: number) {
+    return this.http.get(this.baseUrl + 'MaintainerTablets/' + maintainerid);
+  }
+
   createStockAllocation(currentUserId: number, allocationModel) {
     return this.http.post(this.baseUrl + 'StockAllocation/' + currentUserId, allocationModel);
+  }
+
+  createTabletAllocation(currentUserId: number, allocationModel) {
+    return this.http.post(this.baseUrl + 'TabletAllocation/' + currentUserId, allocationModel);
+  }
+
+  saveApproSphare(currentUserId: number, approSphareModel) {
+    return this.http.post(this.baseUrl + 'ApproSphare/' + currentUserId, approSphareModel);
+  }
+
+  saveBackTablet(currentUserId: number, approSphareModel) {
+    return this.http.post(this.baseUrl + 'BackSphare/' + currentUserId, approSphareModel);
   }
 
 

@@ -22,6 +22,7 @@ import { StudyLevel } from '../_models/study-level';
 })
 export class AuthService {
   baseUrl = environment.apiUrl + 'auth/';
+  redirectUrl: string;
 
   adminTypeId = environment.adminTypeId;
   jwtHelper = new JwtHelperService();
@@ -327,6 +328,23 @@ export class AuthService {
   getStudyLevels(): Observable<StudyLevel[]> {
     return this.http.get<StudyLevel[]>(this.baseUrl + 'GetStudyLevels');
   }
+  getCityMunicipalities(cityId) {
+    return this.http.get(this.baseUrl + 'CityMunincipalities/' + cityId);
+  }
+
+  getMunEcs(munId) {
+    return this.http.get(this.baseUrl + 'MunEnrolmentCenters/' + munId);
+  }
+
+  getDeptCeiTablets(departmentId) {
+    return this.http.get(this.baseUrl + 'DeptCeiTablets/' + departmentId);
+  }
+
+
+  getCitySelectedEmps(cityId) {
+    return this.http.get(this.baseUrl + 'CitySelectedEmps/' + cityId);
+  }
+
 
   getMaritalStatus() {
     return this.http.get(this.baseUrl + 'GetMaritalStatus');

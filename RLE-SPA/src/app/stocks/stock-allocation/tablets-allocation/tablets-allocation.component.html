@@ -41,31 +41,32 @@
         </form>
       </div>
       <div class="col-md-9 animated bounceInRight" *ngIf="showTablets">
-        <div class="row">
-          <!-- <div class="col-md-6">
-            <div class="md-form form-sm mt-2">
-              <input mdbInput type="text" id="form1" [formControl]="searchControl" class="form-control mr-2">
-              <label for="form1" class="">rechercher</label>
-            </div>
-          </div> -->
+        <div *ngIf="!noResult && tablets.length===0">
+         <h4> patientez...</h4>
         </div>
         <div *ngIf="noResult">
-
+          {{noResult}}
         </div>
-        <div *ngIf="tablets.lenth>0">
+        <div *ngIf="tablets.length>0" class="animated bounceInRight">
+          <div class="row">
+            <!-- <div class="col-md-6">
+              <div class="md-form form-sm mt-2">
+                <input mdbInput type="text" id="form1" [formControl]="searchControl" class="form-control mr-2">
+                <label for="form1" class="">rechercher</label>
+              </div>
+            </div> -->
+          </div>
           <p>{{tablets.length}} tablette(s) trouvée(s)</p>
-          <div class="row" style="overflow-y: scroll; height:160px;">
+          <div class="row" style="overflow-y: scroll; height:230px;">
             <div class="col-md-2" *ngFor="let tablet of tablets">
-              <!-- Material checked -->
               <mdb-checkbox [(ngModel)]="tablet.selected" [checked]="true">{{tablet.imei}}</mdb-checkbox>
             </div>
           </div>
-          <button size="sm" type="button" [disabled]="!stockForm.valid" mdbBtn color="success" (click)="basicModal.show()"
-            mdbWavesEffect>enregistrer</button>
+          <button size="sm" type="button" [disabled]="!stockForm.valid" mdbBtn color="success"
+            (click)="basicModal.show()" mdbWavesEffect>enregistrer</button>
         </div>
-        
-      </div>
 
+      </div>
     </mdb-card-body>
   </mdb-card>
 

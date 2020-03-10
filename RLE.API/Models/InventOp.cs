@@ -25,6 +25,7 @@ namespace RLE.API.Models
         public string FormNum { get; set; }
         public byte Status { get; set; }
         public DateTime InsertDate { get; set; }
+        public int? InsertUserId { get; set; }
 
         public  EnrolmentCenter EnrolmentCenter { get; set; }
         public  Failure Failure { get; set; }
@@ -35,6 +36,7 @@ namespace RLE.API.Models
         public  Tablet Tablet { get; set; }
         public  Tablet TabletEx { get; set; }
         public  User ToEmployee { get; set; }
+         public  User InsertUser { get; set; }
         public  Store ToStore { get; set; }
         // public  ICollection<StockMvtInventOp> StockMvtInventOp { get; set; }
     }

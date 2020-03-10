@@ -35,6 +35,15 @@ namespace RLE.API.Helpers
                         + Convert.ToInt32(src.Trained) + Convert.ToInt32(src.Hired) + Convert.ToInt32(src.Reserved));
                 });
 
+            CreateMap<EnrolmentCenter, EcsForListDto>()
+            .ForMember(dest => dest.DisplayCode, opt =>
+            {
+                opt.MapFrom(src => src.Municipality.City.Department.Region.Code +"-" + src.Municipality.City.Department.Code +"-"
+                            + src.Municipality.City.Code +"-"  + src.Municipality.Code +"-" + src.Code);
+            })
+            ;
+
+
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<UserForRegisterDto, User>();
             CreateMap<TrainingCreationDto, Training>();

@@ -122,7 +122,4 @@ export class StockAllocationComponent implements OnInit {
       }
     });
   }
-
-  
-
 }

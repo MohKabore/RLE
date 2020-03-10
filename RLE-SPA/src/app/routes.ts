@@ -22,6 +22,9 @@ import { ErrorComponent } from './Home/error/error.component';
 import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
 import { TrainingClassResultComponent } from './users/training/training-class-result/training-class-result.component';
 import { EmployeesComponent } from './users/employees/employees.component';
+import { ApproSpareComponent } from './stocks/stock-allocation/appro-spare/appro-spare.component';
+import { BackTabletComponent } from './stocks/stock-allocation/back-tablet/back-tablet.component';
+import { AssignmentComponent } from './operation/assignment/assignment/assignment.component';
 
 
 export const appRoutes: Routes = [
@@ -44,6 +47,9 @@ export const appRoutes: Routes = [
             { path: 'trainingClassResult/:id', component: TrainingClassResultComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'stockEntry', component: StockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'approSphare', component: ApproSpareComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'assignment', component: AssignmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             {
                 path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
                 , resolve: { training: TrainingDetailResolver }
@@ -57,5 +63,5 @@ export const appRoutes: Routes = [
 
         ]
     },
-    { path: '**', component: NotFoundComponent, pathMatch: 'full' }
+    { path: '**', redirectTo: '', pathMatch: 'full' }
 ];

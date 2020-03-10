@@ -91,6 +91,7 @@ namespace RLE.API.Data {
         public  DbSet<UserHistoryType> UserHistoryTypes { get; set; }
         public  DbSet<Quota> Quotas { get; set; }
         public  DbSet<StoreType> StoreTypes { get; set; }
+        public  DbSet<Email> Emails { get; set; }
 
 
 

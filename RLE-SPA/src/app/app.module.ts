@@ -55,6 +55,9 @@ import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-al
 import { NgxQRCodeModule } from 'ngx-qrcode2';
 import { TrainingClassResultComponent } from './users/training/training-class-result/training-class-result.component';
 import { EmployeesComponent } from './users/employees/employees.component';
+import { ApproSpareComponent } from './stocks/stock-allocation/appro-spare/appro-spare.component';
+import { BackTabletComponent } from './stocks/stock-allocation/back-tablet/back-tablet.component';
+import { AssignmentComponent } from './operation/assignment/assignment/assignment.component';
 registerLocaleData(fr);
 
 export function tokenGetter() {
@@ -86,7 +89,10 @@ export function tokenGetter() {
     ErrorComponent,
   TabletsAllocationComponent,
   TrainingClassResultComponent,
-  EmployeesComponent
+  EmployeesComponent,
+  ApproSpareComponent,
+  BackTabletComponent,
+  AssignmentComponent
   ],
   imports: [
     CommonModule,

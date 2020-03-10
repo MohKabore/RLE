@@ -1,0 +1,106 @@
+<div class="container mt-5 animated bounceInDown">
+  <div class="d-flex justify-content-center">
+    <div class="col-md-12">
+      <mdb-card>
+        <mdb-card-header class="info-color white-text text-center py-4">
+          <h5>
+            <strong>AFFECTATION OPERATEUR</strong>
+          </h5>
+        </mdb-card-header>
+        <mdb-card-body>
+          <form style="color: #757575;" [formGroup]="affectationForm">
+              <div class="row">
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="regionId" [options]="regions" placeholder="region*"
+                      (ngModelChange)="getDepartments()" formControlName="regionId"></mdb-select>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="departmentId" [options]="depts" placeholder="department*"
+                      (ngModelChange)="getCities()" formControlName="departmentId"></mdb-select>
+                  </div>
+                </div>
+
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="cityId" [options]="cities" placeholder="ville*" (ngModelChange)="getMuns()"
+                      formControlName="cityId"></mdb-select>
+                  </div>
+                </div>
+                <div class="col-md-3">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-select id="employeeId" [options]="ops" placeholder="opérateur*" formControlName="employeeId">
+                    </mdb-select>
+                  </div>
+                </div>
+              </div>
+
+                <div *ngIf="affectationForm.value.cityId" class="row animated bounceInRight">
+                  <div class="col-md-3">
+                    <div class="md-form form-sm mt-2 mb-0">
+                      <mdb-select id="municipalityId" [options]="muns" placeholder="commune*" (ngModelChange)="getEcs()"
+                        formControlName="municipalityId"></mdb-select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="md-form form-sm mt-2 mb-0">
+                      <mdb-select id="enrolmentCenterId" [options]="ecs" placeholder="centre d'enrolement*"
+                        formControlName="enrolmentCenterId"></mdb-select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="md-form form-sm mt-2 mb-0">
+                      <mdb-select id="tabletId" [options]="tablets" placeholder="tablette*" formControlName="tabletId">
+                      </mdb-select>
+                    </div>
+                  </div>
+                  <div class="col-md-3">
+                    <div class="md-form mb-2 mt-1 form-sm">
+                      <mdb-date-picker name="mydate" [inline]="true" [options]="myDatePickerOptions"
+                        [placeholder]="'date effectation'" formControlName="opDate"></mdb-date-picker>
+                    </div>
+                  </div>
+                </div>
+
+
+              
+              <div class="col-md-12">
+                <div class="d-flex justify-content-center animated bounceInUp" *ngIf="affectationForm.valid">
+                  <button mdbBtn size="sm" color="success"  (click)="basicModal.show()">enregistrer</button>
+                </div>
+              </div>
+          </form>
+        </mdb-card-body>
+      </mdb-card>
+    </div>
+  </div>
+
+</div>
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
+      </div>
+      <div class="modal-body">
+        <b>Confirmez-vous l'affectation de cet Opérateur ?</b>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+          (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
+        <button type="button" mdbBtn color="success" size="sm"
+          class="relative waves-light" mdbWavesEffect (click)="[basicModal.hide(),save()]">enregistrer</button>
+      </div>
+    </div>
+
+  </div>
+</div>

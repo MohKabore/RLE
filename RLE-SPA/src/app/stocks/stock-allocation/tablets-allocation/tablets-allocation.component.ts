@@ -88,6 +88,22 @@ export class TabletsAllocationComponent implements OnInit {
   }
 
   saveStockAllocation() {
+    this.wait = true;
+    const formData = this.stockForm.value;
+    formData.tablets =  this.tablets.filter(a => a.selected === true);
+    formData.mvtDate = Utils.inputDateDDMMYY(formData.mvtDate, '/');
+
+    this.stockService.createTabletAllocation(this.currentUserId, formData).subscribe(() => {
+      this.alertify.success('enregistrement terminé...');
+      this.stockForm.reset();
+      this.showTablets = false;
+      this.tablets = [];
+      this.showTablets = false;
+            // this.departments = [];
+      this.wait = false;
+    }, error => {
+      this.router.navigate(['error']);
+    });
 
   }
 

@@ -892,6 +892,59 @@ namespace RLE.API.Controllers
             return Ok(levels);
         }
 
+        [HttpGet("CityMunincipalities/{cityId}")]
+        public async Task<IActionResult> GetMunincipalities(int cityId)
+        {
+            var muns = await _context.Municipalities
+                                    .Where(m => m.CityId == cityId)
+                                    .OrderBy(a => a.Name)
+                                    .ToListAsync();
+            return Ok(muns);
+        }
+
+        [HttpGet("MunEnrolmentCenters/{municipaltyId}")]
+        public async Task<IActionResult> MunEnrolmentCenters(int municipaltyId)
+        {
+            var ecs = await _context.EnrolmentCenters
+                                    .Include(d=>d.Municipality)
+                                    .ThenInclude(d=>d.City)
+                                    .ThenInclude(d=>d.Department)
+                                    .ThenInclude(d=>d.Region)
+                                    .Where(m => m.MunicipalityId == municipaltyId)
+                                    .OrderBy(a => a.Name)
+                                    .ToListAsync();
+            var ecsToReturn =  _mapper.Map<IEnumerable<EcsForListDto>>(ecs);
+            return Ok(ecsToReturn);
+        }
+
+        [HttpGet("DeptCeiTablets/{departmentId}")]
+        public async Task<IActionResult> DeptCeiTablets(int departmentId)
+        {
+            int ceiStoreid = _config.GetValue<int>("AppSettings:CEIStoreId");
+            var tablets = await _context.Tablets
+                                    .Include(m => m.Store)
+                                    .Where(m => m.Store.DepartmentId == departmentId && m.Store.StorePId == ceiStoreid)
+                                    .OrderBy(a => a.Imei)
+                                    .ToListAsync();
+            return Ok(tablets);
+        }
+
+        [HttpGet("CitySelectedEmps/{cityId}")]
+        public async Task<IActionResult> CitySelectedEmps(int cityId)
+        {
+            var users = await _context.Users
+                                    .Where(m => m.ResCityId == cityId && m.Selected == true && m.TypeEmpId ==  typeOperatorId 
+                                    && m.TabletId == null)
+                                    .OrderBy(a => a.LastName)
+                                    .ThenBy(a=>a.FirstName)
+                                    .ToListAsync();
+            var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
+            
+            return Ok(usersToReturn);
+        }
+
+
+
         [HttpGet("GetMaritalStatus")]
         public async Task<IActionResult> GetMaritalStatus()
         {
@@ -977,18 +1030,18 @@ namespace RLE.API.Controllers
             if (result.Succeeded)
             {
                 var userId = userToCreate.Id;
-                    if (userId < 10)
-                    {
-                        userToCreate.Idnum = "0000" + userId;
-                    }
-                    else if (userId >= 10 && userId < 100)
-                        userToCreate.Idnum = "000" + userId;
-                    else if (userId >= 100 && userId < 1000)
-                        userToCreate.Idnum = "00" + userId;
-                    else if (userId >= 1000 && userId < 10000)
-                        userToCreate.Idnum = "0" + userId;
-                    else
-                        userToCreate.Idnum = userId.ToString();
+                if (userId < 10)
+                {
+                    userToCreate.Idnum = "0000" + userId;
+                }
+                else if (userId >= 10 && userId < 100)
+                    userToCreate.Idnum = "000" + userId;
+                else if (userId >= 100 && userId < 1000)
+                    userToCreate.Idnum = "00" + userId;
+                else if (userId >= 1000 && userId < 10000)
+                    userToCreate.Idnum = "0" + userId;
+                else
+                    userToCreate.Idnum = userId.ToString();
                 var uh = new UserHistory
                 {
                     InsertUserId = insertUserId,
