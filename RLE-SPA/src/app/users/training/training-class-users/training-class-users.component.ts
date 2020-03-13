@@ -18,7 +18,7 @@ export class TrainingClassUsersComponent implements OnInit {
   trainingClassid: number;
   show = false;
   trainingClass: TrainingClass;
-  participants: User[] = [];
+  participants: any[] = [];
   isSelected: any = [];
   showConfirmation = false;
 

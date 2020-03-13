@@ -10,7 +10,7 @@ import { } from 'ng-uikit-pro-standard';
 // import { InMemoryDataService } from './shared/inmemory-db/inmemory-db.service';
 
 // MDB Angular Pro
-import { StepperModule, ToastModule, WavesModule, MDBSpinningPreloader, ProgressbarModule } from 'ng-uikit-pro-standard';
+import { StepperModule, ToastModule, WavesModule, MDBSpinningPreloader, ProgressbarModule, IconsModule  } from 'ng-uikit-pro-standard';
 import { MDBBootstrapModulesPro } from 'ng-uikit-pro-standard';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -58,6 +58,7 @@ import { EmployeesComponent } from './users/employees/employees.component';
 import { ApproSpareComponent } from './stocks/stock-allocation/appro-spare/appro-spare.component';
 import { BackTabletComponent } from './stocks/stock-allocation/back-tablet/back-tablet.component';
 import { AssignmentComponent } from './operation/assignment/assignment/assignment.component';
+import { ExpressAssigmentComponent } from './operation/assignment/assignment/express-assigment/express-assigment.component';
 registerLocaleData(fr);
 
 export function tokenGetter() {
@@ -92,7 +93,8 @@ export function tokenGetter() {
   EmployeesComponent,
   ApproSpareComponent,
   BackTabletComponent,
-  AssignmentComponent
+  AssignmentComponent,
+  ExpressAssigmentComponent
   ],
   imports: [
     CommonModule,
@@ -114,6 +116,7 @@ export function tokenGetter() {
     ButtonsModule,
     ModalModule,
     StepperModule,
+    IconsModule,
     ToastModule.forRoot(),
     WavesModule,
     MDBBootstrapModulesPro.forRoot(),

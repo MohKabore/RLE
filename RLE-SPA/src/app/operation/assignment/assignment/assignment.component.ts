@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/_services/auth.service';
 import { Utils } from 'src/app/shared/utils';
 import { OperationService } from 'src/app/_services/operation.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-assignment',
@@ -23,7 +24,7 @@ export class AssignmentComponent implements OnInit {
   myDatePickerOptions = Utils.myDatePickerOptions;
 
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private opService: OperationService, private alertify: AlertifyService) { }
+  constructor(private fb: FormBuilder,private router: Router, private authService: AuthService, private opService: OperationService, private alertify: AlertifyService) { }
 
   ngOnInit() {
     this.currentUserId = this.authService.currentUser.id;
@@ -132,6 +133,8 @@ export class AssignmentComponent implements OnInit {
     this.opService.affectOp(this.currentUserId, formData).subscribe(() => {
       this.affectationForm.reset();
       this.alertify.success('enregistrement terminé...');
+    }, error => {
+      this.router.navigate(['/error']);
     });
   }
 

@@ -25,6 +25,7 @@ import { EmployeesComponent } from './users/employees/employees.component';
 import { ApproSpareComponent } from './stocks/stock-allocation/appro-spare/appro-spare.component';
 import { BackTabletComponent } from './stocks/stock-allocation/back-tablet/back-tablet.component';
 import { AssignmentComponent } from './operation/assignment/assignment/assignment.component';
+import { ExpressAssigmentComponent } from './operation/assignment/assignment/express-assigment/express-assigment.component';
 
 
 export const appRoutes: Routes = [
@@ -49,6 +50,7 @@ export const appRoutes: Routes = [
             { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'approSphare', component: ApproSpareComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'assignment', component: AssignmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             {
                 path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }

@@ -34,6 +34,9 @@
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier']">membre du personnel</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/assignment']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">affectation opérateur</a>
+
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/expressAssignment']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">affectation nouvel opérateur</a>
       
 
     </div>

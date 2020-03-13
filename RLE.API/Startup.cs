@@ -140,55 +140,55 @@ namespace RLE.API
             if (env.IsDevelopment())
             {
                 // app.UseDeveloperExceptionPage();
-                //app.UseDeveloperExceptionPage();
-                app.UseExceptionHandler(builder =>
-                {
-                    builder.Run(async context =>
-                    {
-                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+                app.UseDeveloperExceptionPage();
+                // app.UseExceptionHandler(builder =>
+                // {
+                //     builder.Run(async context =>
+                //     {
+                //         context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
 
-                        var error = context.Features.Get<IExceptionHandlerFeature>();
-                        // dataContext.
-                        //  var exception = error.Error;
-                        if (error != null)
-                        {
-                            if (error != null)
-                            {
-                                var err = $"<h1>Error: {error.Error.Message}</h1>{error.Error.Source}<hr />{context.Request.Path}<br />";
-                                err += $"QueryString: {context.Request.QueryString}<hr />";
+                //         var error = context.Features.Get<IExceptionHandlerFeature>();
+                //         // dataContext.
+                //         //  var exception = error.Error;
+                //         if (error != null)
+                //         {
+                //             if (error != null)
+                //             {
+                //                 var err = $"<h1>Error: {error.Error.Message}</h1>{error.Error.Source}<hr />{context.Request.Path}<br />";
+                //                 err += $"QueryString: {context.Request.QueryString}<hr />";
 
-                                err += $"Stack Trace<hr />{error.Error.StackTrace.Replace(Environment.NewLine, "<br />")}";
-                                if (error.Error.InnerException != null)
-                                    err +=
-                                        $"Inner Exception<hr />{error.Error.InnerException?.Message.Replace(Environment.NewLine, "<br />")}";
-                                // This bit here to check for a form collection!
-                                if (context.Request.HasFormContentType && context.Request.Form.Any())
-                                {
-                                    err += "<table border=\"1\"><tr><td colspan=\"2\">Form collection:</td></tr>";
-                                    foreach (var form in context.Request.Form)
-                                    {
-                                        err += $"<tr><td>{form.Key}</td><td>{form.Value}</td></tr>";
-                                    }
-                                    err += "</table>";
-                                }
-                                dataContext.Add (
-                                    new Email {
-                                        Content = err,
-                                        Subject = "Error"
-                                    }
-                                );
-                                dataContext.SaveChanges();
-                                //  await   _emailSender.SendEmailAsync("mhkabore@gmail.com", "CMP v2 error", err);
-                                // context.Response.Redirect("/Home/Error?r=" +
-                                //                             System.Net.WebUtility.UrlEncode(context.Request.Path + "?" +
-                                //                                                             context.Request.QueryString));
-                            }
+                //                 err += $"Stack Trace<hr />{error.Error.StackTrace.Replace(Environment.NewLine, "<br />")}";
+                //                 if (error.Error.InnerException != null)
+                //                     err +=
+                //                         $"Inner Exception<hr />{error.Error.InnerException?.Message.Replace(Environment.NewLine, "<br />")}";
+                //                 // This bit here to check for a form collection!
+                //                 if (context.Request.HasFormContentType && context.Request.Form.Any())
+                //                 {
+                //                     err += "<table border=\"1\"><tr><td colspan=\"2\">Form collection:</td></tr>";
+                //                     foreach (var form in context.Request.Form)
+                //                     {
+                //                         err += $"<tr><td>{form.Key}</td><td>{form.Value}</td></tr>";
+                //                     }
+                //                     err += "</table>";
+                //                 }
+                //                 dataContext.Add (
+                //                     new Email {
+                //                         Content = err,
+                //                         Subject = "Error"
+                //                     }
+                //                 );
+                //                 dataContext.SaveChanges();
+                //                 //  await   _emailSender.SendEmailAsync("mhkabore@gmail.com", "CMP v2 error", err);
+                //                 // context.Response.Redirect("/Home/Error?r=" +
+                //                 //                             System.Net.WebUtility.UrlEncode(context.Request.Path + "?" +
+                //                 //                                                             context.Request.QueryString));
+                //             }
 
-                            context.Response.AddApplicationError(error.Error.Message);
-                            await context.Response.WriteAsync(error.Error.Message);
-                        }
-                    });
-                });
+                //             context.Response.AddApplicationError(error.Error.Message);
+                //             await context.Response.WriteAsync(error.Error.Message);
+                //         }
+                //     });
+                // });
             }
             else
             {

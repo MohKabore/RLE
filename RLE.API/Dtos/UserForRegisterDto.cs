@@ -72,5 +72,10 @@ namespace RLE.API.Dtos
         public bool Trained { get; set; }
         public bool Reserved { get; set; }
 
+        public int? EnrolmentCenterId { get; set; }
+        public int? StoreId { get; set; }
+        public int? TabletId { get; set; }
+        public DateTime? OpDate { get; set; }
+
     }
 }

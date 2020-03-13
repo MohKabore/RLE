@@ -63,7 +63,7 @@
     <tbody>
       <tr *ngFor="let el of participants; let i = index">
         <th scope="row">
-          <mdb-checkbox [(ngModel)]="el.selected" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
+          <mdb-checkbox [(ngModel)]="el.pris" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
         </th>
         <td>{{el.lastName}}</td>
         <td>{{el.firstName}}</td>
@@ -138,9 +138,9 @@
     </thead>
     <tbody>
       <tr *ngFor="let el of participants; let i = index" style="border-bottom: 1px solid black;">
-        <th scope="row">{{i+1}}</th>
-        <td><b style="font-size:20px;">{{el.lastName}}</b></td>
-        <td><b style="font-size:20px;"> {{el.firstName}}</b></td>
+      <th scope="row" >{{i+1}}</th>
+        <td><b style="font-size:20px;" >{{el.lastName}}</b></td>
+        <td><b style="font-size:20px;" > {{el.firstName}}</b></td>
         <td><b style="font-size:20px;">{{el.phoneNumber}} <span *ngIf="el.secondPhoneNumber"> /
               {{el.secondPhoneNumber}}</span></b></td>
         <td></td>

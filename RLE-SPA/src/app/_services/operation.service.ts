@@ -16,4 +16,16 @@ export class OperationService {
     return this.http.post(this.baseUrl + 'AssignOp/' + currentUserId, assignmentModeol);
   }
 
+  verifyImeis(imeis) {
+    return this.http.post(this.baseUrl + 'VerifyImeis', imeis);
+  }
+
+  verifyEcCodes(ecCodes) {
+    return this.http.post(this.baseUrl + 'VerifyEcCodes', ecCodes);
+  }
+
+  affectNewUsers(insertUserid, newEmps) {
+    return this.http.post(this.baseUrl + 'AffectNewUsers/' + insertUserid, newEmps);
+  }
+
 }
