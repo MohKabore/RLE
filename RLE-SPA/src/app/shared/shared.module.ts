@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { ToastrModule } from 'ngx-toastr';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-import { SearchModule } from './components/search/search.module';
-import { SharedComponentsModule } from './components/shared-components.module';
+// import { SearchModule } from './components/search/search.module';
+// import { SharedComponentsModule } from './components/shared-components.module';
 import { SharedDirectivesModule } from './directives/shared-directives.module';
 import { SharedPipesModule } from './pipes/shared-pipes.module';
 
@@ -13,10 +13,10 @@ import { SharedPipesModule } from './pipes/shared-pipes.module';
   imports: [
     CommonModule,
     PerfectScrollbarModule,
-    SearchModule,
+    // SearchModule,
     ToastrModule.forRoot(),
     NgbModule,
-    SharedComponentsModule,
+    // SharedComponentsModule,
     SharedDirectivesModule,
     SharedPipesModule,
     RouterModule

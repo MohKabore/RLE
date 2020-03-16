@@ -59,6 +59,9 @@ import { ApproSpareComponent } from './stocks/stock-allocation/appro-spare/appro
 import { BackTabletComponent } from './stocks/stock-allocation/back-tablet/back-tablet.component';
 import { AssignmentComponent } from './operation/assignment/assignment/assignment.component';
 import { ExpressAssigmentComponent } from './operation/assignment/assignment/express-assigment/express-assigment.component';
+import { ForgotComponent } from './views/sessions/forgot/forgot.component';
+import { ResetPasswordComponent } from './registration/reset-password/reset-password.component';
+// import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
 export function tokenGetter() {
@@ -94,7 +97,10 @@ export function tokenGetter() {
   ApproSpareComponent,
   BackTabletComponent,
   AssignmentComponent,
-  ExpressAssigmentComponent
+  ExpressAssigmentComponent,
+  ResetPasswordComponent,
+  ForgotComponent
+  // SignupComponent
   ],
   imports: [
     CommonModule,
