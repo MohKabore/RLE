@@ -31,7 +31,7 @@ export class TrainingClassResultComponent implements OnInit {
     this.currentUserId = this.authService.decodedToken.nameid;
     this.route.params.subscribe(params => {
       this.trainingClassId = params.id;
-      this.verifyIStatus();
+      this.verifyTrainerClass();
     });
     this.searchControl.valueChanges.pipe(debounceTime(200)).subscribe(value => {
       this.filerData(value);
@@ -75,12 +75,23 @@ export class TrainingClassResultComponent implements OnInit {
   verifyIStatus() {
     this.userService.verifytrainingClassStatus(this.trainingClassId).subscribe((res: number) => {
       if (res === 0) {
-        this.alertify.info('Cette salle de formation n\'est pas encore clôturer');
-        this.router.navigate(['/home']);
+        this.closeTrainingClass();
       } else {
-        this.verifyTrainerClass();
+        this.getTrainedUsers();
       }
     });
+  }
+
+  closeTrainingClass() {
+    if (confirm('cette salle de formation n\'est pas encore clôturée... Voulez vous la cloturer mtnt?')) {
+      this.userService.closeTrainingClass(this.trainingClassId, this.currentUserId).subscribe(() => {
+        this.alertify.success('salle de formation cloturée...');
+        this.getTrainedUsers();
+      });
+    } else {
+      this.alertify.info('vous ne pouvez pas faire le point de cette salle de formation');
+      this.router.navigate(['/home']);
+    }
   }
 
   removeSelectedUsers() {
@@ -201,11 +212,12 @@ export class TrainingClassResultComponent implements OnInit {
           this.alertify.error('vous ne pouvez pas faire le point de cette salle de formation');
           this.router.navigate(['/home']);
         } else {
-          this.getTrainedUsers();
+          this.verifyIStatus();
         }
       });
     } else {
-      this.getTrainedUsers();
+      this.verifyIStatus();
+      // this.getTrainedUsers();
     }
   }
 

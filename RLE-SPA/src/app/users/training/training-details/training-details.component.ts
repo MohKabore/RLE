@@ -164,7 +164,7 @@ export class TrainingDetailsComponent implements OnInit {
     if (confirm('voulez-vous vraiment cloturer cette salle ?')) {
       this.userService.closeTrainingClass(trainingClassId, this.currentUserId).subscribe(() => {
         this.training.trainingClasses[idx].status = 1;
-        this.alertify.success('formation cloturée...');
+        this.alertify.success('salle de formation cloturée...');
       });
     }
   }
