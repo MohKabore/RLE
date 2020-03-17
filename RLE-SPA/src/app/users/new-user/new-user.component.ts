@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input, EventEmitter, Output } from '@angular/core';
 import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
 import { Utils } from 'src/app/shared/utils';
 import { AlertifyService } from 'src/app/_services/alertify.service';
@@ -19,8 +19,10 @@ export class NewUserComponent implements OnInit {
   birthDateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
   cniMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/];
   userForm: FormGroup;
+  @Output() cancelEdition = new EventEmitter<any>();
+
   searchForm: FormGroup;
-  user: any;
+  @Input() user: any;
   regions: any = [];
   depts: any = [];
   cities: any = [];
@@ -29,6 +31,7 @@ export class NewUserComponent implements OnInit {
   educationTracks: any = [];
   maritalStatus: any = [];
   waitDiv = false;
+  editionMode;
   waitForValidation = true;
   userPhotoUrl = '';
   sexe = [
@@ -48,6 +51,7 @@ export class NewUserComponent implements OnInit {
   headElements = ['#', 'nom', 'Prenoms', 'Contact 1', 'Contact 2', 'Email'];
   isSelected: any = [];
   searchControl: FormControl = new FormControl();
+  formModel;
 
 
 
@@ -55,10 +59,24 @@ export class NewUserComponent implements OnInit {
   constructor(private fb: FormBuilder, private authService: AuthService, private alertify: AlertifyService) { }
 
   ngOnInit() {
+    if (this.user) {
+      this.editionMode = 'edit';
+      this.userPhotoUrl = this.user.photoUrl;
+      this.formModel = this.user;
+      // this.getDepartments();
+      // this.getCities();
+    } else {
+      this.editionMode = 'add';
+      this.initializeFormModel();
+    }
+
     if (this.authService.isMaintenancier()) {
       this.regionId = Number(this.authService.currentUser.regionId);
       this.isMaintenancier = true;
       this.getDepartments();
+      if (this.editionMode === 'edit') {
+        this.getCities();
+      }
     }
 
     if (this.authService.isHotliner()) {
@@ -75,36 +93,61 @@ export class NewUserComponent implements OnInit {
     });
   }
 
+  initializeFormModel() {
+    this.formModel = {
+      lastName: '',
+      firstName: '',
+      gender: null,
+      dateOfBirth: '',
+      resCityId: null,
+      departmentId: null,
+      regionId: this.regionId,
+      typeEmpId: null,
+      maritalStatusId: null,
+      educationalTrackId: null,
+      studyLevelId: null,
+      phoneNumber: '',
+      secondPhoneNumber: '',
+      birthPlace: '',
+      nbChild: null,
+      email: '',
+      cni: '',
+      passport: '',
+      iddoc: ''
+    }
+
+  }
+
   createUserForms() {
     this.userForm = this.fb.group({
-      lastName: ['', Validators.required],
-      firstName: ['', Validators.required],
-      gender: [null, Validators.required],
-      dateOfBirth: [''],
-      resCityId: [null],
-      departmentId: [null, Validators.required],
+      lastName: [this.formModel.lastName, Validators.required],
+      firstName: [this.formModel.firstName, Validators.required],
+      gender: [this.formModel.gender, Validators.required],
+      dateOfBirth: [this.formModel.dateOfBirth],
+      resCityId: [this.formModel.resCityId],
+      departmentId: [this.formModel.departmentId, Validators.required],
       regionId: [this.regionId, Validators.required],
-      typeEmpId: [null, Validators.required],
-      maritalStatusId: [null],
-      educationalTrackId: [null],
-      studyLevelId: [null],
-      phoneNumber: ['', Validators.required],
-      secondPhoneNumber: [''],
-      birthPlace: [''],
-      nbChild: [null],
-      email: ['', [Validators.email]],
-      cni: [''],
-      passport: [''],
-      iddoc: ['']
+      typeEmpId: [this.formModel.typeEmpId, Validators.required],
+      maritalStatusId: [this.formModel.maritalStatusId],
+      educationalTrackId: [this.formModel.educationalTrackId],
+      studyLevelId: [this.formModel.studyLevelId],
+      phoneNumber: [this.formModel.phoneNumber, Validators.required],
+      secondPhoneNumber: [this.formModel.secondPhoneNumber],
+      birthPlace: [this.formModel.birthPlace],
+      nbChild: [this.formModel.nbChild],
+      email: [this.formModel.email, [Validators.email]],
+      cni: [this.formModel.cni],
+      passport: [this.formModel.passport],
+      iddoc: [this.formModel.iddoc]
     });
   }
 
   select(e) {
-    const idx = this.isSelected.indexOf(e);
+    const idx = this.isSelected.findIndex(a => a === e);
     if (idx === -1) {
       this.isSelected = [...this.isSelected, e];
     } else {
-      this.isSelected.splice(idx);
+      this.isSelected.splice(idx,1);
     }
   }
 
@@ -224,7 +267,12 @@ export class NewUserComponent implements OnInit {
 
   getCities() {
     this.cities = [];
-    const departmentId = this.userForm.value.departmentId;
+    let departmentId: number;
+    if (this.editionMode === 'add') {
+      departmentId = this.userForm.value.departmentId;
+    } else {
+      departmentId = this.user.departmentId;
+    }
     this.authService.getInscCitiesByDeptid(departmentId).subscribe((res: any[]) => {
       for (let i = 0; i < res.length; i++) {
         const element = { value: res[i].id, label: res[i].name };
@@ -309,9 +357,6 @@ export class NewUserComponent implements OnInit {
       });
     }
 
-
-
-
   }
   saveImportedUsers() {
     if (confirm('voulez-vous vraiment enregistrer ses informations?')) {
@@ -324,21 +369,23 @@ export class NewUserComponent implements OnInit {
         element.regionId = formData.regionId;
         element.departmentId = formData.departmentId;
         element.resCityId = formData.resCityId;
+        element.gender = 1;
       }
       this.authService.addImportedUsers(dataToSave, this.authService.decodedToken.nameid).subscribe((userid: number) => {
         this.alertify.success('enregistrement terminé...');
         this.importedUsers = this.importedUsers.filter(a => a.selected === false);
         this.filteredUsers = this.importedUsers;
-        this.searchForm.reset();
+        // this.searchForm.reset();
         // this.searchForm.setValue(null);
         this.isSelected = [];
-        this.userForm.reset();
+        // this.userForm.reset();
+        this.searchForm.controls['resCityId'].setValue(null);
+
         if (this.isMaintenancier) {
           // this.getDepartments();
           this.createUserForms();
         } else {
           this.getRegions();
-
         }
         this.waitDiv = false;
       });
@@ -402,7 +449,6 @@ export class NewUserComponent implements OnInit {
       this.importedUsers = [];
       this.filteredUsers = [];
       const d = jsonData;
-      // debugger;
       for (let i = 0; i < d.at.length; i++) {
         const la_ligne = d.at[i];
         const element: any = {};
@@ -444,5 +490,8 @@ export class NewUserComponent implements OnInit {
     this.isSelected = [];
   }
 
+  returnToList() {
+    this.cancelEdition.emit(true);
+  }
 
 }

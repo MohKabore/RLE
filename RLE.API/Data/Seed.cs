@@ -4,6 +4,7 @@ using System.Linq;
 using RLE.API.Models;
 using Microsoft.AspNetCore.Identity;
 using Newtonsoft.Json;
+using Microsoft.EntityFrameworkCore;
 
 namespace RLE.API.Data
 {
@@ -12,6 +13,14 @@ namespace RLE.API.Data
         public static void SeedUsers(DataContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
 
+          var users = context.Users.Include(r=>r.ResCity).ThenInclude(r=>r.Department).Where(r =>r.RegionId==null && r.ResCity!=null);
+            foreach (var usr in users)
+            {
+                usr.RegionId = usr.ResCity.Department.RegionId;
+                context.Update(usr);
+
+            }
+            context.SaveChanges();
 
             if (!userManager.Users.Any())
             {

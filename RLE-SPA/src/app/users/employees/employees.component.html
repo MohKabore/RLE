@@ -1,6 +1,6 @@
 <div class="container mt-5 animated bounceInDown">
     <div class="d-flex justify-content-center">
-        <div class="col-md-12" *ngIf="!showDetails">
+        <div class="col-md-12" *ngIf="!showDetails && !showEditionDiv">
             <mdb-card class="row">
                 <mdb-card-body>
                     <form style="color: #757575;" [formGroup]="searchForm">
@@ -190,9 +190,13 @@
             <mdb-card>
                 <mdb-card-body style="width: 100%;">
                     <p class="text-right"><button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
-                            (click)="returnToList()">retour</button></p>
+                            (click)="returnToList()"><i class="fa fa-arrow-left"></i></button>
+                            <!-- <button type="button" (click)="goToEditionDiv()" size="sm" mdbBtn color="primary" title="editer" mdbWavesEffect><i class="fa fa-edit"></i></button> -->
+                        </p>
                     <p>Localisation : <b>{{user?.regionName}}/{{user?.departmentName}}/{{user?.resCityName}}</b></p>
                     <p>Status : <b style="font-size: 12px;">{{user?.details}}</b></p>
+                    <p *ngIf="user?.enrolmentCenterId">Centre : {{user?.enrolmentCenterName}}</p>
+                    <p *ngIf="user?.tabletId">Tablette : {{user?.tabletImei}}</p>
                 </mdb-card-body>
             </mdb-card>
 
@@ -200,6 +204,8 @@
 
         </div>
     </div>
+</div>
 
-
+<div *ngIf="showEditionDiv">
+    <app-new-user [user]="user" (cancelEdition)="backToList($event)"></app-new-user>
 </div>

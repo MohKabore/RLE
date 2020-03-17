@@ -152,7 +152,7 @@ export class TrainedUsersComponent implements OnInit {
     if (idx === -1) {
       this.isSelected = [...this.isSelected, e];
     } else {
-      this.isSelected.splice(idx);
+      this.isSelected.splice(idx,1);
     }
   }
 

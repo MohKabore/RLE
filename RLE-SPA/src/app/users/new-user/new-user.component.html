@@ -14,16 +14,16 @@
       <mdb-card-body>
         <mdb-card-title>
           <h4 class="text-center">
-            <p class="text-title">ENREGISTREMENT MEMBRE DU PERSONNEL</p>
+            <p class="text-title" *ngIf="editionMode==='add'">ENREGISTREMENT MEMBRE DU PERSONNEL </p>
+            <p class="text-title" *ngIf="editionMode==='edit'">MODIFICATION MEMBRE DU PERSONNEL </p>
           </h4>
         </mdb-card-title>
-        <form>
+        <form *ngIf="editionMode==='add'">
           <div class="file-field md-form">
             <div mdbBtn color="primary" size="sm" class="waves-light" mdbWavesEffect>
               <span>importer</span>
               <input type="file" mdbFileSelect (change)="onFileChange($event)" accept=".xlsx, .xls">
             </div>
-
           </div>
         </form>
         <hr>
@@ -42,7 +42,7 @@
                   <div class="m-0">
                     <div class="file-field md-form m-0">
                       <div mdbBtn color="light" size="sm" class="waves-light" mdbWavesEffect>
-                        <span>choisir la photo</span>
+                        <span style="font-size: 10px;">choisir la photo</span>
                         <input type="file" accept='image/*' mdbFileSelect (change)="parentImgResult($event)">
                       </div>
                     </div>
@@ -201,6 +201,8 @@
               <div class="d-flex justify-content-center">
                 <button mdbBtn size="sm" color="success" [disabled]="!userForm.valid"
                   (click)="[basicModal.show(), verifyIfExist()]">enregistrer</button>
+
+                  <button mdbBtn size="sm" *ngIf="editionMode==='edit'" color="light" (click)="returnToList()"  >annuler</button>
               </div>
             </div>
           </div>

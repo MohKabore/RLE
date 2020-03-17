@@ -16,6 +16,7 @@ namespace RLE.API.Helpers
         public AutoMapperProfiles(DataContext context)
         {
             _context = context;
+            
         }
         public AutoMapperProfiles()
         {
@@ -27,6 +28,10 @@ namespace RLE.API.Helpers
                 .ForMember(dest => dest.Age, opt =>
                 {
                     opt.MapFrom(d => d.DateOfBirth.CalculateAge());
+                })
+                .ForMember(dest => dest.DateOfBirth, opt =>
+                {
+                    opt.MapFrom(d => d.DateOfBirth.ToString("dd/MM/yyyy", frC));
                 })
                 .ForMember(dest => dest.Step, opt =>
                 {

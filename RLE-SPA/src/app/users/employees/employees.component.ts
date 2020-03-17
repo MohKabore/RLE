@@ -33,6 +33,7 @@ export class EmployeesComponent implements OnInit {
   isMaintenancier = false;
   isHotliner = false;
   showDetails = false;
+  showEditionDiv = false;
   constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
 
 
@@ -61,6 +62,10 @@ export class EmployeesComponent implements OnInit {
     });
   }
   returnToList() {
+    this.showDetails = false;
+  }
+  goToEditionDiv() {
+    this.showEditionDiv = true;
     this.showDetails = false;
   }
 
@@ -108,6 +113,11 @@ export class EmployeesComponent implements OnInit {
         }
       });
     }
+  }
+
+  backToList() {
+    this.showEditionDiv = false;
+    this.showDetails = true;
   }
 
 

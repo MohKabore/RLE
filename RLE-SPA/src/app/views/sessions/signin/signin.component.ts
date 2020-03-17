@@ -70,7 +70,7 @@ export class SigninComponent implements OnInit {
             }
             this.loading = false;
         }, error => {
-            this.alertify.error(error);
+            this.alertify.error(error.error);
             this.loading = false;
         });
     }

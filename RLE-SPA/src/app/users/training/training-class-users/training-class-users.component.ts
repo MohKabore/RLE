@@ -106,7 +106,7 @@ export class TrainingClassUsersComponent implements OnInit {
     if (idx) {
       this.isSelected = [...this.isSelected, e];
     } else {
-      this.isSelected.splice(idx);
+      this.isSelected.splice(idx,1);
     }
   }
 
@@ -123,7 +123,7 @@ export class TrainingClassUsersComponent implements OnInit {
       for (let i = 0; i < this.isSelected.length; i++) {
         const userId = this.isSelected[i];
         const idx = this.participants.findIndex(a => a.id === userId);
-        this.participants.splice(idx);
+        this.participants.splice(idx,1);
       }
       this.isSelected = [];
       this.alertify.success('enregistrement terminé...');

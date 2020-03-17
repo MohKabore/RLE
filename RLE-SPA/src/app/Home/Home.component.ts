@@ -11,7 +11,7 @@ import { Department } from '../_models/department';
   styleUrls: ['./Home.component.css']
 })
 export class HomeComponent implements OnInit {
-  regions: Region[];
+  regions: any[];
   region: any = {};
   regionList: any = [];
   showDetails = false;

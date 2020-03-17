@@ -1,4 +1,5 @@
 using System;
+using RLE.API.Models;
 
 namespace RLE.API.Dtos
 {
@@ -10,7 +11,7 @@ namespace RLE.API.Dtos
         public string LastName { get; set; }
         public string PhotoUrl { get; set; }
         public string SecondPhoneNumber { get; set; }
-        public DateTime DateOfBirth { get; set; }
+        public string DateOfBirth { get; set; }
         public string Idnum { get; set; }
         public int TypeEmpId { get; set; }
         public string TypeEmpName { get; set; }
@@ -20,6 +21,8 @@ namespace RLE.API.Dtos
         public string DepartmentName { get; set; }
         public int? ResCityId { get; set; }
         public string ResCityName { get; set; }
+        public byte Gender { get; set; }
+
         public int? MaritalStatusId { get; set; }
         public string MaritalStatusName { get; set; }
         public string PhoneNumber { get; set; }
@@ -46,6 +49,12 @@ namespace RLE.API.Dtos
         public bool Reserved { get; set; }
         public int Step { get; set; }
         public string Details { get; set; }
+        public string EnrolmentCenterName { get; set; }
+        public int? EnrolmentCenterId { get; set; }
+        public EnrolmentCenter EnrolmentCenter { get; set; }
+        public int? TabletId { get; set; }
+        public string TabletImei { get; set; }
+        public Tablet Tablet { get; set; }
         
     }
 }

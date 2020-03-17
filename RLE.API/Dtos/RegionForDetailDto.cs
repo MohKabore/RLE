@@ -10,6 +10,7 @@ namespace RLE.API.Dtos
             TotalPreSelected = 0;
             TotalRegistered = 0;
             TotalSelected = 0;
+            TotalReserved = 0;
             NbEmpNeeded = 0;
             PrctRegistered = 0;
             PrctPreselected = 0;
@@ -23,6 +24,7 @@ namespace RLE.API.Dtos
         public int NbEmpNeeded { get; set; }
 
         public int TotalRegistered { get; set; }
+        public int TotalReserved { get; set; }
         public int TotalPreSelected { get; set; }
         public int TotalOnTraining { get; set; }
         public int TotalSelected { get; set; }
