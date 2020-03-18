@@ -11,6 +11,7 @@ namespace RLE.API.Dtos
             TotalRegistered = 0;
             TotalSelected = 0;
             TotalReserved = 0;
+            TotalTrained=0;
             NbEmpNeeded = 0;
             PrctRegistered = 0;
             PrctPreselected = 0;
@@ -28,11 +29,13 @@ namespace RLE.API.Dtos
         public int TotalPreSelected { get; set; }
         public int TotalOnTraining { get; set; }
         public int TotalSelected { get; set; }
+        public int TotalTrained{ get; set; }
 
         public double PrctRegistered { get; set; }
         public double PrctPreselected { get; set; }
         public double PrctOnTraining { get; set; }
         public double PrctSelected { get; set; }
+        public double PrctTrained { get; set; }
 
         public bool ActiveforInscription { get; set; }
         public List<DepartmentForDetailDto> Departments { get; set; }

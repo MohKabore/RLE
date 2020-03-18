@@ -1,37 +1,43 @@
-<div *ngFor="let reg of regions" class="animated bounceInDown">
-  <mdb-card class="mb-2">
-    <mdb-card-body>
-      <mdb-card-title>
-        <h4 class="text-center">{{reg.name}} ({{reg.totalRegistered}} sur {{reg.nbEmpNeeded}})</h4>
-      </mdb-card-title>
-  <table style="width: 100%;">
-    <tr>
-      <td style="width: 20%;"><b>Inscrit(s)</b></td>
-      <td>:</td>
-      <td style="width: 100%;text-align: left;">{{reg.totalRegistered}}</td>
-    </tr>
-    <tr>
-      <td><b>Pré-sélectionné(s)</b></td>
-      <td>:</td>
-      <td>{{reg.totalPreSelected}}</td>
-    </tr>
-    <tr>
-      <td><b>formé(s)</b></td>
-      <td>:</td>
-      <td>{{reg.totalOnTraining}}</td>
-    </tr>
-    <tr>
-      <td><b>Sélectionnée(s)</b></td>
-      <td>:</td>
-      <td>{{reg.totalSelected}}</td>
-    </tr>
-
-    <tr>
-      <td><b>Réserviste(s)</b></td>
-      <td>:</td>
-      <td>{{reg.totalReserved}}</td>
-    </tr>
-  </table>
-    </mdb-card-body>
-  </mdb-card>
+<div class="container mt-5">
+  <div *ngFor="let reg of regions" class="animated mb-1 bounceInDown">
+    <mdb-card class="mb-2">
+      <mdb-card-body>
+        <mdb-card-title>
+          <h4 class="text-center">{{reg.name}} ({{reg.totalRegistered}} sur {{reg.nbEmpNeeded}})</h4>
+        </mdb-card-title>
+    <table style="width: 100%;">
+      <tr [ngClass]="{'alert alert-danger' :reg.prctRegistered<50,'alert alert-warning' :reg.prctRegistered<75 && reg.prctRegistered>=50
+        ,'alert alert-primary' :reg.prctRegistered<100 && reg.prctRegistered>=75,'alert alert-success' :reg.prctRegistered>=100}">
+        <td style="width: 20%;"><b>Inscrit(s)</b></td>
+        <td>:</td>
+        <td style="width: 100%;text-align: left;">{{reg.totalRegistered}}</td>
+      </tr>
+      <tr [ngClass]="{'alert alert-danger' :reg.prctPreselected<50,'alert alert-warning' :reg.prctPreselected<75 && reg.prctPreselected>=50
+        ,'alert alert-primary' :reg.prctPreselected<100 && reg.prctPreselected>=75,'alert alert-success' :reg.prctPreselected>=100}">
+        <td><b>Pré-sélectionné(s)</b></td>
+        <td>:</td>
+        <td>{{reg.totalPreSelected}}</td>
+      </tr>
+      <tr [ngClass]="{'alert alert-danger' :reg.prctTrained<50,'alert alert-warning' :reg.prctTrained<75 && reg.prctTrained>=50
+        ,'alert alert-primary' :reg.prctTrained<100 && reg.prctTrained>=75 ,'alert alert-success' :reg.prctTrained>=100}">
+        <td><b>formé(s)</b></td>
+        <td>:</td>
+        <td>{{reg.totalTrained}}</td>
+      </tr>
+      <tr [ngClass]="{'alert alert-danger' :reg.prctSelected<50,'alert alert-warning' :reg.prctSelected<75 && reg.prctSelected>=50
+        ,'alert alert-warning' :reg.prctSelected<100 && reg.prctSelected>=75,'alert alert-success' :reg.prctSelected>=100}">
+        <td><b>Sélectionnée(s)</b></td>
+        <td>:</td>
+        <td>{{reg.totalSelected}}</td>
+      </tr>
+  
+      <tr>
+        <td><b>Réserviste(s)</b></td>
+        <td>:</td>
+        <td>{{reg.totalReserved}}</td>
+      </tr>
+    </table>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
 </div>
