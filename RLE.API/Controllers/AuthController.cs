@@ -906,14 +906,14 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> MunEnrolmentCenters(int municipaltyId)
         {
             var ecs = await _context.EnrolmentCenters
-                                    .Include(d=>d.Municipality)
-                                    .ThenInclude(d=>d.City)
-                                    .ThenInclude(d=>d.Department)
-                                    .ThenInclude(d=>d.Region)
+                                    .Include(d => d.Municipality)
+                                    .ThenInclude(d => d.City)
+                                    .ThenInclude(d => d.Department)
+                                    .ThenInclude(d => d.Region)
                                     .Where(m => m.MunicipalityId == municipaltyId)
                                     .OrderBy(a => a.Name)
                                     .ToListAsync();
-            var ecsToReturn =  _mapper.Map<IEnumerable<EcsForListDto>>(ecs);
+            var ecsToReturn = _mapper.Map<IEnumerable<EcsForListDto>>(ecs);
             return Ok(ecsToReturn);
         }
 
@@ -933,13 +933,13 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> CitySelectedEmps(int cityId)
         {
             var users = await _context.Users
-                                    .Where(m => m.ResCityId == cityId && m.Selected == true && m.TypeEmpId ==  typeOperatorId 
+                                    .Where(m => m.ResCityId == cityId && m.Selected == true && m.TypeEmpId == typeOperatorId
                                     && m.TabletId == null)
                                     .OrderBy(a => a.LastName)
-                                    .ThenBy(a=>a.FirstName)
+                                    .ThenBy(a => a.FirstName)
                                     .ToListAsync();
             var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(users);
-            
+
             return Ok(usersToReturn);
         }
 
@@ -1061,51 +1061,68 @@ namespace RLE.API.Controllers
         [HttpPost("AddImportedUsers/{insertUserId}")]
         public async Task<IActionResult> AddImportedUsers(List<UserForRegisterDto> usersForRegisterDto, int insertUserId)
         {
+            int step = 0;
             foreach (var userForRegisterDto in usersForRegisterDto)
             {
-                var userName = Guid.NewGuid();
-                var userToCreate = _mapper.Map<User>(userForRegisterDto);
-                userToCreate.PreSelected = true;
-                userToCreate.Selected = false;
-                userToCreate.UserName = userName.ToString();
-                userToCreate.ValidationCode = userName.ToString();
-                var result = await _userManager.CreateAsync(userToCreate, password);
 
-                // var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
-
-                if (result.Succeeded)
+                if (userForRegisterDto.LastName != null && userForRegisterDto.FirstName != null && userForRegisterDto.PhoneNumber!=null)
                 {
-                    var userId = userToCreate.Id;
-                    if (userId < 10)
+                    var ops = await _context.Users.FirstOrDefaultAsync(u => u.LastName.ToUpper() == userForRegisterDto.LastName.ToUpper()
+                                                                                   && u.FirstName.ToUpper() == userForRegisterDto.FirstName.ToUpper()
+                                                                                   && u.RegionId == userForRegisterDto.RegionId && u.PhoneNumber == userForRegisterDto.PhoneNumber);
+                    if (ops == null)
                     {
-                        userToCreate.Idnum = "0000" + userId;
+                        step++;
+                        var userName = Guid.NewGuid();
+                        var userToCreate = _mapper.Map<User>(userForRegisterDto);
+                        userToCreate.PreSelected = true;
+                        userToCreate.Selected = false;
+                        userToCreate.UserName = userName.ToString();
+                        userToCreate.ValidationCode = userName.ToString();
+                        var result = await _userManager.CreateAsync(userToCreate, password);
+
+                        // var userToReturn = _mapper.Map<UserForDetailedDto>(userToCreate);
+
+                        if (result.Succeeded)
+                        {
+                            var userId = userToCreate.Id;
+                            if (userId < 10)
+                            {
+                                userToCreate.Idnum = "0000" + userId;
+                            }
+                            else if (userId >= 10 && userId < 100)
+                                userToCreate.Idnum = "000" + userId;
+                            else if (userId >= 100 && userId < 1000)
+                                userToCreate.Idnum = "00" + userId;
+                            else if (userId >= 1000 && userId < 10000)
+                                userToCreate.Idnum = "0" + userId;
+                            else
+                                userToCreate.Idnum = userId.ToString();
+                            _repo.Update(userToCreate);
+                            var uh = new UserHistory
+                            {
+                                InsertUserId = insertUserId,
+                                UserId = userToCreate.Id,
+                                UserHistoryTypeId = _config.GetValue<int>("AppSettings:AddUserHistorytypeId")
+                            };
+                            _repo.Add(uh);
+                        }
                     }
-                    else if (userId >= 10 && userId < 100)
-                        userToCreate.Idnum = "000" + userId;
-                    else if (userId >= 100 && userId < 1000)
-                        userToCreate.Idnum = "00" + userId;
-                    else if (userId >= 1000 && userId < 10000)
-                        userToCreate.Idnum = "0" + userId;
-                    else
-                        userToCreate.Idnum = userId.ToString();
-                    _repo.Update(userToCreate);
-                    var uh = new UserHistory
-                    {
-                        InsertUserId = insertUserId,
-                        UserId = userToCreate.Id,
-                        UserHistoryTypeId = _config.GetValue<int>("AppSettings:AddUserHistorytypeId")
-                    };
-                    _repo.Add(uh);
+
+
                 }
 
 
             }
 
-            if (await _repo.SaveAll())
+            if (step > 0)
+            {
+                if (await _repo.SaveAll())
+                    return Ok();
+                return BadRequest();
+            }
+            else
                 return Ok();
-
-
-            return BadRequest();
 
         }
 
@@ -1189,6 +1206,47 @@ namespace RLE.API.Controllers
             return Ok(false);
         }
 
+
+        [HttpGet("GetDoubons")]
+        public async Task<IActionResult> GetDoubons()
+        {
+            try
+            {
+                var emps = await _context.Users.Include(t => t.ResCity).Include(t => t.Department).Include(t => t.Region).Where(t => t.TypeEmpId == 3).ToListAsync();
+                var doublons = new List<User>();
+
+                foreach (var user in emps)
+                {
+                    var d = new List<User>();
+                    if ((doublons.FirstOrDefault(a => a.Id == user.Id) == null))
+                    {
+                        // if(user.PhoneNumber!=null)
+                        //  d = emps.Where(a => a.LastName.ToLower() == user.LastName.ToLower() && a.FirstName == user.FirstName.ToLower()
+                        //                     && a.PhoneNumber == user.PhoneNumber  && a.Id > user.Id).ToList();
+
+                        
+                         d = emps.Where(a => a.LastName.ToLower() == user.LastName.ToLower() && a.FirstName == user.FirstName.ToLower()
+                                                && a.Id > user.Id).ToList();
+                        if (d.Count() > 0)
+                        {
+                            doublons.AddRange(d);
+                            if ((doublons.FirstOrDefault(a => a.Id == user.Id) == null))
+                                doublons.Add(user);
+                        }
+                    }
+
+                }
+
+                var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(doublons);
+                return Ok(usersToReturn);
+            }
+            catch (System.Exception ex)
+            {
+
+                return BadRequest();
+            }
+
+        }
 
 
     }

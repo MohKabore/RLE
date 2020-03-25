@@ -13,14 +13,34 @@ namespace RLE.API.Data
         public static void SeedUsers(DataContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
 
-          var users = context.Users.Include(r=>r.ResCity).ThenInclude(r=>r.Department).Where(r =>r.RegionId==null && r.ResCity!=null);
-            foreach (var usr in users)
-            {
-                usr.RegionId = usr.ResCity.Department.RegionId;
-                context.Update(usr);
+            // var users = context.Users.Where(r => r.TypeEmpId == 3);
+            // int step = 0;
+            // var lst2 = new List<int>();
+            // foreach (var usr in users)
+            // {
+            //     var doublons = users.Where(r => r.TypeEmpId == usr.TypeEmpId && r.LastName == usr.LastName &&
+            //     r.PhoneNumber == usr.PhoneNumber && r.Id != usr.Id);
+            //     if (doublons.Count() > 0)
+            //         lst2.AddRange(doublons.Select(a => a.Id));
+            // }
 
-            }
-            context.SaveChanges();
+            // try
+            // {
+            //     foreach (var userid in lst2.Distinct())
+            //     {
+            //         var userh = context.UserHistories.Where(a => a.UserId == userid);
+            //         context.RemoveRange(userh);
+            //         var user = context.Users.FirstOrDefault(a => a.Id == userid);
+            //         context.Remove(user);
+            //     }
+            //     context.SaveChanges();
+            // }
+            // catch (System.Exception)
+            // {
+
+            //     throw;
+            // }
+
 
             if (!userManager.Users.Any())
             {

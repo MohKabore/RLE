@@ -113,6 +113,7 @@ export class ConfirmEmailComponent implements OnInit {
 
     }, error => {
       this.alertify.error(error);
+      this.router.navigate(['error']);
     });
 
   }

@@ -526,7 +526,7 @@ namespace RLE.API.Controllers
             return NotFound();
         }
 
-        // [HttpGet("AllRegionOpDetails")]
+        //     [HttpGet("AllRegionOpDetails")]
         // public async Task<IActionResult> AllRegionOpDetails()
         // {
         //     var quotas = await _context.Quotas.ToListAsync();
@@ -536,6 +536,7 @@ namespace RLE.API.Controllers
         //     var selectionQuota = quotas.FirstOrDefault(a => a.Id == _config.GetValue<int>("AppSettings:SelectionQuota")).Percentage;
         //     var allDepartments = await _context.Departments.ToArrayAsync();
         //     var allCities = await _context.Cities.ToArrayAsync();
+        //     int operatorTypeId = _config.GetValue<int>("AppSettings:OperatorTypeId");
         //     var allOperators = await _context.Users.Where(u => u.TypeEmpId == operatorTypeId).ToListAsync();
 
 
@@ -551,10 +552,16 @@ namespace RLE.API.Controllers
         //             Departments = new List<DepartmentForDetailDto>()
 
         //         };
-        //         var departments = allDepartments.Where(d => d.RegionId == region.Id).ToList();
+        //         var departments = allDepartments.Where(d => d.RegionId == region.Id).OrderBy(d => d.Name).ToList();
         //         foreach (var dept in departments)
         //         {
-        //             var d = new CityForDetailDto();
+        //             var d = new DepartmentForDetailDto()
+        //             {
+        //                 Id = dept.Id,
+        //                 Name = dept.Name,
+        //                 Code = dept.Code
+
+        //             };
 
         //             var cities = allCities.Where(re => re.DepartmentId == dept.Id)
         //                                                     .OrderBy(a => a.Name);
@@ -563,12 +570,16 @@ namespace RLE.API.Controllers
         //                 var operators = allOperators.Where(u => u.ResCityId == city.Id);
         //                 var c = new CityForDetailDto
         //                 {
-        //                     TotalRegistered = operators.Where(a => a.PreSelected == false).Count(),
+        //                     Id = city.Id,
+        //                     Name = city.Name,
+        //                     Code = city.Code,
+        //                     TotalRegistered = operators.Count(),
         //                     TotalPreSelected = operators.Where(a => a.PreSelected == true).Count(),
         //                     TotalOnTraining = operators.Where(a => a.OnTraining == true).Count(),
         //                     TotalSelected = operators.Where(a => a.Selected == true).Count(),
         //                     NbEmpNeeded = city.NbEmpNeeded,
         //                 };
+        //                 c.TotalRegisteredPrct = (int)Math.Round(100 * ((r.NbEmpNeeded * inscrpitionQuota)), 2);
         //                 d.TotalSelected += c.TotalSelected;
         //                 d.TotalOnTraining += c.TotalOnTraining;
         //                 d.TotalPreSelected += c.TotalPreSelected;
@@ -584,12 +595,13 @@ namespace RLE.API.Controllers
         //             r.PrctPreselected = Math.Round(100 * ((double)r.TotalPreSelected / (double)(r.NbEmpNeeded * preselectionQuota)), 2);
         //             r.PrctOnTraining = Math.Round(100 * ((double)r.TotalOnTraining / (double)(r.NbEmpNeeded * onTrainingQuota)), 2);
         //             r.PrctSelected = Math.Round(100 * ((double)r.TotalSelected / (double)(r.NbEmpNeeded * selectionQuota)), 2);
+        //             r.TotalRegisteredPrct = Convert.ToInt32(r.NbEmpNeeded * inscrpitionQuota);
+        //             r.TotalReserveToHave = Convert.ToInt32((r.NbEmpNeeded * inscrpitionQuota) - r.NbEmpNeeded);
         //         }
         //         regionsToReturn.Add(r);
         //     }
         //     return Ok(regionsToReturn);
         // }
-
 
         [HttpGet("AllRegionOpDetails")]
         public async Task<IActionResult> AllRegionOpDetails()
@@ -604,6 +616,8 @@ namespace RLE.API.Controllers
             int operatorTypeId = _config.GetValue<int>("AppSettings:OperatorTypeId");
             var allOperators = await _context.Users.Where(u => u.TypeEmpId == operatorTypeId).ToListAsync();
 
+            var recap = new CitiesRecap();
+            recap.TotalCities = allCities.Count();
 
             var allRegions = await _context.Regions.OrderBy(a => a.Name).ToListAsync();
             var regionsToReturn = new List<RegionForDetailDto>();
@@ -624,46 +638,81 @@ namespace RLE.API.Controllers
                     {
                         Id = dept.Id,
                         Name = dept.Name,
-                        Code = dept.Code
-
+                        Code = dept.Code,
+                        RegionId = dept.RegionId,
+                        Cities = new List<CityForDetailDto>()
                     };
 
-                    var cities = allCities.Where(re => re.DepartmentId == dept.Id)
-                                                            .OrderBy(a => a.Name);
-                    foreach (var city in cities)
+                    var deptCities = allCities.Where(c => c.DepartmentId == dept.Id);
+                    foreach (var c in deptCities)
                     {
-                        var operators = allOperators.Where(u => u.ResCityId == city.Id);
-                        var c = new CityForDetailDto
+
+                        var cityOps = allOperators.Where(a => a.ResCityId == c.Id).ToList();
+                        int t = cityOps.Count();
+                        // d.Cities.Add(new CityForDetailDto
+                        // {
+                        //     Id = c.Id,
+                        //     Name = c.Name,
+                        //     Code = c.Code,
+                        //     DepartmentId = c.DepartmentId,
+                        //     NbEmpNeeded = c.NbEmpNeeded,
+                        //     TotalRegistered = t,
+                        //     PrctRegistered = Math.Round(100 * ((double)t / (double)(c.NbEmpNeeded * inscrpitionQuota)), 2),
+                        //     TotalRegisteredPrct = Convert.ToInt32(c.NbEmpNeeded * inscrpitionQuota),
+                        //     TotalReserveToHave = Convert.ToInt32((c.NbEmpNeeded * inscrpitionQuota) - c.NbEmpNeeded)
+                        // });
+
+                        var cc = new CityForDetailDto
                         {
-                            Id = city.Id,
-                            Name = city.Name,
-                            Code = city.Code,
-                            TotalRegistered = operators.Count(),
-                            TotalPreSelected = operators.Where(a => a.PreSelected == true).Count(),
-                            TotalOnTraining = operators.Where(a => a.OnTraining == true).Count(),
-                            TotalSelected = operators.Where(a => a.Selected == true).Count(),
-                            NbEmpNeeded = city.NbEmpNeeded,
+                            Id = c.Id,
+                            Name = c.Name,
+                            Code = c.Code,
+                            DepartmentId = c.DepartmentId,
+                            NbEmpNeeded = c.NbEmpNeeded,
+                            TotalRegistered = t,
+                            // PrctRegistered = Math.Round(100 * ((double)t / (double)(c.NbEmpNeeded * inscrpitionQuota)), 2),
+                            // PrctRegistered = 100 * (t / (c.NbEmpNeeded * inscrpitionQuota)),
+                            TotalRegisteredPrct = Convert.ToInt32(c.NbEmpNeeded * inscrpitionQuota),
+                            TotalReserveToHave = Convert.ToInt32((c.NbEmpNeeded * inscrpitionQuota) - c.NbEmpNeeded)
                         };
-                        d.TotalSelected += c.TotalSelected;
-                        d.TotalOnTraining += c.TotalOnTraining;
-                        d.TotalPreSelected += c.TotalPreSelected;
-                        d.TotalRegistered += c.TotalRegistered;
+                        if (cc.TotalRegisteredPrct > 0)
+                            cc.PrctRegistered = (100 * t) / (cc.TotalRegisteredPrct);
+                        if (cc.PrctRegistered < 65)
+                            recap.RedCities++;
+                        if (cc.PrctRegistered >= 65 && cc.PrctRegistered < 90)
+                            recap.OrangeCities++;
+                        if (cc.PrctRegistered >= 90 && cc.PrctRegistered < 100)
+                            recap.BleuCities++;
+                        if (cc.PrctRegistered >= 100)
+                            recap.GreenCities++;
+
+                        d.Cities.Add(cc);
+                        d.TotalRegistered += t;
                         d.NbEmpNeeded += c.NbEmpNeeded;
+                        d.TotalRegisteredPrct = Convert.ToInt32(d.NbEmpNeeded * inscrpitionQuota);
+                        d.TotalReserveToHave = Convert.ToInt32((d.NbEmpNeeded * inscrpitionQuota) - d.NbEmpNeeded);
                     }
-                    r.TotalOnTraining += d.TotalOnTraining;
-                    r.TotalPreSelected += d.TotalPreSelected;
-                    r.TotalRegistered += d.TotalRegistered;
-                    r.TotalSelected += d.TotalSelected;
+                    if (d.TotalRegisteredPrct > 0)
+                        d.PrctRegistered = (d.TotalRegistered * 100) / d.TotalRegisteredPrct;
+                    r.Departments.Add(d);
                     r.NbEmpNeeded += d.NbEmpNeeded;
-                    r.PrctRegistered = Math.Round(100 * ((double)r.TotalRegistered / (double)(r.NbEmpNeeded * inscrpitionQuota)), 2);
-                    r.PrctPreselected = Math.Round(100 * ((double)r.TotalPreSelected / (double)(r.NbEmpNeeded * preselectionQuota)), 2);
-                    r.PrctOnTraining = Math.Round(100 * ((double)r.TotalOnTraining / (double)(r.NbEmpNeeded * onTrainingQuota)), 2);
-                    r.PrctSelected = Math.Round(100 * ((double)r.TotalSelected / (double)(r.NbEmpNeeded * selectionQuota)), 2);
+                    r.TotalRegistered += d.TotalRegistered;
+                    r.TotalRegisteredPrct = Convert.ToInt32(r.NbEmpNeeded * inscrpitionQuota);
+                    r.TotalReserveToHave = Convert.ToInt32((r.NbEmpNeeded * inscrpitionQuota) - r.NbEmpNeeded);
+
                 }
+                if (r.TotalRegisteredPrct > 0)
+                    r.PrctRegistered = (r.TotalRegistered * 100) / r.TotalRegisteredPrct;
                 regionsToReturn.Add(r);
             }
-            return Ok(regionsToReturn);
+            return Ok(new
+            {
+                regions = regionsToReturn,
+                recap = recap
+            });
         }
+
+
 
 
         [HttpGet("{regionId}/GetRegionRegistrationDetails")]
@@ -698,25 +747,50 @@ namespace RLE.API.Controllers
                 {
 
                     var cityOps = ops.Where(a => a.ResCityId == c.Id).ToList();
-                    d.Cities.Add(new CityForDetailDto
+                    int t = cityOps.Count();
+                    // d.Cities.Add(new CityForDetailDto
+                    // {
+                    //     Id = c.Id,
+                    //     Name = c.Name,
+                    //     Code = c.Code,
+                    //     DepartmentId = c.DepartmentId,
+                    //     NbEmpNeeded = c.NbEmpNeeded,
+                    //     TotalRegistered = t,
+                    //     PrctRegistered = Math.Round(100 * ((double)t / (double)(c.NbEmpNeeded * inscrpitionQuota)), 2),
+                    //     TotalRegisteredPrct = Convert.ToInt32(c.NbEmpNeeded * inscrpitionQuota),
+                    //     TotalReserveToHave = Convert.ToInt32((c.NbEmpNeeded * inscrpitionQuota) - c.NbEmpNeeded)
+                    // });
+
+
+                    var cc = new CityForDetailDto
                     {
                         Id = c.Id,
                         Name = c.Name,
                         Code = c.Code,
                         DepartmentId = c.DepartmentId,
                         NbEmpNeeded = c.NbEmpNeeded,
-                        TotalRegistered = cityOps.Count(),
-                        PrctRegistered = Math.Round(100 * ((double)cityOps.Count() / (double)(c.NbEmpNeeded * inscrpitionQuota)), 2)
-                    });
-                    int t = cityOps.Count();
-
-                    d.TotalRegistered += cityOps.Count();
+                        TotalRegistered = t,
+                        // PrctRegistered = Math.Round(100 * ((double)t / (double)(c.NbEmpNeeded * inscrpitionQuota)), 2),
+                        TotalRegisteredPrct = Convert.ToInt32(c.NbEmpNeeded * inscrpitionQuota),
+                        TotalReserveToHave = Convert.ToInt32((c.NbEmpNeeded * inscrpitionQuota) - c.NbEmpNeeded)
+                    };
+                    if(cc.TotalRegisteredPrct>0)
+                      cc.PrctRegistered = (100 * t) / (cc.TotalRegisteredPrct);
+                    d.Cities.Add(cc);
+                    d.TotalRegistered += t;
                     d.NbEmpNeeded += c.NbEmpNeeded;
+                    d.TotalRegisteredPrct = Convert.ToInt32(d.NbEmpNeeded * inscrpitionQuota);
+                    d.TotalReserveToHave = Convert.ToInt32((d.NbEmpNeeded * inscrpitionQuota) - d.NbEmpNeeded);
                 }
-                d.PrctRegistered = Math.Round(100 * ((double)d.TotalRegistered / (double)(d.NbEmpNeeded * inscrpitionQuota)), 2);
+                // d.PrctRegistered = Math.Round(100 * ((double)d.TotalRegistered / (double)(d.NbEmpNeeded * inscrpitionQuota)), 2);
+                if(d.TotalRegisteredPrct>0)
+                d.PrctRegistered =(d.TotalRegistered*100) / d.TotalRegisteredPrct;
                 regionToReturn.Departments.Add(d);
                 regionToReturn.NbEmpNeeded += d.NbEmpNeeded;
                 regionToReturn.TotalRegistered += d.TotalRegistered;
+                regionToReturn.TotalRegisteredPrct = Convert.ToInt32(regionToReturn.NbEmpNeeded * inscrpitionQuota);
+                regionToReturn.TotalReserveToHave = Convert.ToInt32((regionToReturn.NbEmpNeeded * inscrpitionQuota) - regionToReturn.NbEmpNeeded);
+
             }
             regionToReturn.PrctRegistered = Math.Round(100 * ((double)regionToReturn.TotalRegistered / (double)(regionToReturn.NbEmpNeeded * inscrpitionQuota)), 2);
             return Ok(regionToReturn);
@@ -1160,7 +1234,7 @@ namespace RLE.API.Controllers
                                             .Include(a => a.EnrolmentCenter)
                                             .Include(a => a.Tablet)
                                             .FirstOrDefaultAsync(u => u.Id == userId);
-            if(user!=null)
+            if (user != null)
             {
                 var userToReturn = _mapper.Map<UserForListDto>(user);
                 if (userToReturn.Step == 1)
@@ -1172,7 +1246,8 @@ namespace RLE.API.Controllers
                                                                         .Include(a => a.TrainingClass.Department)
                                                                         .Include(a => a.TrainingClass.City)
                                                                         .Include(a => a.TrainingClass.Training)
-                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId)).TrainingClass; if (userToReturn.Step == 2)
+                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId)); 
+                                                                        if (userToReturn.Step == 2)
                         userToReturn.Details = "Programmé(e) pour formation.";
                     if (userToReturn.Step == 3)
                         userToReturn.Details = "Formé(e):";
@@ -1185,15 +1260,45 @@ namespace RLE.API.Controllers
 
                     if (trainingClass != null)
                     {
-                        userToReturn.Details += " (" + trainingClass.Training.Name + " du " + trainingClass.StartDate.ToString("dd/MM/yyyy", frC)
-                         + ". Lieu de la formation " + trainingClass.Department.Name + " - " + trainingClass.City.Name + ")";
+                        userToReturn.Details += " (" + trainingClass.TrainingClass.Training.Name + " du " + trainingClass.TrainingClass.StartDate.ToString("dd/MM/yyyy", frC)
+                         + ". Lieu de la formation " + trainingClass.TrainingClass.Department.Name + " - " + trainingClass.TrainingClass.City.Name + ")";
                     }
                 }
                 return Ok(userToReturn);
             }
             return NotFound();
+        }
+        [HttpPost("ReAssignOps/{cityId}/{departmentId}")]
+        public async Task<IActionResult> ReAssignOps(int departmentId, int cityId, List<int> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userId);
+                user.ResCityId = cityId;
+                user.DepartmentId = departmentId;
+                _repo.Update(user);
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest();
+        }
 
 
+        [HttpPost("RemoveOps")]
+        public async Task<IActionResult> RemoveOps(List<int> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                var h = await _context.UserHistories.FirstOrDefaultAsync(a => a.UserId == userId);
+                if (h != null)
+                    _repo.Delete(h);
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userId);
+                _repo.Delete(user);
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+            return BadRequest();
         }
 
 

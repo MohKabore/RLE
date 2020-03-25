@@ -51,7 +51,7 @@
     "ng2-validation": "4.2.0",
     "ngx-bootstrap": "^5.1.1",
     "ngx-chips": "1.9.8",
-    "ngx-color-picker": "7.0.1",
+    "ngx-color-picker": "^7.0.1",
     "ngx-echarts": "4.0.0",
     "ngx-editor": "^4.1.0",
     "ngx-flip": "^7.1.0",

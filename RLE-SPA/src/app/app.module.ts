@@ -10,7 +10,7 @@ import { } from 'ng-uikit-pro-standard';
 // import { InMemoryDataService } from './shared/inmemory-db/inmemory-db.service';
 
 // MDB Angular Pro
-import { StepperModule, ToastModule, WavesModule, MDBSpinningPreloader, ProgressbarModule, IconsModule  } from 'ng-uikit-pro-standard';
+import { StepperModule, ToastModule, WavesModule, MDBSpinningPreloader, ProgressbarModule, IconsModule, CarouselModule  } from 'ng-uikit-pro-standard';
 import { MDBBootstrapModulesPro } from 'ng-uikit-pro-standard';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -19,6 +19,7 @@ import { NgxEchartsModule } from 'ngx-echarts';
 import { TextMaskModule } from 'angular2-text-mask';
 import { NgxPaginationModule } from 'ngx-pagination';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { ColorPickerModule } from 'ngx-color-picker';
 
 import { SharedModule } from './shared/shared.module';
 // import { InMemoryWebApiModule } from 'angular-in-memory-web-api';
@@ -61,6 +62,9 @@ import { AssignmentComponent } from './operation/assignment/assignment/assignmen
 import { ExpressAssigmentComponent } from './operation/assignment/assignment/express-assigment/express-assigment.component';
 import { ForgotComponent } from './views/sessions/forgot/forgot.component';
 import { ResetPasswordComponent } from './registration/reset-password/reset-password.component';
+import { RetroStoresComponent } from './retrofit/retro-stores/retro-stores.component';
+import { OpHandlingComponent } from './operation/assignment/assignment/op-handling/op-handling.component';
+import { DemoComponent } from './Home/demo/demo.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -99,7 +103,10 @@ export function tokenGetter() {
   AssignmentComponent,
   ExpressAssigmentComponent,
   ResetPasswordComponent,
-  ForgotComponent
+  ForgotComponent,
+  RetroStoresComponent,
+  OpHandlingComponent,
+  DemoComponent
   // SignupComponent
   ],
   imports: [
@@ -121,7 +128,9 @@ export function tokenGetter() {
     PaginationModule,
     ButtonsModule,
     ModalModule,
+    CarouselModule ,
     StepperModule,
+    ColorPickerModule,
     IconsModule,
     ToastModule.forRoot(),
     WavesModule,

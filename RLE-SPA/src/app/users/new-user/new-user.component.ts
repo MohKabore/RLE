@@ -34,6 +34,7 @@ export class NewUserComponent implements OnInit {
   editionMode;
   waitForValidation = true;
   userPhotoUrl = '';
+  readyforImport: boolean;
   sexe = [
     { value: 1, label: 'Homme' },
     { value: 0, label: 'Femme' }
@@ -147,7 +148,7 @@ export class NewUserComponent implements OnInit {
     if (idx === -1) {
       this.isSelected = [...this.isSelected, e];
     } else {
-      this.isSelected.splice(idx,1);
+      this.isSelected.splice(idx, 1);
     }
   }
 
@@ -433,6 +434,7 @@ export class NewUserComponent implements OnInit {
   }
 
   onFileChange(ev) {
+    this.readyforImport = true;
     let workBook = null;
     let jsonData = null;
     const reader = new FileReader();
@@ -458,6 +460,9 @@ export class NewUserComponent implements OnInit {
           element.secondPhoneNumber = la_ligne.contact2,
           element.email = la_ligne.email;
         element.selected = false;
+        if(!la_ligne.nom || !la_ligne.prenoms || !la_ligne.contact1) {
+          this.readyforImport = false;
+        }
 
         this.importedUsers = [...this.importedUsers, element];
       }

@@ -1,0 +1,186 @@
+<div class="container mt-5" *ngIf="wait">
+  <div *ngIf="!noResult && users.length===0">
+    <h4>chargement en cours...</h4>
+    <mdb-progress-bar class="progress primary-color-dark" mode="indeterminate"></mdb-progress-bar>
+  </div>
+</div>
+
+<div *ngIf="!wait" class="container mt-5 animated bounceInDown">
+  <mdb-card class="row" *ngIf="!usersDiv">
+    <mdb-card-body>
+      <form style="color: #757575;" [formGroup]="searchForm">
+        <div class="row">
+          <div class="col-md-2">
+            <div class="md-form form-sm m-0">
+              <mdb-select id="typeEmpId2" [options]="typeEmps" placeholder="Poste" formControlName="typeEmpId">
+              </mdb-select>
+            </div>
+          </div>
+          <div class="col-md-2" *ngIf="regions.length>0">
+            <div class="md-form form-sm m-0">
+              <mdb-select id="regionId2" [options]="regions" [disabled]="isMaintenancier" placeholder="region"
+                formControlName="regionId" (ngModelChange)="getDepartments()">
+              </mdb-select>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="md-form form-sm m-0">
+              <mdb-select id="departmentId2" [options]="depts" placeholder="département" formControlName="departmentId"
+                (ngModelChange)="getCities()">
+              </mdb-select>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="md-form form-sm  m-0">
+              <mdb-select id="resCityId2" [options]="cities" placeholder="ville ou commune" formControlName="resCityId">
+              </mdb-select>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="md-form form-sm  m-0">
+              <!-- <button title="enregistrer" (click)="save()" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
+                [disabled]=" !searchForm.valid || isSelected.length===0">réaffecter</button> -->
+              <button title="rechercher" (click)="searchEmp()" type="button" mdbBtn size="sm" color="primary"
+                mdbWavesEffect
+                [disabled]="!searchForm.value.regionId || !searchForm.value.typeEmpId">rechercher</button>
+              <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="reset()">annuler</button>
+            </div>
+          </div>
+
+        </div>
+      </form>
+    </mdb-card-body>
+  </mdb-card>
+
+  <mdb-card class="mt-2 animated animate bounceInUp" *ngIf="usersDiv">
+    <mdb-card-body>
+      <div *ngIf="!noResult && users.length===0">
+        <h4>patientez...</h4>
+        <mdb-progress-bar class="progress primary-color-dark" mode="indeterminate"></mdb-progress-bar>
+      </div>
+      <div *ngIf="noResult">
+        {{noResult}}
+      </div>
+      <div *ngIf="users.length>0">
+        <b class="text-center" >Nouvelle localité</b> <hr>
+        <form style="color: #757575;" [formGroup]="affectationForm">
+          <div class="row">
+
+            <div class="col-md-3">
+              <div class="md-form form-sm m-0">
+                <mdb-select id="departmentId" [options]="depts" placeholder="département" formControlName="departmentId"
+                  (ngModelChange)="getAffectationCities()">
+                </mdb-select>
+              </div>
+            </div>
+
+            <div class="col-md-3">
+              <div class="md-form form-sm  m-0">
+                <mdb-select id="resCityId" [options]="affectationCities" placeholder="ville ou commune"
+                  formControlName="resCityId">
+                </mdb-select>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <div class="md-form form-sm  m-0">
+                <!-- <button title="enregistrer" (click)="save()" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
+                  [disabled]=" !searchForm.valid || isSelected.length===0">réaffecter</button> -->
+                <button title="réaffecter" type="button" mdbBtn size="sm" color="primary" mdbWavesEffect
+                  (click)="basicModal.show()" [disabled]="!searchForm.value.regionId || !searchForm.value.typeEmpId"
+                  [disabled]="!affectationForm.valid || isSelected.length===0">réaffecter</button>
+                <button title="suppimer"  (click)="basicModal1.show()"  [disabled]="isSelected.length===0" type="button" size="sm" mdbBtn color="danger"
+                  mdbWavesEffect>supprmier</button>
+                <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="cancel()">annuler</button>
+              </div>
+            </div>
+
+          </div>
+        </form>
+        <span>-{{users.length}} personnes(s) trouvée(s)</span> <br>
+        <span>-{{isSelected.length}} ligne(s) sélectionnée(s)</span>
+
+        <table style="width: 100%;" id="tableSortExample" mdbTable mdbTableScroll scrollY="true" maxHeight="600"
+          bordered="true" class="z-depth-1 mt-1">
+          <thead>
+            <tr>
+              <th *ngFor="let head of headElements; let i = index" aria-controls="tableSortExample" scope="col"
+                [mdbTableSort]="users" [sortBy]="headElements[i]">{{head | titlecase}}
+                <!-- <mdb-icon fas icon="sort"></mdb-icon> -->
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let el of users; let i = index">
+              <th scope="row">
+                <mdb-checkbox [(ngModel)]="el.selected" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
+              </th>
+              <td>{{el.lastName}}</td>
+              <td>{{el.firstName}}</td>
+              <td>{{el.phoneNumber}}</td>
+              <td>{{el.secondPhoneNumber}}</td>
+              <td>{{el.Email}}</td>
+              <td>{{el.regionName}}</td>
+              <td>{{el.departmentName}}</td>
+              <td>{{el.resCityName}}</td>
+            </tr>
+          </tbody>
+        </table>
+
+      </div>
+    </mdb-card-body>
+  </mdb-card>
+</div>
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">REAFFECTATION</h4>
+      </div>
+      <div class="modal-body">
+        <h4 *ngIf="isSelected.length>1">confirmer-vous la réaffectation de ses opérateurs ??</h4>
+        <h4 *ngIf="isSelected.length===1">confirmer-vous la réaffectation de cette personne ??</h4>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+          (click)="basicModal.hide()" mdbWavesEffect>fermer</button>
+        <button type="button" mdbBtn color="success" (click)="basicModal.hide(); reAssignOps()" size="sm"
+          class="relative waves-light" mdbWavesEffect>enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div mdbModal #basicModal1="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">suppression opérateur</h4>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-danger" *ngIf="isSelected.length===1"> Etes-vous sûre de vouloir supprimer cette personne ??</h3>
+        <h3 class="text-danger" *ngIf="isSelected.length>1"> Etes-vous sûre de vouloir supprimer ses {{isSelected.lenght}} personnes ??</h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" size="sm" mdbBtn color="light" class="waves-light" aria-label="Close"
+          (click)="basicModal1.hide()" mdbWavesEffect>fermer</button>
+        <button type="button" size="sm" mdbBtn color="success" (click)="remove();basicModal1.hide()" class="relative waves-light" mdbWavesEffect>enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>

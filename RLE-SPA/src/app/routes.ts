@@ -26,6 +26,9 @@ import { ApproSpareComponent } from './stocks/stock-allocation/appro-spare/appro
 import { BackTabletComponent } from './stocks/stock-allocation/back-tablet/back-tablet.component';
 import { AssignmentComponent } from './operation/assignment/assignment/assignment.component';
 import { ExpressAssigmentComponent } from './operation/assignment/assignment/express-assigment/express-assigment.component';
+import { RetroStoresComponent } from './retrofit/retro-stores/retro-stores.component';
+import { OpHandlingComponent } from './operation/assignment/assignment/op-handling/op-handling.component';
+import { DemoComponent } from './Home/demo/demo.component';
 
 
 export const appRoutes: Routes = [
@@ -38,11 +41,13 @@ export const appRoutes: Routes = [
         canActivate: [AuthGuard],
         children: [
             { path: 'error', component: ErrorComponent },
+            { path: 'demo', component: DemoComponent },
             { path: 'assignAccount', component: AssignAccountComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
             { path: 'registrationLocalilties', component: RegistrationLocalitiesComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
             { path: 'preSelection', component: PreSelectionComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'employees', component: EmployeesComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'opHandling', component: OpHandlingComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'trainingClassResult/:id', component: TrainingClassResultComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
@@ -52,6 +57,7 @@ export const appRoutes: Routes = [
             { path: 'assignment', component: AssignmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'retrofitStores', component: RetroStoresComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             {
                 path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
                 , resolve: { training: TrainingDetailResolver }

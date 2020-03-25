@@ -47,7 +47,7 @@
                 <div class="md-form">
                   <input type="text" class="form-control" (blur)="userNameVerification()" id="userName" formControlName="userName" class="form-control"
                     mdbInput>
-                  <label for="userName">nom d'utilisateur</label>
+                  <label for="userName">login ou nom d'utilisateur</label>
                   <span *ngIf="userNameExist" class="text-danger">nom d'utilisateur déja utilisé... Veuillez reéssayer un autre</span>  </div>
                 <div class="md-form">
                   <input type="password" mdbValidate id="password" minlength="4" (change)="updateConfirmValidator()" formControlName="password" class="form-control" mdbInput>
@@ -70,7 +70,6 @@
                 </div>
               </div>
             </div>
-           
           </form>
         </mdb-card-body>
       </mdb-card>

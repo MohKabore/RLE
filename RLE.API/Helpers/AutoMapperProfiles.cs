@@ -51,6 +51,7 @@ namespace RLE.API.Helpers
 
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<UserForRegisterDto, User>();
+            CreateMap<NewStoreDto, RetrofitStore>();
             CreateMap<TrainingCreationDto, Training>();
             CreateMap<TrainingForUpdateDto, Training>();
             CreateMap<TrainingClassCreationDto, TrainingClass>();

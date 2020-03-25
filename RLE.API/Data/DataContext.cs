@@ -92,6 +92,11 @@ namespace RLE.API.Data {
         public  DbSet<Quota> Quotas { get; set; }
         public  DbSet<StoreType> StoreTypes { get; set; }
         public  DbSet<Email> Emails { get; set; }
+        public  DbSet<Product>  Products { get; set; }
+        public  DbSet<RetrofitInventOp>  RetrofitInventOps { get; set; }
+        public  DbSet<RetrofitStore>  RetrofitStores { get; set; }
+        public  DbSet<RetrofitStoreProduct>  RetrofitStoreProducts { get; set; }
+
 
 
 

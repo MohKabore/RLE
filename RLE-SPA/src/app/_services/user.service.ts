@@ -124,8 +124,8 @@ export class UserService {
   //   return this.http.post(this.baseUrl + 'users/' + id + '/updatePerson', user);
   // }
 
-  getAllRegionsOpDetails(): Observable<Region[]> {
-    return this.http.get<Region[]>(this.baseUrl + 'users/AllRegionOpDetails');
+  getAllRegionsOpDetails() {
+    return this.http.get(this.baseUrl + 'users/AllRegionOpDetails');
   }
 
   searchUsers(data: any) {
@@ -176,6 +176,8 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/SearchPreSelectedEmps', params);
   }
 
+
+
   saveUserAssignAccount(userIds, insertUserId) {
     return this.http.post(this.baseUrl + 'users/SaveUserAssignAccount/' + insertUserId, userIds);
   }
@@ -213,8 +215,8 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/EditTrainingClass/' + trainingClassId + '/' + insertUserId, trainingClass);
   }
 
-  regionOpDetails(regionId: number): Observable<Region> {
-    return this.http.get<Region>(this.baseUrl + 'users/' + regionId + '/GetRegionRegistrationDetails');
+  regionOpDetails(regionId: number){
+    return this.http.get(this.baseUrl + 'users/' + regionId + '/GetRegionRegistrationDetails');
   }
 
   allRegions(): Observable<Region[]> {
@@ -279,5 +281,13 @@ export class UserService {
 
   getEmployeeDetails(userId) {
     return this.http.get(this.baseUrl + 'users/EmployeeDetails/' + userId);
+  }
+
+  reAssignOps(cityId,departmentId, userIds) {
+    return this.http.post(this.baseUrl + 'users/ReAssignOps/' + cityId + '/' + departmentId, userIds);
+  }
+
+  deleteOps(userIds) {
+    return this.http.post(this.baseUrl + 'users/RemoveOps', userIds);
   }
 }

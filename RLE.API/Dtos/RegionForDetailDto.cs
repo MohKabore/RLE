@@ -17,6 +17,11 @@ namespace RLE.API.Dtos
             PrctPreselected = 0;
             PrctOnTraining = 0;
             PrctSelected = 0;
+             TotalRegisteredPrct =0;
+            TotalPreSelectedPrct =0;
+            TotalOnTrainingPrct =0;
+            TotalSelectedPrct=0;
+            TotalReserveToHave = 0;
         }
         public int Id { get; set; }
         public string Code { get; set; }
@@ -39,5 +44,10 @@ namespace RLE.API.Dtos
 
         public bool ActiveforInscription { get; set; }
         public List<DepartmentForDetailDto> Departments { get; set; }
+         public int TotalRegisteredPrct { get; set; }
+        public int TotalPreSelectedPrct { get; set; }
+        public int TotalOnTrainingPrct { get; set; }
+        public int TotalSelectedPrct { get; set; }
+        public int TotalReserveToHave { get; set; }
     }
 }

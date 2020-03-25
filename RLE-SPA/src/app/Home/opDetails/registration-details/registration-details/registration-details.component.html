@@ -1,10 +1,10 @@
-<div class="container mt-5"> 
+<div class="container mt-5">
   <div *ngIf="showRegions" class=" animated fadeInDown">
-    <mdb-card class="row mb-1">
+    <mdb-card class="row mb-3">
       <mdb-card-body>
         <form [formGroup]="searchForm">
           <div class="md-form">
-            <mdb-select [options]="regions" id="regionId" (ngModelChange)="getDetails()" placeholder="Region"
+            <mdb-select  [options]="regions" id="regionId" (ngModelChange)="getDetails()" placeholder="Region"
               formControlName="regionId">
             </mdb-select>
           </div>
@@ -13,19 +13,19 @@
     </mdb-card>
   </div>
 </div>
-<div *ngIf="showDetails">
+<div *ngIf="showDetails" class="container">
   <div *ngIf="!noResult && !show">
     <div class="d-flex justify-content-center">
       <div class="spinner-border" role="status">
         <span class="sr-only">Loading...</span>
       </div>
     </div>
-   </div>
+  </div>
   <div *ngIf="noResult">
-   {{noResult}}
+    {{noResult}}
   </div>
   <div class="row  animated fadeInUp" *ngIf="show">
-    <div *ngFor="let dept of region.departments" class="col-md-12">
+    <!-- <div *ngFor="let dept of region.departments" class="col-md-12">
       <mdb-card class="text-white mb-3" bgColor="bg-danger" *ngIf="dept.prctRegistered<50">
         <mdb-card-header>
           <h4 class="text-center">{{dept.name}} :{{dept.prctRegistered}}% ({{dept.totalRegistered}}/{{dept.nbEmpNeeded}})</h4> 
@@ -93,6 +93,105 @@
         <mdb-card-body>
         </mdb-card-body>
       </mdb-card>
+    </div> -->
+
+
+
+
+    <div *ngFor="let dept of region.departments" class="col-md-12 mb-2">
+      <mdb-card>
+        <h4 class="text-center mt-2">{{dept.name}} :{{dept.prctRegistered}}%
+          ({{dept.totalRegistered}}/{{dept.totalRegisteredPrct}},dont {{dept.totalReserveToHave}} reservistes)</h4>
+          <div class="row mb-2" *ngFor="let city of dept.cities">
+            <div class="col-md-2 my-auto text-center">
+              {{city.name}}
+            </div>
+            <div class="col-md-1 my-auto  d-none d-sm-block">
+            :
+            </div>
+            <div class="col-md-9 text-left">
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered<=65" style="height: 40px;">
+                <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}},dont 
+                    {{city.totalReserveToHave}} reservistes)</b></div>
+              </div>
+
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered>65 && city.prctRegistered<90"
+                style="height: 40px;">
+                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}},dont 
+                    {{city.totalReserveToHave}} reservistes)</b></div>
+              </div>
+
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered>=90 && city.prctRegistered<100"
+                style="height: 40px;">
+                <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}},dont 
+                    {{city.totalReserveToHave}} reservistes)</b></div>
+              </div>
+
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered>=100" style="height: 40px;">
+                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}},dont 
+                    {{city.totalReserveToHave}} reservistes)</b></div>
+              </div>
+            </div>
+          </div>
+        <!-- <table style="width: 100%;">
+          <tr *ngFor="let city of dept.cities">
+            <td style="width: 15%;text-align: center;"><b class="text-right">{{city.name}}</b></td>
+            <td style="width: 1%;">:</td>
+            <td>
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered<=65" style="height: 40px;">
+                <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
+                    {{city.totalReserveToHave}} reservistes attendus)</b></div>
+              </div>
+
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered>65 && city.prctRegistered<90"
+                style="height: 40px;">
+                <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
+                    {{city.totalReserveToHave}} reservistes attendus)</b></div>
+              </div>
+
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered>=90 && city.prctRegistered<100"
+                style="height: 40px;">
+                <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
+                    {{city.totalReserveToHave}} reservistes attendus)</b></div>
+              </div>
+
+              <div class="progress text-left mr-1" *ngIf="city.prctRegistered>=100" style="height: 40px;">
+                <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0"
+                  style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
+                  aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
+                    {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
+                    {{city.totalReserveToHave}} reservistes attendus)</b></div>
+              </div>
+
+            </td>
+          </tr>
+        </table> -->
+        <mdb-card-body>
+        </mdb-card-body>
+      </mdb-card>
+
+
     </div>
   </div>
 </div>

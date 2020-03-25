@@ -1,0 +1,50 @@
+<div class="container pt-5 animated bounceInDown">
+  <button type="button" size="sm" mdbBtn color="primary" class="relative waves-light" (click)="basicModal.show()"
+    mdbWavesEffect>ajouter un magasin</button>
+
+</div>
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">ENREGISTREMENT MAGASIN</h4>
+      </div>
+      <div class="modal-body">
+        <mdb-card>
+          <mdb-card-body class="row">
+            <form style="color: #757575;" [formGroup]="storeForm"> 
+              <div class="md-form">
+                <div class="md-form">
+                  <input mdbInput type="text" id="name" formControlName="name" class="form-control">
+                  <label for="name">Nom</label>
+                </div>
+
+                <div class="md-form">
+                  <input mdbInput type="text" id="color" formControlName="color" [(colorPicker)]="color"
+                    [style.background]="color" (colorPickerChange)="setColor()">
+                  <label for="color">Couleur</label>
+                </div>
+              </div>
+
+            </form>
+
+
+          </mdb-card-body>
+        </mdb-card>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+          (click)="basicModal.hide()" mdbWavesEffect>fermer</button>
+        <button type="button" mdbBtn color="success"   [disabled]="!storeForm.valid"
+        (click)="saveStore();basicModal.hide()" size="sm" class="relative waves-light"
+          mdbWavesEffect>enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>

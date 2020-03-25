@@ -34,17 +34,20 @@ export class EmployeesComponent implements OnInit {
   isHotliner = false;
   showDetails = false;
   showEditionDiv = false;
+  regionId = null;
   constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
 
 
   ngOnInit() {
     if (this.authService.isMaintenancier()) {
       this.isMaintenancier = true;
+      this.regionId = this.authService.currentUser.regionId;
+      this.isMaintenancier = true;
+      this.getDepartments();
     }
-
-    if (this.authService.isHotliner()) {
-      this.isHotliner = true;
-    }
+    // if (this.authService.isHotliner()) {
+    //   this.isHotliner = true;
+    // }
     this.getTypeEmps();
     this.getRegions();
     this.createSearchForms();
@@ -55,6 +58,7 @@ export class EmployeesComponent implements OnInit {
 
   getdetails(userid) {
     this.showDetails = true;
+    this.user = null;
     this.userService.getEmployeeDetails(userid).subscribe((res: User) => {
       this.user = res;
     }, error => {
@@ -89,10 +93,16 @@ export class EmployeesComponent implements OnInit {
   }
 
   getDepartments() {
-    const regionId = this.searchForm.value.regionId;
+    let regionId: number;
+    if (this.isMaintenancier) {
+      regionId = this.regionId;
+    } else {
+      regionId = this.searchForm.value.regionId;
+    }
+    this.depts = [];
+    this.cities = [];
     if (regionId) {
-      this.depts = [];
-      this.cities = [];
+
       this.authService.getDeptsByRegionid(regionId).subscribe((res: any[]) => {
         for (let i = 0; i < res.length; i++) {
           const element = { value: res[i].id, label: res[i].name };
@@ -151,7 +161,7 @@ export class EmployeesComponent implements OnInit {
     this.searchForm = this.fb.group({
       resCityId: [null],
       departmentId: [null],
-      regionId: [null],
+      regionId: [this.regionId],
       typeEmpId: [null],
       empName: ['']
     });

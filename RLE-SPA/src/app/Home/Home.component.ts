@@ -12,6 +12,7 @@ import { Department } from '../_models/department';
 })
 export class HomeComponent implements OnInit {
   regions: any[];
+  recap: any;
   region: any = {};
   regionList: any = [];
   showDetails = false;
@@ -23,8 +24,10 @@ export class HomeComponent implements OnInit {
   }
 
   getRegionsData() {
-    this.userService.getAllRegionsOpDetails().subscribe((res) => {
-      this.regions = res;
+    this.userService.getAllRegionsOpDetails().subscribe((res : any) => {
+      this.regions = res.regions;
+      this.recap = res.recap;
+
     }, error => {
       console.log(error);
     });

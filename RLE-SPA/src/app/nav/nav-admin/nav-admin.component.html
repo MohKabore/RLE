@@ -2,6 +2,11 @@
   <li class="nav-item waves-light" mdbWavesEffect>
     <a class="nav-link text-muted" (click)="closeNavOnClick()" [routerLink]="['/home']">accueil</a>
   </li>
+
+  <!-- <li class="nav-item waves-light" mdbWavesEffect>
+    <a class="nav-link text-muted" (click)="closeNavOnClick()" [routerLink]="['/demo']">démos</a>
+  </li> -->
+
   <li class="nav-item dropdown btn-group" dropdown
     *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">
     <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
@@ -10,6 +15,10 @@
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/inscription']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">inscription</a>
+
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/opHandling']"
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">rélocalisation</a>
+
       <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin']"
         [routerLink]="['/registrationLocalilties']">localité d'inscription</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin']"
@@ -18,8 +27,8 @@
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">Point Inscription</a>
       <!-- <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/preSelection']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">pré-selection</a> -->
-      <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/formations']"
-        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">formations</a>
+      <!-- <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/formations']"
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">formations</a> -->
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/trainingResult']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">point formations</a>
     </div>
@@ -56,6 +65,19 @@
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">appro Sphare</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/backTablet']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">retour tablette</a>
+    </div>
+  </li>
+
+
+  <li class="nav-item dropdown btn-group" dropdown
+    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">
+    <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
+      rétrofit
+    </a>
+    <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
+      <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStores']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">magasin</a>
+      
     </div>
   </li>
 

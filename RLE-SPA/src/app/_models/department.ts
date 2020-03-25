@@ -21,6 +21,8 @@ export class Department {
   prctOnTraining: number;
   prctSelected: number;
   activeforInscription: boolean;
+  totalRegisteredPrct: number;
+  totalReserveToHave:number;
 
   Region: Region;
   cities: City[];

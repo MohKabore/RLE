@@ -28,5 +28,7 @@ export class City {
   prctOnTraining: number;
   prctSelected: number;
   activeforInscription: boolean;
+  totalRegisteredPrct: number;
+  totalReserveToHave:number;
 
 }

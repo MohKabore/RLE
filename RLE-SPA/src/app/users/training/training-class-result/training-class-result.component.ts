@@ -22,6 +22,8 @@ export class TrainingClassResultComponent implements OnInit {
   totalSelected = 0;
   totalReserved = 0;
   pageSize = 8;
+  page = 1;
+
   searchControl: FormControl = new FormControl();
 
 

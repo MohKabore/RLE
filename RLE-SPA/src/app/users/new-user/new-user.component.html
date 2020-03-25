@@ -250,7 +250,7 @@
             <div class="col-md-4">
               <div class="md-form form-sm  m-0">
                 <button title="enregistrer" (click)="saveImportedUsers()" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
-                  [disabled]=" !searchForm.valid || isSelected.length===0">ajouter </button>
+                  [disabled]=" !searchForm.valid || isSelected.length===0 || readyforImport===false">enregistrer </button>
                 <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="cancel()">annuler</button>
               </div>
             </div>
@@ -274,7 +274,8 @@
             </div>
         </div>
         </div>
-        
+        <p>{{readyforImport}}</p>
+        <span class="text-danger" *ngIf="!readyforImport"><b>Veuillez verifiez votre fichier</b></span>
           <table style="width: 100%;" id="tableSortExample" mdbTable mdbTableScroll scrollY="true" maxHeight="400" bordered="true" class="z-depth-1 mt-1">
             <thead>
               <tr>
@@ -289,9 +290,9 @@
                 <th scope="row">
                   <mdb-checkbox [(ngModel)]="el.selected" (change)="select(i)">{{i+1}}</mdb-checkbox>
                 </th>
-                <td>{{el.lastName}}</td>
-                <td>{{el.firstName}}</td>
-                <td>{{el.phoneNumber}}</td>
+                <td>{{el.lastName}} <span class="text-danger" *ngIf="!el.lastName"> pas de nom trouvé</span></td>
+                <td>{{el.firstName}} <span class="text-danger" *ngIf="!el.firstName"> pas de nom trouvé</span></td>
+                <td>{{el.phoneNumber}} <span class="text-danger" *ngIf="!el.phoneNumber"> pas de nom trouvé</span></td>
                 <td>{{el.secondPhoneNumber}}</td>
                 <td>{{el.Email}}</td>
               </tr>

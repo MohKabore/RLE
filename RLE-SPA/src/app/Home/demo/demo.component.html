@@ -1,0 +1,66 @@
+<div class="container mt-5 animated bounceInDown">
+  <div class="row">
+    <div class="col-lg-4 col-md-6 mb-4">
+      <a><img class="img-fluid z-depth-1" src="../../../assets/images/importation.JPG" alt="video" (click)="videoModal1.show()"></a>
+      <p><b class="text-center">Importer liste</b> <button size="sm" type="button" mdbBtn color="light" mdbWavesEffect> <a href="../../../assets/fichiers/fichier_importation.xlsx">techarger modèle</a></button></p>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <a><img class="img-fluid z-depth-1" src="../../../assets/images/personne.JPG" alt="video" (click)="videoModal2.show()"></a>
+     <p> <b class="text-center">Ajouter une personne</b></p>
+    </div>
+    <div class="col-lg-4 col-md-6 mb-4">
+      <a><img class="img-fluid z-depth-1"  src="../../../assets/images/relocalisation.JPG" alt="video" (click)="videoModal3.show()"></a>
+      <p><b class="text-center">Rélocalisation ou suppression</b></p>
+    </div>
+  </div>
+</div>
+
+
+<div mdbModal #videoModal1="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myVideoModal1Label"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body mb-0 p-0">
+        <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+         <video  controls loop src="https://res.cloudinary.com/dn7e9vscs/video/upload/v1584815378/importation_excel_c2lfmn.mp4"></video>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mdbBtn type="button" color="light"  size="sm" (click)="videoModal1.hide()">fermer</button>
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+<div mdbModal #videoModal2="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myVideoModal2Label"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body mb-0 p-0">
+        <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+          <video  controls loop src="https://res.cloudinary.com/dn7e9vscs/video/upload/v1584815373/enregistrement_d_une_personne_hy2rqc.mp4"></video>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mdbBtn type="button" color="light"  size="sm" (click)="videoModal2.hide()">fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div mdbModal #videoModal3="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myVideoModal3Label"
+  aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-body mb-0 p-0">
+        <div class="embed-responsive embed-responsive-16by9 z-depth-1-half">
+         <video class="video-fluid" controls loop src="https://res.cloudinary.com/dn7e9vscs/video/upload/v1584754438/mise_a_jour_localisation_des_op_ruwaek.mp4"></video>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <button mdbBtn type="button" color="light"  size="sm" (click)="videoModal3.hide()">fermer</button>
+      </div>
+    </div>
+  </div>
+</div>
