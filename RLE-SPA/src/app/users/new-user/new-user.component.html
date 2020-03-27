@@ -202,7 +202,8 @@
                 <button mdbBtn size="sm" color="success" [disabled]="!userForm.valid"
                   (click)="[basicModal.show(), verifyIfExist()]">enregistrer</button>
 
-                  <button mdbBtn size="sm" *ngIf="editionMode==='edit'" color="light" (click)="returnToList()"  >annuler</button>
+                <button mdbBtn size="sm" *ngIf="editionMode==='edit'" color="light"
+                  (click)="returnToList()">annuler</button>
               </div>
             </div>
           </div>
@@ -231,35 +232,38 @@
                 </mdb-select>
               </div>
             </div>
-  
+
             <div class="col-md-2">
               <div class="md-form form-sm m-0">
-                <mdb-select id="departmentId2" [options]="depts" placeholder="département" formControlName="departmentId"
-                  (ngModelChange)="getExportCities()">
+                <mdb-select id="departmentId2" [options]="depts" placeholder="département"
+                  formControlName="departmentId" (ngModelChange)="getExportCities()">
                 </mdb-select>
               </div>
             </div>
-  
+
             <div class="col-md-2">
               <div class="md-form form-sm  m-0">
-                <mdb-select id="resCityId2" [options]="cities" placeholder="ville ou commune" formControlName="resCityId">
+                <mdb-select id="resCityId2" [options]="cities" placeholder="ville ou commune"
+                  formControlName="resCityId">
                 </mdb-select>
               </div>
             </div>
-  
+
             <div class="col-md-4">
               <div class="md-form form-sm  m-0">
-                <button title="enregistrer" (click)="saveImportedUsers()" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
-                  [disabled]=" !searchForm.valid || isSelected.length===0 || readyforImport===false">enregistrer </button>
+                <button title="enregistrer" (click)="saveImportedUsers()" type="button" mdbBtn size="sm" color="success"
+                  mdbWavesEffect
+                  [disabled]=" !searchForm.valid || isSelected.length===0 || readyforImport===false">enregistrer
+                </button>
                 <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="cancel()">annuler</button>
               </div>
             </div>
-  
+
           </div>
         </form>
       </mdb-card-body>
     </mdb-card>
-  
+
 
     <mdb-card class="mt-2">
       <mdb-card-body>
@@ -268,39 +272,39 @@
         <div class="row">
           <div class="col-md-6">
             <div class="md-form form-sm mt-2">
-                <input mdbInput type="text" id="form1" [formControl]="searchControl"
-                    class="form-control mr-2">
-                <label for="form1" class="">rechercher</label>
+              <input mdbInput type="text" id="form1" [formControl]="searchControl" class="form-control mr-2">
+              <label for="form1" class="">rechercher</label>
             </div>
-        </div>
+          </div>
         </div>
         <p>{{readyforImport}}</p>
         <span class="text-danger" *ngIf="!readyforImport"><b>Veuillez verifiez votre fichier</b></span>
-          <table style="width: 100%;" id="tableSortExample" mdbTable mdbTableScroll scrollY="true" maxHeight="400" bordered="true" class="z-depth-1 mt-1">
-            <thead>
-              <tr>
-                <th *ngFor="let head of headElements; let i = index" aria-controls="tableSortExample" scope="col"
-                  [mdbTableSort]="filteredUsers" [sortBy]="headElements[i]">{{head | titlecase}}
-                  <!-- <mdb-icon fas icon="sort"></mdb-icon> -->
-                </th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let el of filteredUsers; let i = index">
-                <th scope="row">
-                  <mdb-checkbox [(ngModel)]="el.selected" (change)="select(i)">{{i+1}}</mdb-checkbox>
-                </th>
-                <td>{{el.lastName}} <span class="text-danger" *ngIf="!el.lastName"> pas de nom trouvé</span></td>
-                <td>{{el.firstName}} <span class="text-danger" *ngIf="!el.firstName"> pas de nom trouvé</span></td>
-                <td>{{el.phoneNumber}} <span class="text-danger" *ngIf="!el.phoneNumber"> pas de nom trouvé</span></td>
-                <td>{{el.secondPhoneNumber}}</td>
-                <td>{{el.Email}}</td>
-              </tr>
-            </tbody>
-          </table>
+        <table style="width: 100%;" id="tableSortExample" mdbTable mdbTableScroll scrollY="true" maxHeight="400"
+          bordered="true" class="z-depth-1 mt-1">
+          <thead>
+            <tr>
+              <th *ngFor="let head of headElements; let i = index" aria-controls="tableSortExample" scope="col"
+                [mdbTableSort]="filteredUsers" [sortBy]="headElements[i]">{{head | titlecase}}
+                <!-- <mdb-icon fas icon="sort"></mdb-icon> -->
+              </th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let el of filteredUsers; let i = index">
+              <th scope="row">
+                <mdb-checkbox [(ngModel)]="el.selected" (change)="select(i)">{{i+1}}</mdb-checkbox>
+              </th>
+              <td>{{el.lastName}} <span class="text-danger" *ngIf="!el.lastName"> pas de nom trouvé</span></td>
+              <td>{{el.firstName}} <span class="text-danger" *ngIf="!el.firstName"> pas de nom trouvé</span></td>
+              <td>{{el.phoneNumber}} <span class="text-danger" *ngIf="!el.phoneNumber"> pas de nom trouvé</span></td>
+              <td>{{el.secondPhoneNumber}}</td>
+              <td>{{el.Email}}</td>
+            </tr>
+          </tbody>
+        </table>
       </mdb-card-body>
     </mdb-card>
-  
+
   </div>
 </div>
 
@@ -319,11 +323,17 @@
         <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
       </div>
       <div class="modal-body">
-        <b *ngIf="!userExist">Etes vous sûre de vouloir enregistrer ???</b>
-        <div *ngIf="userExist">
-          <p class="text-danger">Désolé ... certaines de vous informations importantes existent déja pour un profil
-            enrégistré</p>
+        <div *ngIf="editionMode==='add'">
+          <b *ngIf="!userExist">Etes vous sûre de vouloir enregistrer ???</b>
+          <div *ngIf="userExist">
+            <p class="text-danger">Désolé ... certaines de vous informations importantes existent déja pour un profil
+              enrégistré</p>
+          </div>
         </div>
+        <div *ngIf="editionMode==='edit'">
+          <b>voulez-vous vraiment enregistrer ses informations ??</b>
+        </div>
+
       </div>
       <div class="modal-footer">
         <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"

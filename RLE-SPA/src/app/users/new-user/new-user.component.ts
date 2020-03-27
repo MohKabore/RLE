@@ -6,6 +6,8 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { environment } from 'src/environments/environment';
 import * as XLSX from 'xlsx';
 import { debounceTime } from 'rxjs/operators';
+import { UserService } from 'src/app/_services/user.service';
+import { Router } from '@angular/router';
 
 
 
@@ -20,6 +22,8 @@ export class NewUserComponent implements OnInit {
   cniMask = [/\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/, /\d/];
   userForm: FormGroup;
   @Output() cancelEdition = new EventEmitter<any>();
+  @Output() endUpdate = new EventEmitter<any>();
+  @Output() photoChange = new EventEmitter<any>();
 
   searchForm: FormGroup;
   @Input() user: any;
@@ -53,17 +57,19 @@ export class NewUserComponent implements OnInit {
   isSelected: any = [];
   searchControl: FormControl = new FormControl();
   formModel;
+  currentUserId: number;
 
 
 
 
-  constructor(private fb: FormBuilder, private authService: AuthService, private alertify: AlertifyService) { }
+  constructor(private fb: FormBuilder, private router: Router, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
 
   ngOnInit() {
     if (this.user) {
       this.editionMode = 'edit';
       this.userPhotoUrl = this.user.photoUrl;
       this.formModel = this.user;
+      this.currentUserId = this.user.id;
       // this.getDepartments();
       // this.getCities();
     } else {
@@ -154,32 +160,38 @@ export class NewUserComponent implements OnInit {
 
   verifyIfExist() {
 
-    this.waitForValidation = true;
-    this.userExist = false;
-    const userdata = this.userForm.value;
-    if (userdata.typeEmpId === this.operatorTypeId) {
-      this.authService.operatorExist(userdata).subscribe((res: boolean) => {
-        if (res === true) {
-          this.userExist = true;
-        }
-        this.waitForValidation = false;
-      }, error => {
-        console.log(error);
-      });
-    } else if (userdata.typeEmpId === this.maintenancierTypeId) {
-      this.authService.maintenancierExist(userdata).subscribe((res: boolean) => {
-        if (res === true) {
-          this.userExist = true;
-        }
-        this.waitForValidation = false;
+    if (this.editionMode === 'add') {
+      this.waitForValidation = true;
+      this.userExist = false;
+      const userdata = this.userForm.value;
+      if (userdata.typeEmpId === this.operatorTypeId) {
+        this.authService.operatorExist(userdata).subscribe((res: boolean) => {
+          if (res === true) {
+            this.userExist = true;
+          }
+          this.waitForValidation = false;
+        }, error => {
+          console.log(error);
+        });
+      } else if (userdata.typeEmpId === this.maintenancierTypeId) {
+        this.authService.maintenancierExist(userdata).subscribe((res: boolean) => {
+          if (res === true) {
+            this.userExist = true;
+          }
+          this.waitForValidation = false;
 
-      }, error => {
-        console.log(error);
-      });
+        }, error => {
+          console.log(error);
+        });
+      } else {
+        this.userExist = false;
+        this.waitForValidation = false;
+      }
     } else {
       this.userExist = false;
       this.waitForValidation = false;
     }
+
   }
 
   parentImgResult(event) {
@@ -191,6 +203,10 @@ export class NewUserComponent implements OnInit {
       this.userPhotoUrl = e.target.result;
     };
     reader.readAsDataURL(event.target.files[0]);
+    if (this.editionMode === 'edit') {
+      // enrgistrement de la photo
+      this.addPhoto(this.currentUserId);
+    }
     // fin recupération
 
 
@@ -327,36 +343,47 @@ export class NewUserComponent implements OnInit {
     if (dataToSave.dateOfBirth) {
       dataToSave.dateOfBirth = Utils.inputDateDDMMYY(dataToSave.dateOfBirth, '/');
     }
-    if (this.authService.loggedIn() === true) {
-      this.authService.addUser(dataToSave, this.authService.decodedToken.nameid).subscribe((userid: number) => {
-        if (userid && this.userPhotoUrl) {
-          // enregistrement de la photo
-          this.addPhoto(userid);
-        } else {
-          this.alertify.success('enregistrement terminé...');
-          this.userForm.reset();
-          if (this.isMaintenancier) {
-            // this.getDepartments();
-            this.createUserForms();
-          } else {
-            this.getRegions();
 
+    if (this.editionMode === 'add') {
+      if (this.authService.loggedIn() === true) {
+        this.authService.addUser(dataToSave, this.authService.decodedToken.nameid).subscribe((userid: number) => {
+          if (userid && this.userPhotoUrl) {
+            // enregistrement de la photo
+            this.addPhoto(userid);
+          } else {
+            this.alertify.success('enregistrement terminé...');
+            this.userForm.reset();
+            if (this.isMaintenancier) {
+              // this.getDepartments();
+              this.createUserForms();
+            } else {
+              this.getRegions();
+
+            }
+            this.waitDiv = false;
           }
-          this.waitDiv = false;
-        }
-      });
+        });
+      } else {
+        this.authService.savePreInscription(dataToSave).subscribe((userid: number) => {
+          if (userid && this.userPhotoUrl) {
+            // enregistrement de la photo
+            this.addPhoto(userid);
+            this.userPhotoUrl = '';
+            this.alertify.success('enregistrement terminé...');
+            this.userForm.reset();
+            this.waitDiv = false;
+          } else {
+            this.alertify.success('enregistrement terminé...');
+            this.userForm.reset();
+            this.waitDiv = false;
+          }
+        });
+      }
     } else {
-      this.authService.savePreInscription(dataToSave).subscribe((userid: number) => {
-        if (userid && this.userPhotoUrl) {
-          // enregistrement de la photo
-          this.addPhoto(userid);
-        } else {
-          this.alertify.success('enregistrement terminé...');
-          this.userForm.reset();
-          this.waitDiv = false;
-        }
-      });
+      this.updateuser(dataToSave);
     }
+
+
 
   }
   saveImportedUsers() {
@@ -418,19 +445,42 @@ export class NewUserComponent implements OnInit {
   }
 
 
+  updateuser(user: any) {
+    this.userService.updateUserInformations(this.currentUserId, user).subscribe(() => {
+      this.endUpdate.emit(this.currentUserId);
+      this.alertify.success('modification enregistrée...');
+    }, error => {
+      this.router.navigate(['error']);
+    });
+  }
 
-  addPhoto(userId) {
+
+
+  addPhoto(userId): any {
+    if(this.editionMode==='edit') {
+      this.waitDiv = true;
+    }
     const formData = new FormData();
     formData.append('file', this.file, this.file.name);
-    this.authService.addUserPhoto(userId, formData).subscribe(() => {
-      this.userPhotoUrl = '';
-      this.alertify.success('enregistrement terminé...');
-      this.userForm.reset();
-      this.waitDiv = false;
-    }, error => {
-      console.log(error);
-      this.waitDiv = false;
+    this.authService.addUserPhoto(userId, formData).subscribe((res: any) => {
+      if (this.editionMode === 'edit') {
+        if (this.currentUserId === this.authService.currentUser.id) {
+          this.authService.changeUserPhoto(res.photoUrl);
+          this.waitDiv = false;
+        }
+        this.photoChange.emit(res.photoUrl);
+
+        this.alertify.success('nouvelle photo enregistrée....');
+      }
     });
+    // , error => {
+    //   console.log(error);
+    //   if (this.editionMode === 'edit') {
+    //     this.alertify.error('impossible d\'enregistrer la nouvelle photo....');
+    //     console.log(error);
+    //   }
+    //   // this.waitDiv = false;
+    // }
   }
 
   onFileChange(ev) {
@@ -460,7 +510,7 @@ export class NewUserComponent implements OnInit {
           element.secondPhoneNumber = la_ligne.contact2,
           element.email = la_ligne.email;
         element.selected = false;
-        if(!la_ligne.nom || !la_ligne.prenoms || !la_ligne.contact1) {
+        if (!la_ligne.nom || !la_ligne.prenoms || !la_ligne.contact1) {
           this.readyforImport = false;
         }
 

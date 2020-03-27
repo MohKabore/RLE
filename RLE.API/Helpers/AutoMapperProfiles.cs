@@ -65,6 +65,8 @@ namespace RLE.API.Helpers
             {
                 opt.MapFrom(src => src.EndDate.ToString("dd/MM/yyyy", frC));
             });
+            CreateMap<UserForUpdateDto, User> ();
+
 
 
             // CreateMap<User, UserForAutoCompleteDto>()
@@ -111,7 +113,6 @@ namespace RLE.API.Helpers
             //         opt.MapFrom (src => (src.EvalDate.Date <= DateTime.Now.Date));
             //     });
             // CreateMap<Photo, PhotosForDetailedDto> ();
-            // CreateMap<UserForUpdateDto, User> ();
             // CreateMap<Photo, PhotoForReturnDto> ();
             // CreateMap<PhotoForCreationDto, Photo> ();
             // CreateMap<UserForRegisterDto, User> ();

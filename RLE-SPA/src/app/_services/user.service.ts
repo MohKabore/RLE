@@ -290,4 +290,9 @@ export class UserService {
   deleteOps(userIds) {
     return this.http.post(this.baseUrl + 'users/RemoveOps', userIds);
   }
+
+  updateUserInformations(userId, user) {
+    // debugger
+    return this.http.put(this.baseUrl + 'users/UpdateUser/' + userId, user);
+  }
 }

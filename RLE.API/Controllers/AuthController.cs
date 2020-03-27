@@ -1155,22 +1155,23 @@ namespace RLE.API.Controllers
             }
 
             photoForCreationDto.Url = uploadResult.Uri.ToString();
+            string photoUrl =  uploadResult.Uri.ToString();
             photoForCreationDto.PublicId = uploadResult.PublicId;
 
 
             var photo = _mapper.Map<Photo>(photoForCreationDto);
-
-            if (!user.Photos.Any(u => u.IsMain))
-            {
-                photo.IsMain = true;
+             photo.IsMain = true;
                 photo.IsApproved = true;
+
+            foreach (var p in user.Photos)
+            {
+            p.IsMain = false;
             }
-
-
             user.Photos.Add(photo);
 
             if (await _repo.SaveAll())
-                return Ok();
+                return Ok(new {
+                   photoUrl =  photoUrl });
 
             return BadRequest("Could not add the photo");
         }
@@ -1185,7 +1186,7 @@ namespace RLE.API.Controllers
             else
             {
                 user = await _context.Users.FirstOrDefaultAsync(a => a.TypeEmpId == typeOperatorId && a.FirstName.ToLower() == userToVerify.FirstName.ToLower()
-                                   && a.ResCityId == userToVerify.ResCityId && a.Gender == userToVerify.Gender);
+                                   && a.RegionId == userToVerify.RegionId && a.Gender == userToVerify.Gender);
                 if (user != null)
                     return Ok(true);
 
@@ -1198,8 +1199,8 @@ namespace RLE.API.Controllers
         {
             var user = await _context.Users
             .FirstOrDefaultAsync(a => a.TypeEmpId == typeMaintenancierId && a.FirstName.ToLower() == userToVerify.FirstName.ToLower()
-                                    && a.RegionId == userToVerify.RegionId && a.Gender == userToVerify.Gender && a.DateOfBirth == userToVerify.DateOfBirth
-                                    && a.DepartmentId == userToVerify.DepartmentId);
+                                    && a.RegionId == userToVerify.RegionId && a.Gender == userToVerify.Gender
+                                    );
             if (user != null)
                 return Ok(true);
 
@@ -1225,7 +1226,7 @@ namespace RLE.API.Controllers
                         //                     && a.PhoneNumber == user.PhoneNumber  && a.Id > user.Id).ToList();
 
                         
-                         d = emps.Where(a => a.LastName.ToLower() == user.LastName.ToLower() && a.FirstName == user.FirstName.ToLower()
+                                d = emps.Where(a => a.LastName.ToLower() == user.LastName.ToLower() && a.FirstName == user.FirstName.ToLower()
                                                 && a.Id > user.Id).ToList();
                         if (d.Count() > 0)
                         {
@@ -1240,7 +1241,7 @@ namespace RLE.API.Controllers
                 var usersToReturn = _mapper.Map<IEnumerable<UserForListDto>>(doublons);
                 return Ok(usersToReturn);
             }
-            catch (System.Exception ex)
+            catch (System.Exception)
             {
 
                 return BadRequest();

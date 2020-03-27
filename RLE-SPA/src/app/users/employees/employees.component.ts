@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { debounceTime } from 'rxjs/operators';
 import { User } from 'src/app/_models/user';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-employees',
@@ -35,10 +36,12 @@ export class EmployeesComponent implements OnInit {
   showDetails = false;
   showEditionDiv = false;
   regionId = null;
-  constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
+  currentUserId : number;
+  constructor(private fb: FormBuilder, private router: Router, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
 
 
   ngOnInit() {
+    this.currentUserId = this.authService.currentUser.id; 
     if (this.authService.isMaintenancier()) {
       this.isMaintenancier = true;
       this.regionId = this.authService.currentUser.regionId;
@@ -67,6 +70,7 @@ export class EmployeesComponent implements OnInit {
   }
   returnToList() {
     this.showDetails = false;
+    this.usersDiv = true;
   }
   goToEditionDiv() {
     this.showEditionDiv = true;
@@ -128,6 +132,7 @@ export class EmployeesComponent implements OnInit {
   backToList() {
     this.showEditionDiv = false;
     this.showDetails = true;
+
   }
 
 
@@ -139,11 +144,11 @@ export class EmployeesComponent implements OnInit {
       }
     });
   }
-  searchEmp() {
+  searchEmp(showUsers) {
     const searchValues = this.searchForm.value;
     this.users = [];
     this.noResult = '';
-    this.usersDiv = true;
+    this.usersDiv = showUsers;
     this.userService.searchEmployees(searchValues).subscribe((res: User[]) => {
       if (res.length > 0) {
         this.users = res;
@@ -197,6 +202,34 @@ export class EmployeesComponent implements OnInit {
     this.cities = [];
     this.depts = [];
     this.filteredUsers = [];
+  }
+
+  updateUser(userId) {
+    this.getdetails(userId);
+    this.showEditionDiv = false;
+    this.showDetails = true;
+    this.searchEmp(false);
+  }
+
+  updatePhoto(photoUrl) {
+    this.user.photoUrl = photoUrl;
+    this.users.find(a => a.id === this.user.id).photoUrl = photoUrl;
+  }
+
+  removeUser() {
+    if (confirm('voulez-vous vraiment supprimer cette personne ??')) {
+      let isSelectd = [];
+      isSelectd = [...isSelectd, this.user.id];
+      this.userService.deleteOps(isSelectd).subscribe((res) => {
+        this.isSelected = [];
+        this.alertify.success('enregistrement terminé...');
+        const idx = this.users.findIndex(a => a.id === this.user.id);
+        this.users.splice(idx, 1);
+        this.returnToList();
+      }, error => {
+        this.router.navigate(['error']);
+      });
+    }
   }
 
 

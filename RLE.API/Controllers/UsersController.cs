@@ -1233,6 +1233,7 @@ namespace RLE.API.Controllers
                                             .Include(a => a.Municipality)
                                             .Include(a => a.EnrolmentCenter)
                                             .Include(a => a.Tablet)
+                                            .Include(a => a.Photos)
                                             .FirstOrDefaultAsync(u => u.Id == userId);
             if (user != null)
             {
@@ -1299,6 +1300,22 @@ namespace RLE.API.Controllers
             if (await _repo.SaveAll())
                 return Ok();
             return BadRequest();
+        }
+
+    
+     [HttpPut("UpdateUser/{id}")]
+        public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
+        {
+            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+                return Unauthorized();
+
+            var userFromRepo = await _repo.GetUser(id, true);
+
+            _mapper.Map(userForUpdateDto, userFromRepo);
+            if (await _repo.SaveAll())
+                return NoContent();
+
+            throw new Exception($"Updating user {id} failed on save");
         }
 
 
