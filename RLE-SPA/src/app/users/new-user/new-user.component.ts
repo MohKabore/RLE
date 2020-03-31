@@ -50,6 +50,8 @@ export class NewUserComponent implements OnInit {
   isMaintenancier = false;
   isHotliner = false;
   regionId: number;
+  departmentId: number;
+  resCityId: number;
   importedUsers: any = [];
   filteredUsers: any = [];
   showExport = false;
@@ -70,8 +72,13 @@ export class NewUserComponent implements OnInit {
       this.userPhotoUrl = this.user.photoUrl;
       this.formModel = this.user;
       this.currentUserId = this.user.id;
-      // this.getDepartments();
-      // this.getCities();
+      this.departmentId = this.user.departmentId;
+      this.regionId = this.user.regionId;
+      this.resCityId = this.user.resCityId;
+      this.isMaintenancier = true;
+      this.getRegions();
+      this.getDepartments();
+      this.getCities();
     } else {
       this.editionMode = 'add';
       this.initializeFormModel();
@@ -255,7 +262,7 @@ export class NewUserComponent implements OnInit {
   getDepartments() {
     this.depts = [];
     this.cities = [];
-    if (!this.isMaintenancier) {
+    if (this.editionMode === 'add' && !this.isMaintenancier) {
       this.regionId = this.userForm.value.regionId;
     }
     this.authService.getInscDeptsByRegionid(this.regionId).subscribe((res: any[]) => {
@@ -286,11 +293,9 @@ export class NewUserComponent implements OnInit {
     this.cities = [];
     let departmentId: number;
     if (this.editionMode === 'add') {
-      departmentId = this.userForm.value.departmentId;
-    } else {
-      departmentId = this.user.departmentId;
-    }
-    this.authService.getInscCitiesByDeptid(departmentId).subscribe((res: any[]) => {
+      this.departmentId = this.userForm.value.departmentId;
+    } 
+    this.authService.getInscCitiesByDeptid(this.departmentId).subscribe((res: any[]) => {
       for (let i = 0; i < res.length; i++) {
         const element = { value: res[i].id, label: res[i].name };
         this.cities = [...this.cities, element];
@@ -457,7 +462,7 @@ export class NewUserComponent implements OnInit {
 
 
   addPhoto(userId): any {
-    if(this.editionMode==='edit') {
+    if (this.editionMode === 'edit') {
       this.waitDiv = true;
     }
     const formData = new FormData();
@@ -466,10 +471,9 @@ export class NewUserComponent implements OnInit {
       if (this.editionMode === 'edit') {
         if (this.currentUserId === this.authService.currentUser.id) {
           this.authService.changeUserPhoto(res.photoUrl);
-          this.waitDiv = false;
         }
         this.photoChange.emit(res.photoUrl);
-
+        this.waitDiv = false;
         this.alertify.success('nouvelle photo enregistrée....');
       }
     });

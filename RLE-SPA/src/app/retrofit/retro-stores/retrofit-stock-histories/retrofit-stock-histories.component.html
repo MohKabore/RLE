@@ -1,0 +1,139 @@
+<div class="container mt-5">
+  <!-- Nav tabs -->
+<mdb-tabset [buttonClass]="'classic-tabs tabs-cyan'" [contentClass]="'card'" class="classic-tabs">
+  <!--Panel 1-->
+  <mdb-tab heading="UN MAGASIN" class="animated bounceInLeft">
+    <div class="container">
+      <form class="z-depth-1 row mt-1"   [formGroup]="tab1SearchForm">
+        <div class="col-md-3">
+          <div class="md-form form-sm m-0">
+              <mdb-select id="storeId" [options]="tab1Stores" placeholder="Magasin"
+                  formControlName="storeId">
+              </mdb-select>
+          </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form form-sm m-0">
+          <mdb-date-picker name="startDate" [inline]="true" [options]="myDatePickerOptions"
+            [placeholder]="'date début'" formControlName="startDate"></mdb-date-picker>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form form-sm m-0">
+          <mdb-date-picker name="endDate" [inline]="true" [options]="myDatePickerOptions"
+            [placeholder]="'date fin'" formControlName="endDate"></mdb-date-picker>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <button type="button" (click)="tab1Search()" [disabled]="!tab1SearchForm.valid" size="sm" mdbBtn color="light" mdbWavesEffect>rechercher</button>
+      </div>
+      </form>
+    </div>
+
+      <div *ngIf="showtab1Result" class=" mt-1">
+        <div  *ngIf="!tab1NoResult && tab1Inventops.length===0">
+          <h4>chargement en cours...</h4>
+          <mdb-progress-bar class="progress primary-color-dark" mode="indeterminate"></mdb-progress-bar>
+        </div>
+        <div *ngIf="tab1NoResult">
+          <p>{{tab1NoResult}}</p>
+        </div>
+
+        <div *ngIf="tab1Inventops.length>0">
+              <table mdbTable class="z-depth-1">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date et Heure</th>
+                  <th>Type</th>
+                  <th>Materiel</th>
+                  <th>Quantité</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let inventOp of tab1Inventops; let i = index">
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{inventOp.opDate}}</td>
+                  <td>{{inventOp.inventOpTypeName}}</td>
+                  <td>{{inventOp.productName}}</td>
+                  <td>{{inventOp.qty}}</td>
+                  <td>{{inventOp.fromStoreName}}</td>
+                  <td>{{inventOp.toStoreName}}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+
+      </div>
+  </mdb-tab>
+  <!--Panel 2-->
+  <mdb-tab heading="PLUSIEURS MAGASINS" class="animated bounceInRight">
+    <div class="container">
+      <form class="z-depth-1 row mt-1"   [formGroup]="tab2SearchForm">
+        <div class="col-md-3">
+          <div class="md-form form-sm m-0">
+              <mdb-select id="storeIds" [multiple]="true" [options]="tab1Stores" placeholder="Magasin"
+                  formControlName="storeIds">
+              </mdb-select>
+          </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form form-sm m-0">
+          <mdb-date-picker name="startDate" [inline]="true" [options]="myDatePickerOptions"
+            [placeholder]="'date début'" formControlName="startDate"></mdb-date-picker>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="md-form form-sm m-0">
+          <mdb-date-picker name="endDate" [inline]="true" [options]="myDatePickerOptions"
+            [placeholder]="'date fin'" formControlName="endDate"></mdb-date-picker>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <button type="button" (click)="tab2Search()" [disabled]="!tab2SearchForm.valid" size="sm" mdbBtn color="light" mdbWavesEffect>rechercher</button>
+      </div>
+      </form>
+    </div>
+
+      <div *ngIf="showtab2Result" class=" mt-1">
+        <div  *ngIf="!tab2NoResult && tab2Inventops.length===0">
+          <h4>chargement en cours...</h4>
+          <mdb-progress-bar class="progress primary-color-dark" mode="indeterminate"></mdb-progress-bar>
+        </div>
+        <div *ngIf="tab2NoResult">
+          <p>{{tab2NoResult}}</p>
+        </div>
+
+        <div *ngIf="tab2Inventops.length>0">
+              <table mdbTable class="z-depth-1">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Date et Heure</th>
+                  <th>Type</th>
+                  <th>Materiel</th>
+                  <th>Quantité</th>
+                  <th>Source</th>
+                  <th>Destination</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let inventOp of tab2Inventops; let i = index">
+                  <th scope="row">{{i+1}}</th>
+                  <td>{{inventOp.opDate}}</td>
+                  <td>{{inventOp.inventOpTypeName}}</td>
+                  <td>{{inventOp.productName}}</td>
+                  <td>{{inventOp.qty}}</td>
+                  <td>{{inventOp.fromStoreName}}</td>
+                  <td>{{inventOp.toStoreName}}</td>
+                </tr>
+              </tbody>
+            </table>
+        </div>
+
+      </div>
+  </mdb-tab>
+</mdb-tabset>
+</div>

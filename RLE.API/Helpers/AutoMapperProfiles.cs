@@ -16,7 +16,7 @@ namespace RLE.API.Helpers
         public AutoMapperProfiles(DataContext context)
         {
             _context = context;
-            
+
         }
         public AutoMapperProfiles()
         {
@@ -39,16 +39,29 @@ namespace RLE.API.Helpers
                     Convert.ToInt32(src.PreSelected) + Convert.ToInt32(src.Selected) + Convert.ToInt32(src.OnTraining)
                         + Convert.ToInt32(src.Trained) + Convert.ToInt32(src.Hired) + Convert.ToInt32(src.Reserved));
                 });
+            CreateMap<RetrofitInventOp, RetrofitInventOpDto>()
+            .ForMember(dest => dest.OpDate, opt =>
+                    {
+                        opt.MapFrom(d => d.OpDate.ToString("dd/MM/yyyy HH:mm", frC));
+                    });
 
             CreateMap<EnrolmentCenter, EcsForListDto>()
             .ForMember(dest => dest.DisplayCode, opt =>
             {
-                opt.MapFrom(src => src.Municipality.City.Department.Region.Code +"-" + src.Municipality.City.Department.Code +"-"
-                            + src.Municipality.City.Code +"-"  + src.Municipality.Code +"-" + src.Code);
+                opt.MapFrom(src => src.Municipality.City.Department.Region.Code + "-" + src.Municipality.City.Department.Code + "-"
+                            + src.Municipality.City.Code + "-" + src.Municipality.Code + "-" + src.Code);
             })
             ;
 
-
+            CreateMap<RetrofitStoreProduct, ProductDto>()
+                         .ForMember(dest => dest.Id, opt =>
+                         {
+                             opt.MapFrom(src => src.Product.Id);
+                         })
+                         .ForMember(dest => dest.Name, opt =>
+                         {
+                             opt.MapFrom(src => src.Product.Name);
+                         });
             CreateMap<PhotoForCreationDto, Photo>();
             CreateMap<UserForRegisterDto, User>();
             CreateMap<NewStoreDto, RetrofitStore>();
@@ -65,7 +78,7 @@ namespace RLE.API.Helpers
             {
                 opt.MapFrom(src => src.EndDate.ToString("dd/MM/yyyy", frC));
             });
-            CreateMap<UserForUpdateDto, User> ();
+            CreateMap<UserForUpdateDto, User>();
 
 
 

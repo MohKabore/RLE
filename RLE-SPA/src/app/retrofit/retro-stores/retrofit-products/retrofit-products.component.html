@@ -1,0 +1,70 @@
+<div class="container mt-5 animated shake" *ngIf="waitDiv">
+  Enregistrement en cours. Veuillez patienter...
+</div>
+<div class="container mt-5 animated bounceInDown" *ngIf="!waitDiv">
+  <button type="button" size="sm" mdbBtn color="primary" (click)="createProductForm(null);basicModal.show()" mdbWavesEffect>ajouter</button>
+  <div *ngIf="!products">
+    <h4>chargement en cours...</h4>
+    <mdb-progress-bar class="progress primary-color-dark" mode="indeterminate"></mdb-progress-bar>
+  </div>
+  <p *ngIf="noResult">{{noResult}}</p>
+  <div *ngIf="products">
+    <div *ngFor="let prod of products">
+      <mdb-card class="mt-2">
+        <mdb-card-body>
+          <mdb-card-title class="text-center">
+            <h4><a (click)="createProductForm(prod);basicModal.show()">{{prod.name}}</a></h4>
+            <hr>
+          </mdb-card-title>
+
+          <table class="table-responsive table-sm table-striped">
+            <tr *ngFor="let store of prod.stores">
+              <td>{{store.retrofitStore.name}}</td>
+              <td>:</td>
+              <td>{{store.qty}}</td>
+
+            </tr>
+          </table>
+
+
+        </mdb-card-body>
+      </mdb-card>
+    </div>
+  </div>
+</div>
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel1" *ngIf="editMode==='add'">AJOUTE DE MATERIEL</h4>
+        <h4 class="modal-title w-100" id="myModalLabel" *ngIf="editMode==='edit'">MODIFICATION DE MATERIEL</h4>
+      </div>
+      <div class="modal-body">
+        <form class="row mt-1" [formGroup]="productForm">
+
+          <div class="col-md-12">
+            <div class="md-form form-sm m-0">
+              <div class="md-form">
+                <input mdbInput type="text" id="name" formControlName="name" class="form-control">
+                <label for="name">Nom du matériel</label>
+              </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn size="sm" color="light" class="waves-light" aria-label="Close"
+          (click)="basicModal.hide()" mdbWavesEffect>fermer</button>
+        <button [disabled]="!productForm.valid" type="button" (click)="basicModal.hide();save()" size="sm" mdbBtn
+          color="success" class="relative waves-light" mdbWavesEffect>enregistrer</button>
+      </div>
+    </div>
+  </div>
+</div>

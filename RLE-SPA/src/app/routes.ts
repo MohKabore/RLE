@@ -29,6 +29,10 @@ import { ExpressAssigmentComponent } from './operation/assignment/assignment/exp
 import { RetroStoresComponent } from './retrofit/retro-stores/retro-stores.component';
 import { OpHandlingComponent } from './operation/assignment/assignment/op-handling/op-handling.component';
 import { DemoComponent } from './Home/demo/demo.component';
+import { RetrofitStockEntryComponent } from './retrofit/retro-stores/retrofit-stock-entry/retrofit-stock-entry.component';
+import { RetrofitStockAllocationComponent } from './retrofit/retro-stores/retrofit-stock-allocation/retrofit-stock-allocation.component';
+import { RetrofitStockHistoriesComponent } from './retrofit/retro-stores/retrofit-stock-histories/retrofit-stock-histories.component';
+import { RetrofitProductsComponent } from './retrofit/retro-stores/retrofit-products/retrofit-products.component';
 
 
 export const appRoutes: Routes = [
@@ -58,6 +62,10 @@ export const appRoutes: Routes = [
             { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'retrofitStores', component: RetroStoresComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'retrofitStockEntry', component: RetrofitStockEntryComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'products', component: RetrofitProductsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'retrofitStockTransfer', component: RetrofitStockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'retrofitStockHistories', component: RetrofitStockHistoriesComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             {
                 path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
                 , resolve: { training: TrainingDetailResolver }

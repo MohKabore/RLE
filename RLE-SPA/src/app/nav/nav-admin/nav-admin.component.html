@@ -77,6 +77,15 @@
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStores']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">magasin</a>
+
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/products']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Materiels</a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStockEntry']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Entrée Stock</a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStockTransfer']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Transfert Stock</a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStockHistories']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Historique</a>
       
     </div>
   </li>

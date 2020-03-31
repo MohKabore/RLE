@@ -15,6 +15,11 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using System.Globalization;
 using System.Text.Encodings.Web;
+using CloudinaryDotNet.Actions;
+using Microsoft.Extensions.Options;
+using CloudinaryDotNet;
+using Account = CloudinaryDotNet.Account;
+
 
 namespace RLE.API.Controllers
 {
@@ -31,9 +36,11 @@ namespace RLE.API.Controllers
 
         private readonly UserManager<User> _userManager;
         int operatorTypeId;
+        private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
+        private Cloudinary _cloudinary;
 
         public UsersController(IConfiguration config, DataContext context, IEducNotesRepository repo,
-        UserManager<User> userManager, IMapper mapper)
+        UserManager<User> userManager, IMapper mapper, IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _userManager = userManager;
             _config = config;
@@ -42,6 +49,15 @@ namespace RLE.API.Controllers
             _mapper = mapper;
             password = _config.GetValue<String>("AppSettings:defaultPassword");
             operatorTypeId = _config.GetValue<int>("AppSettings:OperatorTypeId");
+
+            _cloudinaryConfig = cloudinaryConfig;
+            Account acc = new Account(
+               _cloudinaryConfig.Value.CloudName,
+               _cloudinaryConfig.Value.ApiKey,
+               _cloudinaryConfig.Value.ApiSecret
+           );
+
+            _cloudinary = new Cloudinary(acc);
         }
         [HttpPost("SearchNewEmps")]
         public async Task<IActionResult> SearchNewEmps(EmpSearchModelDto searchModel)
@@ -774,8 +790,8 @@ namespace RLE.API.Controllers
                         TotalRegisteredPrct = Convert.ToInt32(c.NbEmpNeeded * inscrpitionQuota),
                         TotalReserveToHave = Convert.ToInt32((c.NbEmpNeeded * inscrpitionQuota) - c.NbEmpNeeded)
                     };
-                    if(cc.TotalRegisteredPrct>0)
-                      cc.PrctRegistered = (100 * t) / (cc.TotalRegisteredPrct);
+                    if (cc.TotalRegisteredPrct > 0)
+                        cc.PrctRegistered = (100 * t) / (cc.TotalRegisteredPrct);
                     d.Cities.Add(cc);
                     d.TotalRegistered += t;
                     d.NbEmpNeeded += c.NbEmpNeeded;
@@ -783,8 +799,8 @@ namespace RLE.API.Controllers
                     d.TotalReserveToHave = Convert.ToInt32((d.NbEmpNeeded * inscrpitionQuota) - d.NbEmpNeeded);
                 }
                 // d.PrctRegistered = Math.Round(100 * ((double)d.TotalRegistered / (double)(d.NbEmpNeeded * inscrpitionQuota)), 2);
-                if(d.TotalRegisteredPrct>0)
-                d.PrctRegistered =(d.TotalRegistered*100) / d.TotalRegisteredPrct;
+                if (d.TotalRegisteredPrct > 0)
+                    d.PrctRegistered = (d.TotalRegistered * 100) / d.TotalRegisteredPrct;
                 regionToReturn.Departments.Add(d);
                 regionToReturn.NbEmpNeeded += d.NbEmpNeeded;
                 regionToReturn.TotalRegistered += d.TotalRegistered;
@@ -1247,8 +1263,8 @@ namespace RLE.API.Controllers
                                                                         .Include(a => a.TrainingClass.Department)
                                                                         .Include(a => a.TrainingClass.City)
                                                                         .Include(a => a.TrainingClass.Training)
-                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId)); 
-                                                                        if (userToReturn.Step == 2)
+                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId));
+                    if (userToReturn.Step == 2)
                         userToReturn.Details = "Programmé(e) pour formation.";
                     if (userToReturn.Step == 3)
                         userToReturn.Details = "Formé(e):";
@@ -1294,6 +1310,29 @@ namespace RLE.API.Controllers
                 var h = await _context.UserHistories.FirstOrDefaultAsync(a => a.UserId == userId);
                 if (h != null)
                     _repo.Delete(h);
+
+                var photos = await _context.Photos.Where(u => u.UserId == userId).ToListAsync();
+                foreach (var photo in photos)
+                {
+                    if (photo.PublicId != null)
+                    {
+                        var deleteParams = new DeletionParams(photo.PublicId);
+
+                        var result = _cloudinary.Destroy(deleteParams);
+
+                        if (result.Result == "ok")
+                        {
+                            _context.Photos.Remove(photo);
+                        }
+                    }
+
+                    if (photo.PublicId == null)
+                    {
+                        _context.Photos.Remove(photo);
+                    }
+                }
+                _context.Photos.RemoveRange(photos);
+
                 var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userId);
                 _repo.Delete(user);
             }
@@ -1302,12 +1341,12 @@ namespace RLE.API.Controllers
             return BadRequest();
         }
 
-    
-     [HttpPut("UpdateUser/{id}")]
+
+        [HttpPut("UpdateUser/{id}")]
         public async Task<IActionResult> UpdateUser(int id, UserForUpdateDto userForUpdateDto)
         {
-            if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
-                return Unauthorized();
+            // if (id != int.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value))
+            //     return Unauthorized();
 
             var userFromRepo = await _repo.GetUser(id, true);
 

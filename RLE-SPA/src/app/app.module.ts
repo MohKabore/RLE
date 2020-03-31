@@ -3,14 +3,14 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgModule } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { BsDropdownModule, TabsModule, BsDatepickerModule, PaginationModule, ButtonsModule, ModalModule } from 'ngx-bootstrap';
+import { BsDropdownModule, BsDatepickerModule, PaginationModule, ButtonsModule, ModalModule, TimepickerModule } from 'ngx-bootstrap';
 import { RouterModule } from '@angular/router';
 import { JwtModule } from '@auth0/angular-jwt';
-import { } from 'ng-uikit-pro-standard';
+// import { } from 'ng-uikit-pro-standard';
 // import { InMemoryDataService } from './shared/inmemory-db/inmemory-db.service';
 
 // MDB Angular Pro
-import { StepperModule, ToastModule, WavesModule, MDBSpinningPreloader, ProgressbarModule, IconsModule, CarouselModule  } from 'ng-uikit-pro-standard';
+import { StepperModule, ToastModule, WavesModule, MDBSpinningPreloader, ProgressbarModule, IconsModule, CarouselModule, TabsModule  } from 'ng-uikit-pro-standard';
 import { MDBBootstrapModulesPro } from 'ng-uikit-pro-standard';
 import { NgxGalleryModule } from 'ngx-gallery';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -65,6 +65,10 @@ import { ResetPasswordComponent } from './registration/reset-password/reset-pass
 import { RetroStoresComponent } from './retrofit/retro-stores/retro-stores.component';
 import { OpHandlingComponent } from './operation/assignment/assignment/op-handling/op-handling.component';
 import { DemoComponent } from './Home/demo/demo.component';
+import { RetrofitStockEntryComponent } from './retrofit/retro-stores/retrofit-stock-entry/retrofit-stock-entry.component';
+import { RetrofitStockAllocationComponent } from './retrofit/retro-stores/retrofit-stock-allocation/retrofit-stock-allocation.component';
+import { RetrofitStockHistoriesComponent } from './retrofit/retro-stores/retrofit-stock-histories/retrofit-stock-histories.component';
+import { RetrofitProductsComponent } from './retrofit/retro-stores/retrofit-products/retrofit-products.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -106,7 +110,11 @@ export function tokenGetter() {
   ForgotComponent,
   RetroStoresComponent,
   OpHandlingComponent,
-  DemoComponent
+  DemoComponent,
+  RetrofitStockEntryComponent,
+  RetrofitStockAllocationComponent,
+  RetrofitStockHistoriesComponent,
+  RetrofitProductsComponent
   // SignupComponent
   ],
   imports: [
@@ -123,15 +131,16 @@ export function tokenGetter() {
     TextMaskModule,
     FormsModule,
     BsDropdownModule.forRoot(),
-    TabsModule,
     BsDatepickerModule,
     PaginationModule,
     ButtonsModule,
     ModalModule,
+    TimepickerModule,
     CarouselModule ,
     StepperModule,
     ColorPickerModule,
     IconsModule,
+    TabsModule,
     ToastModule.forRoot(),
     WavesModule,
     MDBBootstrapModulesPro.forRoot(),
