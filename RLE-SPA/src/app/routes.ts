@@ -33,11 +33,17 @@ import { RetrofitStockEntryComponent } from './retrofit/retro-stores/retrofit-st
 import { RetrofitStockAllocationComponent } from './retrofit/retro-stores/retrofit-stock-allocation/retrofit-stock-allocation.component';
 import { RetrofitStockHistoriesComponent } from './retrofit/retro-stores/retrofit-stock-histories/retrofit-stock-histories.component';
 import { RetrofitProductsComponent } from './retrofit/retro-stores/retrofit-products/retrofit-products.component';
+import { ForgotComponent } from './views/sessions/forgot/forgot.component';
+import { ResetPasswordComponent } from './registration/reset-password/reset-password.component';
+import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
 
 
 export const appRoutes: Routes = [
     // { path: 'preInscription', component: NewUserComponent },
+    { path: 'forgotPassword', component: ForgotComponent },
     { path: 'signIn', component: SigninComponent },
+    { path: 'resetPassword/:code', component: ResetPasswordComponent, resolve: { user: ResetPasswordResolver } },
+
     { path: 'confirmEmail/:code', component: ConfirmEmailComponent, resolve: { user: EmailConfirmResolver } },
     {
         path: '',

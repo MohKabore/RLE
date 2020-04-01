@@ -36,7 +36,7 @@ export class ResetPasswordComponent implements OnInit {
       this.alertify.success('votre mot de passe a bien été modifié');
       this.router.navigate(['/Home']);
     } else {
-      this.alertify.success('erreur survenue');
+      this.alertify.error('erreur survenue');
 
     }
   }

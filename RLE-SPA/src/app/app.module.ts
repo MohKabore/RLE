@@ -69,6 +69,8 @@ import { RetrofitStockEntryComponent } from './retrofit/retro-stores/retrofit-st
 import { RetrofitStockAllocationComponent } from './retrofit/retro-stores/retrofit-stock-allocation/retrofit-stock-allocation.component';
 import { RetrofitStockHistoriesComponent } from './retrofit/retro-stores/retrofit-stock-histories/retrofit-stock-histories.component';
 import { RetrofitProductsComponent } from './retrofit/retro-stores/retrofit-products/retrofit-products.component';
+import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
+import { MemberPasswordSettingComponent } from './registration/member-password-setting/member-password-setting.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -114,7 +116,8 @@ export function tokenGetter() {
   RetrofitStockEntryComponent,
   RetrofitStockAllocationComponent,
   RetrofitStockHistoriesComponent,
-  RetrofitProductsComponent
+  RetrofitProductsComponent,
+  MemberPasswordSettingComponent
   // SignupComponent
   ],
   imports: [
@@ -160,6 +163,7 @@ export function tokenGetter() {
     AuthGuard,
     EmailConfirmResolver,
     TrainingDetailResolver,
+    ResetPasswordResolver,
     HomeResolver,
     MDBSpinningPreloader,
     ProgressbarModule

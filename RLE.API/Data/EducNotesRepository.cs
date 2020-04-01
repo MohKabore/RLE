@@ -301,20 +301,20 @@ namespace RLE.API.Data
         //         .Where(s => s.CourseId == courseId)
         //         .OrderBy(o => o.Course.Name).ToListAsync();
         // }
-        // public async Task<User> GetUserByEmail(string email)
-        // {
-        //     return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToUpper() == email.ToUpper());
-        // }
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToUpper() == email.ToUpper());
+        }
 
-        // // public async Task<IEnumerable<IGrouping<DateTime, Agenda>>> GetClassAgenda(int classId)
-        // // {
-        // //     return await _context.Agendas
-        // //             .Include(i => i.Class)
-        // //             .Include(i => i.Course)
-        // //             .Where(a => a.ClassId == classId)
-        // //             .OrderBy(o => o.DueDate)
-        // //             .GroupBy(g => g.DueDate).ToListAsync();
-        // // }
+        // public async Task<IEnumerable<IGrouping<DateTime, Agenda>>> GetClassAgenda(int classId)
+        // {
+        //     return await _context.Agendas
+        //             .Include(i => i.Class)
+        //             .Include(i => i.Course)
+        //             .Where(a => a.ClassId == classId)
+        //             .OrderBy(o => o.DueDate)
+        //             .GroupBy(g => g.DueDate).ToListAsync();
+        // }
 
         // public async Task<IEnumerable<Agenda>> GetClassAgenda(int classId)
         // {
@@ -446,26 +446,26 @@ namespace RLE.API.Data
         // {
         //     return await _context.Courses.FirstOrDefaultAsync(c => c.Id == Id);
         // }
-        // public async Task<bool> SendResetPasswordLink(string email, string code)
-        // {
-        //     var emailform = new EmailFormDto
-        //     {
-        //         toEmail = email,
-        //         subject = "Réinitialisation de mot passe ",
-        //         //content ="Votre code de validation: "+ "<b>"+code.ToString()+"</b>"
-        //         content = ResetPasswordContent(code)
-        //     };
-        //     try
-        //     {
-        //         var res = await SendEmail(emailform);
-        //         return true;
-        //     }
-        //     catch (System.Exception)
-        //     {
-        //         return false;
-        //     }
+        public async Task<bool> SendResetPasswordLink(string email, string code)
+        {
+            var emailform = new EmailFormDto
+            {
+                toEmail = email,
+                subject = "Réinitialisation de mot passe ",
+                //content ="Votre code de validation: "+ "<b>"+code.ToString()+"</b>"
+                content = ResetPasswordContent(code)
+            };
+            try
+            {
+                var res = await SendEmail(emailform);
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
 
-        // }
+        }
 
         public async Task<bool> SendEmail(EmailFormDto emailFormDto)
         {
@@ -480,17 +480,17 @@ namespace RLE.API.Data
             }
         }
 
-        // private string ResetPasswordContent(string code)
-        // {
-        //     return "<b>RLE</b> a bien enrgistré votre demande de réinitialisation de mot de passe !<br>" +
-        //         "Vous pouvez utiliser le lien suivant pour réinitialiser votre mot de passe: <br>" +
-        //         " <a href=" + _config.GetValue<String>("AppSettings:DefaultResetPasswordLink") + code + "/>cliquer ici</a><br>" +
-        //         "Si vous n'utilisez pas ce lien dans les 3 heures, il expirera." +
-        //         "Pour obtenir un nouveau lien de réinitialisation de mot de passe, visitez" +
-        //         " <a href=" + _config.GetValue<String>("AppSettings:DefaultforgotPasswordLink") + "/>réinitialiser son mot de passe</a>.<br>" +
-        //         "Merci,";
+        private string ResetPasswordContent(string code)
+        {
+            return "<b>RLE 2020</b> a bien enrgistré votre demande de réinitialisation de mot de passe !<br>" +
+                "Vous pouvez utiliser le lien suivant pour réinitialiser votre mot de passe: <br>" +
+                " <a href=" + _config.GetValue<String>("AppSettings:DefaultResetPasswordLink") + code + "/>cliquer ici</a><br>" +
+                "Si vous n'utilisez pas ce lien dans les 3 heures, il expirera." +
+                "Pour obtenir un nouveau lien de réinitialisation de mot de passe, visitez" +
+                " <a href=" + _config.GetValue<String>("AppSettings:DefaultforgotPasswordLink") + "/>réinitialiser son mot de passe</a>.<br>" +
+                "Merci,";
 
-        // }
+        }
         // public bool SendSms(List<string> phoneNumbers, string content)
         // {
         //     try

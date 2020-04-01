@@ -52,7 +52,6 @@ export class RetrofitProductsComponent implements OnInit {
   }
 
   save() {
-    debugger;
     this.waitDiv = true;
     const productName = this.productForm.value.name;
     if (this.editMode === 'add') {

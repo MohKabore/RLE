@@ -20,6 +20,9 @@ namespace RLE.API.Data
         Task<bool> SendEmail(EmailFormDto emailFormDto);
 
         Task<User> GetUserByCode(string code);
+        Task<User> GetUserByEmail(string email);
+
+        Task<bool> SendResetPasswordLink(string email, string code);
         // Task<PagedList<User>> GetUsers(UserParams userParams);
         // Task<IEnumerable<User>> GetChildren(int parentId);
         // Task<IEnumerable<User>> GetClassStudents(int classId);
@@ -55,8 +58,6 @@ namespace RLE.API.Data
         // void AddInscription(int levelId, int userId);
         // void AddUserLink(int userId, int parentId);
 
-        // Task<User> GetUserByEmail(string email);
-        // Task<bool> SendResetPasswordLink(string email, string code);
         // Task<User> GetSingleUser(string userName);
         // Task<List<UserEvalsDto>> GetUserGrades(int userId, int classId);
         // IEnumerable<ClassAgendaToReturnDto> GetAgendaListByDueDate(IEnumerable<Agenda> agendaItems);

@@ -80,80 +80,80 @@ namespace RLE.API.Controllers
             _cloudinary = new Cloudinary(acc);
         }
 
-        // [HttpPost("{id}/setPassword/{password}")] // edition du mot de passe apres validation du code
-        // public async Task<IActionResult> setPassword(int id, string password)
-        // {
-        //     var user = await _repo.GetUser(id, false);
-        //     if (user != null)
-        //     {
-        //         bool emailCOnfirmed = user.EmailConfirmed;
-        //         var newPassword = _userManager.PasswordHasher.HashPassword(user, password);
-        //         user.PasswordHash = newPassword;
-        //         user.ValidatedCode = true;
-        //         user.EmailConfirmed = true;
-        //         if (!emailCOnfirmed)
-        //             user.ValidationDate = DateTime.Now;
-        //         var res = await _userManager.UpdateAsync(user);
+        [HttpPost("{id}/setPassword/{password}")] // edition du mot de passe apres validation du code
+        public async Task<IActionResult> setPassword(int id, string password)
+        {
+            var user = await _repo.GetUser(id, false);
+            if (user != null)
+            {
+                bool emailCOnfirmed = user.EmailConfirmed;
+                var newPassword = _userManager.PasswordHasher.HashPassword(user, password);
+                user.PasswordHash = newPassword;
+                user.ValidatedCode = true;
+                user.EmailConfirmed = true;
+                if (!emailCOnfirmed)
+                    user.ValidationDate = DateTime.Now;
+                var res = await _userManager.UpdateAsync(user);
 
-        //         if (res.Succeeded)
-        //         {
-        //             var mail = new EmailFormDto();
-        //             if (emailCOnfirmed)
-        //             {
-        //                 // Envoi de mail pour la confirmation de la mise a jour du mot de passe
-        //                 mail.subject = "mot de passe modifié";
-        //                 mail.content = "bonjour <b> " + user.LastName + " " + user.FirstName + "</b>, votre nouveau mot de passe a bien eté enregistré...";
-        //                 mail.toEmail = user.Email;
-        //             }
-        //             else
-        //             {
-        //                 mail.subject = "Compte confirmé";
-        //                 mail.content = "<b> " + user.LastName + " " + user.FirstName + "</b>, votre compte a bien été enregistré";
-        //                 mail.toEmail = user.Email;
-        //             }
-        //             await _repo.SendEmail(mail);
-        //             var userToReturn = _mapper.Map<UserForListDto>(user);
-        //             return Ok(new
-        //             {
-        //                 token = await GenerateJwtToken(user),
-        //                 user = userToReturn
+                if (res.Succeeded)
+                {
+                    var mail = new EmailFormDto();
+                    if (emailCOnfirmed)
+                    {
+                        // Envoi de mail pour la confirmation de la mise a jour du mot de passe
+                        mail.subject = "mot de passe modifié";
+                        mail.content = "bonjour <b> " + user.LastName + " " + user.FirstName + "</b>, votre nouveau mot de passe a bien eté enregistré...";
+                        mail.toEmail = user.Email;
+                    }
+                    else
+                    {
+                        mail.subject = "Compte confirmé";
+                        mail.content = "<b> " + user.LastName + " " + user.FirstName + "</b>, votre compte a bien été enregistré";
+                        mail.toEmail = user.Email;
+                    }
+                    await _repo.SendEmail(mail);
+                    var userToReturn = _mapper.Map<UserForListDto>(user);
+                    return Ok(new
+                    {
+                        token = await GenerateJwtToken(user),
+                        user = userToReturn
 
-        //             });
-        //         }
-        //         return BadRequest("impossible de terminé l'action");
-        //     }
-        //     return NotFound();
-        // }
-
-
+                    });
+                }
+                return BadRequest("impossible de terminé l'action");
+            }
+            return NotFound();
+        }
 
 
 
-        // [HttpGet("{email}/ForgotPassword")]
-        // public async Task<IActionResult> ForgotPassword(string email)
-        // {
-        //     // recherche du compte de l 'email
-        //     var user = await _repo.GetUserByEmail(email);
-        //     if (user != null)
-        //     {
-        //         if (!user.EmailConfirmed)
-        //             return BadRequest("compte pas encore activé....");
-        //         // envoi du mail pour le reset du password
-        //         user.ValidationCode = Guid.NewGuid().ToString();
-        //         if (await _repo.SendResetPasswordLink(user.Email, user.ValidationCode))
-        //         {
-        //             // envoi effectuer
-        //             user.ForgotPasswordCount += 1;
-        //             user.ForgotPasswordDate = DateTime.Now;
-        //             await _repo.SaveAll();
-        //             return Ok();
 
-        //         }
-        //         return BadRequest("echec d'envoi du mail");
-        //     }
-        //     return BadRequest("email non trouvé. Veuillez réessayer");
 
-        // }
+        [HttpGet("{email}/ForgotPassword")]
+        public async Task<IActionResult> ForgotPassword(string email)
+        {
+            // recherche du compte de l 'email
+            var user = await _repo.GetUserByEmail(email);
+            if (user != null)
+            {
+                if (!user.EmailConfirmed)
+                    return BadRequest("compte pas encore activé....");
+                // envoi du mail pour le reset du password
+                user.ValidationCode = Guid.NewGuid().ToString();
+                if (await _repo.SendResetPasswordLink(user.Email, user.ValidationCode))
+                {
+                    // envoi effectuer
+                    user.ForgotPasswordCount += 1;
+                    user.ForgotPasswordDate = DateTime.Now;
+                    await _repo.SaveAll();
+                    return Ok();
+
+                }
+                return BadRequest("echec d'envoi du mail");
+            }
+            return BadRequest("email non trouvé. Veuillez réessayer");
+
+        }
         [HttpGet("RegionsList")]
         public async Task<IActionResult> RegionsList()
         {
@@ -326,23 +326,23 @@ namespace RLE.API.Controllers
 
 
 
-        // [HttpGet("ResetPassword/{code}")]
-        // public async Task<IActionResult> ResetPassword(string code)
-        // {
-        //     var user = await _repo.GetUserByCode(code);
-        //     if (user != null)
-        //     {
-        //         if (DateTime.Now.AddHours(-3) >= user.ForgotPasswordDate.Value) // le delai des 3 Heures a expiré
-        //             return BadRequest("Désolé ce lien a expiré....");
-        //         else
-        //             return Ok(new
-        //             {
-        //                 user = _mapper.Map<UserForDetailedDto>(user)
-        //             });
+        [HttpGet("ResetPassword/{code}")]
+        public async Task<IActionResult> ResetPassword(string code)
+        {
+            var user = await _repo.GetUserByCode(code);
+            if (user != null)
+            {
+                if (DateTime.Now.AddHours(-3) >= user.ForgotPasswordDate.Value) // le delai des 3 Heures a expiré
+                    return BadRequest("Désolé ce lien a expiré....");
+                else
+                    return Ok(new
+                    {
+                        user = _mapper.Map<UserForListDto>(user)
+                    });
 
-        //     }
-        //     return BadRequest("lien introuvable");
-        // }
+            }
+            return BadRequest("lien introuvable");
+        }
 
         // [HttpPost("LastValidation")]
         // public async Task<IActionResult> LastValidation(int id, UserForUpdateDto userForUpdateDto)

@@ -16,7 +16,7 @@
             <h4><a (click)="createProductForm(prod);basicModal.show()">{{prod.name}}</a></h4>
             <hr>
           </mdb-card-title>
-
+          <p *ngIf="!prod.stores || prod.stores.length===0"></p>
           <table class="table-responsive table-sm table-striped">
             <tr *ngFor="let store of prod.stores">
               <td>{{store.retrofitStore.name}}</td>
