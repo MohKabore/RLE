@@ -16,7 +16,7 @@ using Microsoft.Extensions.Configuration;
 
 namespace RLE.API.Data
 {
-    public class EducNotesRepository : IEducNotesRepository
+    public class RleRepository : IRleRepository
     {
         private readonly DataContext _context;
         private readonly IConfiguration _config;
@@ -27,7 +27,7 @@ namespace RLE.API.Data
         int teacherTypeId, parentTypeId, studentTypeId, adminTypeId;
         int parentRoleId, memberRoleId, moderatorRoleId, adminRoleId, teacherRoleId;
 
-        public EducNotesRepository(DataContext context, IConfiguration config, IEmailSender emailSender,
+        public RleRepository(DataContext context, IConfiguration config, IEmailSender emailSender,
             UserManager<User> userManager, IMapper mapper)
         {
             _context = context;
@@ -100,6 +100,135 @@ namespace RLE.API.Data
             false;
         }
 
+
+        public async Task<User> GetUserByCode(string code)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.ValidationCode == code);
+        }
+
+
+        public async Task<User> GetUserByEmail(string email)
+        {
+            return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToUpper() == email.ToUpper());
+        }
+
+
+        public async Task<bool> SendResetPasswordLink(string email, string code)
+        {
+            var emailform = new EmailFormDto
+            {
+                toEmail = email,
+                subject = "Réinitialisation de mot passe ",
+                //content ="Votre code de validation: "+ "<b>"+code.ToString()+"</b>"
+                content = ResetPasswordContent(code)
+            };
+            try
+            {
+                var res = await SendEmail(emailform);
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+
+        }
+
+        public async Task<bool> SendEmail(EmailFormDto emailFormDto)
+        {
+            try
+            {
+                await _emailSender.SendEmailAsync(emailFormDto.toEmail, emailFormDto.subject, emailFormDto.content);
+                return true;
+            }
+            catch (System.Exception)
+            {
+                return false;
+            }
+        }
+
+        private string ResetPasswordContent(string code)
+        {
+            return "<b>RLE 2020</b> a bien enrgistré votre demande de réinitialisation de mot de passe !<br>" +
+                "Vous pouvez utiliser le lien suivant pour réinitialiser votre mot de passe: <br>" +
+                " <a href=" + _config.GetValue<String>("AppSettings:DefaultResetPasswordLink") + code + "/>cliquer ici</a><br>" +
+                "Si vous n'utilisez pas ce lien dans les 3 heures, il expirera." +
+                "Pour obtenir un nouveau lien de réinitialisation de mot de passe, visitez" +
+                " <a href=" + _config.GetValue<String>("AppSettings:DefaultforgotPasswordLink") + "/>réinitialiser son mot de passe</a>.<br>" +
+                "Merci,";
+
+        }
+        // public List<int> GetWeekDays(DateTime date)
+        // {
+        //     var dayDate = (int)date.DayOfWeek;
+        //     var dayInt = dayDate == 0 ? 7 : dayDate;
+        //     DateTime monday = date.AddDays(1 - dayInt);
+
+        //     var days = new List<int>();
+        //     for (int i = 0; i < 6; i++)
+        //     {
+        //         days.Add(monday.AddDays(i).Day);
+        //     }
+
+        //     return days;
+        // }
+
+        // public async Task<IEnumerable<Schedule>> GetClassSchedule(int classId)
+        // {
+        //     return await _context.Schedules
+        //         .Include(i => i.Class)
+        //         .Include(i => i.Course)
+        //         .Include(i => i.Teacher)
+        //         .Where(s => s.ClassId == classId)
+        //         .OrderBy(o => o.Day).ThenBy(o => o.StartHourMin).ToListAsync();
+        // }
+
+        // public async Task<IEnumerable<ClassLevelSchedule>> GetClassLevelSchedule(int classLevelId)
+        // {
+        //     return await _context.ClassLevelSchedules
+        //         .Include(i => i.ClassLevel)
+        //         .Include(i => i.Course)
+        //         .Where(s => s.ClassLevelId == classLevelId)
+        //         .OrderBy(o => o.Day).ThenBy(o => o.StartHourMin).ToListAsync();
+        // }
+
+        // public async Task<IEnumerable<Agenda>> GetClassAgenda(int classId, DateTime StartDate, DateTime EndDate)
+        // {
+        //     return await _context.Agendas
+        //                 .Include(i => i.Course)
+        //                 .Where(a => a.ClassId == classId && a.DueDate.Date >= StartDate.Date && a.DueDate.Date <= EndDate.Date)
+        //                 .OrderBy(o => o.DueDate).ToListAsync();
+        // }
+
+        // public async Task<IEnumerable<Agenda>> GetClassAgendaTodayToNDays(int classId, int toNbDays)
+        // {
+        //     DateTime today = DateTime.Now.Date;
+        //     DateTime EndDate = today.AddDays(toNbDays).Date;
+
+        //     return await _context.Agendas
+        //         .Include(i => i.Course)
+        //         .Where(a => a.ClassId == classId && a.DueDate.Date >= today && a.DueDate.Date <= EndDate)
+        //         .OrderBy(o => o.DueDate).ToListAsync();
+        // }
+
+        // public async Task<IEnumerable<User>> GetClassStudents(int classId)
+        // {
+        //     return await _context.Users
+        //         .Include (i => i.Photos)
+        //         //.Include (i => i.Class)
+        //         .Where (u => u.ClassId == classId)
+        //         .OrderBy (e => e.LastName).ThenBy (e => e.FirstName)
+        //         .ToListAsync ();
+        // }
+
+        // public async Task<IEnumerable<CourseSkill>> GetCourseSkills(int courseId)
+        // {
+        //     return await _context.CourseSkills
+        //         .Include(i => i.Skill)
+        //         .Include(i => i.Course)
+        //         .Where(s => s.CourseId == courseId)
+        //         .OrderBy(o => o.Course.Name).ToListAsync();
+        // }
         // public async Task<Photo> GetPhoto(int id)
         // {
         //     var photo = await _context.Photos.IgnoreQueryFilters()
@@ -225,86 +354,6 @@ namespace RLE.API.Data
         // {
         //     return await _context.Agendas.FirstOrDefaultAsync(a => a.Id == agendaId);
         // }
-        public async Task<User> GetUserByCode(string code)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.ValidationCode == code);
-        }
-
-        // public List<int> GetWeekDays(DateTime date)
-        // {
-        //     var dayDate = (int)date.DayOfWeek;
-        //     var dayInt = dayDate == 0 ? 7 : dayDate;
-        //     DateTime monday = date.AddDays(1 - dayInt);
-
-        //     var days = new List<int>();
-        //     for (int i = 0; i < 6; i++)
-        //     {
-        //         days.Add(monday.AddDays(i).Day);
-        //     }
-
-        //     return days;
-        // }
-
-        // public async Task<IEnumerable<Schedule>> GetClassSchedule(int classId)
-        // {
-        //     return await _context.Schedules
-        //         .Include(i => i.Class)
-        //         .Include(i => i.Course)
-        //         .Include(i => i.Teacher)
-        //         .Where(s => s.ClassId == classId)
-        //         .OrderBy(o => o.Day).ThenBy(o => o.StartHourMin).ToListAsync();
-        // }
-
-        // public async Task<IEnumerable<ClassLevelSchedule>> GetClassLevelSchedule(int classLevelId)
-        // {
-        //     return await _context.ClassLevelSchedules
-        //         .Include(i => i.ClassLevel)
-        //         .Include(i => i.Course)
-        //         .Where(s => s.ClassLevelId == classLevelId)
-        //         .OrderBy(o => o.Day).ThenBy(o => o.StartHourMin).ToListAsync();
-        // }
-
-        // public async Task<IEnumerable<Agenda>> GetClassAgenda(int classId, DateTime StartDate, DateTime EndDate)
-        // {
-        //     return await _context.Agendas
-        //                 .Include(i => i.Course)
-        //                 .Where(a => a.ClassId == classId && a.DueDate.Date >= StartDate.Date && a.DueDate.Date <= EndDate.Date)
-        //                 .OrderBy(o => o.DueDate).ToListAsync();
-        // }
-
-        // public async Task<IEnumerable<Agenda>> GetClassAgendaTodayToNDays(int classId, int toNbDays)
-        // {
-        //     DateTime today = DateTime.Now.Date;
-        //     DateTime EndDate = today.AddDays(toNbDays).Date;
-
-        //     return await _context.Agendas
-        //         .Include(i => i.Course)
-        //         .Where(a => a.ClassId == classId && a.DueDate.Date >= today && a.DueDate.Date <= EndDate)
-        //         .OrderBy(o => o.DueDate).ToListAsync();
-        // }
-
-        // public async Task<IEnumerable<User>> GetClassStudents(int classId)
-        // {
-        //     return await _context.Users
-        //         .Include (i => i.Photos)
-        //         //.Include (i => i.Class)
-        //         .Where (u => u.ClassId == classId)
-        //         .OrderBy (e => e.LastName).ThenBy (e => e.FirstName)
-        //         .ToListAsync ();
-        // }
-
-        // public async Task<IEnumerable<CourseSkill>> GetCourseSkills(int courseId)
-        // {
-        //     return await _context.CourseSkills
-        //         .Include(i => i.Skill)
-        //         .Include(i => i.Course)
-        //         .Where(s => s.CourseId == courseId)
-        //         .OrderBy(o => o.Course.Name).ToListAsync();
-        // }
-        public async Task<User> GetUserByEmail(string email)
-        {
-            return await _context.Users.FirstOrDefaultAsync(u => u.Email.ToUpper() == email.ToUpper());
-        }
 
         // public async Task<IEnumerable<IGrouping<DateTime, Agenda>>> GetClassAgenda(int classId)
         // {
@@ -446,51 +495,6 @@ namespace RLE.API.Data
         // {
         //     return await _context.Courses.FirstOrDefaultAsync(c => c.Id == Id);
         // }
-        public async Task<bool> SendResetPasswordLink(string email, string code)
-        {
-            var emailform = new EmailFormDto
-            {
-                toEmail = email,
-                subject = "Réinitialisation de mot passe ",
-                //content ="Votre code de validation: "+ "<b>"+code.ToString()+"</b>"
-                content = ResetPasswordContent(code)
-            };
-            try
-            {
-                var res = await SendEmail(emailform);
-                return true;
-            }
-            catch (System.Exception)
-            {
-                return false;
-            }
-
-        }
-
-        public async Task<bool> SendEmail(EmailFormDto emailFormDto)
-        {
-            try
-            {
-                await _emailSender.SendEmailAsync(emailFormDto.toEmail, emailFormDto.subject, emailFormDto.content);
-                return true;
-            }
-            catch (System.Exception)
-            {
-                return false;
-            }
-        }
-
-        private string ResetPasswordContent(string code)
-        {
-            return "<b>RLE 2020</b> a bien enrgistré votre demande de réinitialisation de mot de passe !<br>" +
-                "Vous pouvez utiliser le lien suivant pour réinitialiser votre mot de passe: <br>" +
-                " <a href=" + _config.GetValue<String>("AppSettings:DefaultResetPasswordLink") + code + "/>cliquer ici</a><br>" +
-                "Si vous n'utilisez pas ce lien dans les 3 heures, il expirera." +
-                "Pour obtenir un nouveau lien de réinitialisation de mot de passe, visitez" +
-                " <a href=" + _config.GetValue<String>("AppSettings:DefaultforgotPasswordLink") + "/>réinitialiser son mot de passe</a>.<br>" +
-                "Merci,";
-
-        }
         // public bool SendSms(List<string> phoneNumbers, string content)
         // {
         //     try

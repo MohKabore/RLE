@@ -121,10 +121,11 @@ namespace RLE.API
             services.AddCors();
             services.Configure<CloudinarySettings>(Configuration.GetSection("CloudinarySettings"));
             //Mapper.Reset();
-            services.AddAutoMapper(typeof(IEducNotesRepository).Assembly);
+            services.AddAutoMapper(typeof(IRleRepository).Assembly);
             services.AddTransient<Seed>();
             // services.AddScoped<IDatingRepository, DatingRepository>();
-            services.AddScoped<IEducNotesRepository, EducNotesRepository>();
+            services.AddScoped<IRleRepository, RleRepository>();
+            services.AddScoped<IStockRepository, StockRepository>();
             services.AddScoped<LogUserActivity>();
         }
 

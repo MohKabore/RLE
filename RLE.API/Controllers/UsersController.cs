@@ -29,7 +29,7 @@ namespace RLE.API.Controllers
     public class UsersController : ControllerBase
     {
         private readonly DataContext _context;
-        private readonly IEducNotesRepository _repo;
+        private readonly IRleRepository _repo;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         string password;
@@ -39,7 +39,7 @@ namespace RLE.API.Controllers
         private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
         private Cloudinary _cloudinary;
 
-        public UsersController(IConfiguration config, DataContext context, IEducNotesRepository repo,
+        public UsersController(IConfiguration config, DataContext context, IRleRepository repo,
         UserManager<User> userManager, IMapper mapper, IOptions<CloudinarySettings> cloudinaryConfig)
         {
             _userManager = userManager;
@@ -162,6 +162,7 @@ namespace RLE.API.Controllers
                 if (user != null)
                 {
                     user.PreSelected = true;
+                    user.Nok = 0;
                     _repo.Update(user);
                 }
 
@@ -173,6 +174,67 @@ namespace RLE.API.Controllers
                 };
                 _repo.Add(uh);
 
+
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest();
+        }
+
+    
+        [HttpPost("SaveReachable")]
+        public async Task<IActionResult> SaveReachable(List<UserIdDto> userIds)
+        {
+            foreach (var userid in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userid.UserId);
+                if (user != null)
+                {
+                    user.PreSelected = true;
+                    user.Nok = 0;
+                    _repo.Update(user);
+                }
+
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest();
+        }
+
+         [HttpPost("SaveUnReachable")]
+        public async Task<IActionResult> SaveUnReachable(List<UserIdDto> userIds)
+        {
+            foreach (var userid in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userid.UserId);
+                if (user != null)
+                {
+                    user.PreSelected = true;
+                    user.Nok = 1;
+                    _repo.Update(user);
+                }
+
+            }
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest();
+        }
+
+          [HttpPost("SaveDisclaimer")]
+        public async Task<IActionResult> SaveDisclaimer(List<UserIdDto> userIds)
+        {
+            foreach (var userid in userIds)
+            {
+                var user = await _context.Users.FirstOrDefaultAsync(a => a.Id == userid.UserId);
+                if (user != null)
+                {
+                    user.PreSelected = true;
+                    user.Nok = 2;
+                    _repo.Update(user);
+                }
 
             }
             if (await _repo.SaveAll())

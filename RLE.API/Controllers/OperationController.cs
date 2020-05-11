@@ -23,14 +23,14 @@ namespace RLE.API.Controllers
     public class OperationController : ControllerBase
     {
         private readonly DataContext _context;
-        private readonly IEducNotesRepository _repo;
+        private readonly IRleRepository _repo;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         string password;
 
         private readonly UserManager<User> _userManager;
         int operatorTypeId;
-        public OperationController(IConfiguration config, DataContext context, IEducNotesRepository repo,
+        public OperationController(IConfiguration config, DataContext context, IRleRepository repo,
         UserManager<User> userManager, IMapper mapper)
         {
             _userManager = userManager;
@@ -240,7 +240,7 @@ namespace RLE.API.Controllers
                     else
                         finalResult = false;
                 }
-                catch (System.Exception ex)
+                catch (System.Exception)
                 {
                     identityContextTransaction.Rollback();
                     finalResult = false;
@@ -254,6 +254,35 @@ namespace RLE.API.Controllers
             return BadRequest();
 
         }
+
+        [HttpPost("AddEnrolmentCenter")]
+        public async Task<IActionResult> AddEnrolmentCenter(NewEcDto ecDto)
+        {
+            var ecToCreate = _mapper.Map<EnrolmentCenter>(ecDto);
+            _repo.Add(ecToCreate);
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest();
+        }
+
+        [HttpPut("{enrolmentCenterId}/UpdateEnrolmentCenter")]
+        public async Task<IActionResult> UpdateEnrolmentCenter(int enrolmentCenterId, NewEcDto ecDto)
+        {
+            var ec = await _context.EnrolmentCenters.FirstOrDefaultAsync(c => c.Id == enrolmentCenterId);
+            if (ec != null)
+            {
+                _mapper.Map(ecDto, ec);
+                if (await _repo.SaveAll())
+                    return Ok();
+
+                return BadRequest();
+            }
+            return NotFound();
+        }
+
+
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////// P U T ///////////////////////////////////////////////////////

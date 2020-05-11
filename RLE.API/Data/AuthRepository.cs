@@ -9,7 +9,7 @@ using RLE.API.Models;
 namespace RLE.API.Data {
     public class AuthRepository : IAuthRepository {
         private readonly DataContext _context;
-        // private readonly IRLERepository _RLERepo;
+        // private readonly IRleRepository _RLERepo;
         private readonly IConfiguration _config;
 
         public AuthRepository (DataContext context, IConfiguration config) {

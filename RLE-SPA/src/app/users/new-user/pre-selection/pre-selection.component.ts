@@ -179,5 +179,34 @@ export class PreSelectionComponent implements OnInit {
       console.log(error);
     });
   }
+  reachable() {
+    this.userService.saveReachable(this.isSelected).subscribe(() => {
+      this.alertify.success('enregistrement terminé...');
+      this.isSelected = [];
+      this.searchEmp();
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  unReachable() {
+    this.userService.saveUnReachable(this.isSelected).subscribe(() => {
+      this.alertify.success('enregistrement terminé...');
+      this.isSelected = [];
+      this.searchEmp();
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  disclaimer() {
+    this.userService.saveDisclaimer(this.isSelected).subscribe(() => {
+      this.alertify.success('enregistrement terminé...');
+      this.isSelected = [];
+      this.searchEmp();
+    }, error => {
+      console.log(error);
+    });
+  }
 
 }

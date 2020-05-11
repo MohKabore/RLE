@@ -90,6 +90,7 @@ namespace RLE.API.Models
         public bool OnTraining { get; set; }
         public ICollection<Photo> Photos { get; set; }
         public DateTime? ForgotPasswordDate { get; set; }
+        public int Nok { get; set; }
 
         // public  ICollection<Ecdeployment> Ecdeployment { get; set; }
         // public  ICollection<EmpHistory> EmpHistory { get; set; }

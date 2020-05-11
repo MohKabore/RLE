@@ -182,6 +182,18 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/SaveUserAssignAccount/' + insertUserId, userIds);
   }
 
+  saveReachable(userIds) {
+    return this.http.post(this.baseUrl + 'users/SaveReachable', userIds);
+  }
+
+  saveUnReachable(userIds) {
+    return this.http.post(this.baseUrl + 'users/SaveUnReachable', userIds);
+  }
+
+  saveDisclaimer(userIds) {
+    return this.http.post(this.baseUrl + 'users/SaveDisclaimer', userIds);
+  }
+
   savePreSelection(userIds, insertUserId) {
     return this.http.post(this.baseUrl + 'users/SavePreSelection/' + insertUserId, userIds);
   }

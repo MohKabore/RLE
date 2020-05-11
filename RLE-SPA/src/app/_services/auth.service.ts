@@ -370,5 +370,9 @@ export class AuthService {
     return this.http.post(this.baseUrl + 'AddImportedUsers/' + currentUserId, usersToSave);
   }
 
+  getEcByCode(ecCode: string) {
+    return this.http.get(this.baseUrl + 'GetEcByCode/' + ecCode);
+  }
+
 
 }

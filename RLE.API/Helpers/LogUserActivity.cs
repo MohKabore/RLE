@@ -14,7 +14,7 @@ namespace RLE.API.Helpers
             var resultContext = await next();
 
             var userId = int.Parse(resultContext.HttpContext.User.FindFirst(ClaimTypes.NameIdentifier).Value);
-            var repo = resultContext.HttpContext.RequestServices.GetService<IEducNotesRepository>();
+            var repo = resultContext.HttpContext.RequestServices.GetService<IRleRepository>();
             var user = await repo.GetUser(userId, true);
             user.LastActive = DateTime.Now;
             await repo.SaveAll();

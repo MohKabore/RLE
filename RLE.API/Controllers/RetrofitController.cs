@@ -15,10 +15,10 @@ namespace RLE.API.Controllers
     [ApiController]
     public class RetrofitController : ControllerBase
     {
-        private readonly IEducNotesRepository _repo;
+        private readonly IRleRepository _repo;
         private readonly DataContext _context;
         private readonly IMapper _mapper;
-        public RetrofitController(IEducNotesRepository repo, DataContext context, IMapper mapper)
+        public RetrofitController(IRleRepository repo, DataContext context, IMapper mapper)
         {
             _mapper = mapper;
             _context = context;

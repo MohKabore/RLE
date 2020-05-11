@@ -1,0 +1,174 @@
+<div class="mt-5 animated bounceInDown">
+  <mdb-tabset [buttonClass]="'classic-tabs tabs-cyan'" [contentClass]="'card'" class="classic-tabs">
+    <mdb-tab heading="Recherche par localité">
+      <form style="color: #757575;" [formGroup]="serachForm">
+        <div class="row">
+          <div class="col-md-2">
+            <div class="md-form form-sm mt-2 mb-0">
+              <mdb-select id="regionId" [options]="regions" placeholder="region*" (ngModelChange)="getDepartments()"
+                formControlName="regionId"></mdb-select>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="md-form form-sm mt-2 mb-0">
+              <mdb-select id="departmentId" [options]="depts" placeholder="department*" (ngModelChange)="getCities()"
+                formControlName="departmentId"></mdb-select>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="md-form form-sm mt-2 mb-0">
+              <mdb-select id="cityId" [options]="cities" placeholder="ville*" (ngModelChange)="getMuns()"
+                formControlName="cityId"></mdb-select>
+            </div>
+          </div>
+
+          <div class="col-md-2">
+            <div class="md-form form-sm mt-2 mb-0">
+              <mdb-select id="municipalityId" [options]="muns" placeholder="commune*" formControlName="municipalityId">
+              </mdb-select>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="md-form form-sm mt-2 mb-0">
+              <button mdbBtn size="sm" color="success" (click)="getEcs()">rechercher</button>
+              <button mdbBtn size="sm" color="light">annuler</button>
+            </div>
+          </div>
+        </div>
+
+      </form>
+
+      <div *ngIf="showEcs">
+        <div class="row">
+          <!-- Card -->
+          <mdb-card class="col-md-4 m-2" *ngFor="let ec of ecs">
+            <mdb-card-body>
+              <!--Title-->
+              <mdb-card-title class="text-center">
+                <h6> {{ec.name}}</h6>
+              </mdb-card-title>
+              <p style="font-size: 14px;"><span>Code :</span> {{ec.displayCode}}</p>
+              <p style="font-size: 14px;"><span>Nombre d'Opérateurs : {{ec.operators.length}}</span></p>
+
+              <div class="text-center">
+                <a mdbBtn color="primary" (click)="basicModal.show();createEcForms(ec)" size="sm"
+                  mdbWavesEffect>editer</a>
+              </div>
+            </mdb-card-body>
+          </mdb-card>
+        </div>
+      </div>
+    </mdb-tab>
+    <mdb-tab heading="Recherche par code">
+      <div class="row">
+        <div class="col-md-6">
+        <div class="md-form form-sm mt-2 mb-0">
+          <div class="md-form">
+            <input mdbInput type="text" [(ngModel)]="ecCode" id="eccode" class="form-control"  [textMask]="{mask: ecCodeMask}">
+            <label for="eccode">entrer le code du centre</label>
+          </div>
+        </div>
+      </div>
+
+        <div class="col-md-6">
+          <div class="md-form form-sm mt-2 mb-0">
+            <div class="md-form">
+              <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="getEcByCode()">rechercher</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <mdb-card *ngIf="showEc">
+        <mdb-card-body>
+          <!--Title-->
+          <mdb-card-title class="text-center">
+            <h6> {{enrolCenter.name}}</h6>
+          </mdb-card-title>
+          <p style="font-size: 14px;"><span>Code :</span> {{enrolCenter.displayCode}}</p>
+          <p style="font-size: 14px;"><span>Nombre d'Opérateurs : {{enrolCenter.operators.length}}</span></p>
+
+          <div class="text-center">
+            <a mdbBtn color="primary" (click)="basicModal.show();createEcForms(enrolCenter)" size="sm"
+              mdbWavesEffect>editer</a>
+          </div>
+        </mdb-card-body>
+      </mdb-card>
+
+    </mdb-tab>
+
+    <mdb-tab heading="Ajouter un centre">
+      <div class="row">
+        <div class="col-12">
+          <p>veuillez cliquer sur le lien ci-dessous pour ajouter un centre</p>
+          <hr>
+          <button type="button" size="sm" mdbBtn color="primary" (click)="createEcForms(null); basicModal.show()"
+            mdbWavesEffect>ajouter centre</button>
+        </div>
+      </div>
+    </mdb-tab>
+  </mdb-tabset>
+</div>
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel"><span *ngIf="editionMode==='edit'">EDITION CENTRE</span><span
+            *ngIf="editionMode==='add'">NOUVEAU CENTRE</span></h4>
+      </div>
+      <div class="modal-body">
+        <form style="color: #757575;" [formGroup]="ecForm">
+          <div class="md-form form-sm mt-2 mb-0">
+            <mdb-select id="ecregionId" [options]="ecregions" placeholder="region*" (ngModelChange)="getECDepartments()"
+              formControlName="regionId"></mdb-select>
+          </div>
+
+          <div class="md-form form-sm mt-2 mb-0">
+            <mdb-select id="ecdepartmentId" [options]="ecdepts" placeholder="department*"
+              (ngModelChange)="getECCities()" formControlName="departmentId"></mdb-select>
+          </div>
+
+          <div class="md-form form-sm mt-2 mb-0">
+            <mdb-select id="eccityId" [options]="eccities" placeholder="ville*" (ngModelChange)="getECMuns()"
+              formControlName="cityId"></mdb-select>
+          </div>
+
+          <div class="md-form form-sm mt-2 mb-0">
+            <mdb-select id="municipalityId" [options]="ecmuns" placeholder="commune*" formControlName="municipalityId">
+            </mdb-select>
+          </div>
+
+          <div class="md-form form-sm mt-2 mb-0">
+            <div class="md-form">
+              <input mdbInput type="text" id="name" class="form-control" formControlName="name">
+              <label for="name">Nom du centre</label>
+            </div>
+          </div>
+
+          <div class="md-form form-sm mt-2 mb-0">
+            <div class="md-form">
+              <input mdbInput type="text" id="code" class="form-control" formControlName="code">
+              <label for="name">Code du centre</label>
+            </div>
+          </div>
+          <div class="md-form form-sm mt-2 mb-0 text-center">
+            <button type="button" (click)="save();basicModal.hide()" size="sm" mdbBtn color="success"
+              mdbWavesEffect>enregistrer</button>
+            <button type="button" size="sm" mdbBtn color="light" (click)="basicModal.hide()"
+              mdbWavesEffect>annuler</button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</div>

@@ -80,22 +80,36 @@
                                 </div>
 
                                 <div class="col-md-6">
-                                    <div class="md-form form-sm mt-2">
-                                        <button [disabled]="isSelected.length===0" type="button"
-                                            (click)="basicModal.show()" mdbBtn color="success" size="sm"
-                                            mdbWavesEffect>enregistrer</button>
-                                    </div>
+                                    <p>{{filteredUsers.length}} personne(s) trouvée(s)</p>
+
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12">
-                            <p>{{filteredUsers.length}} personne(s) trouvée(s)</p>
+                        <div class="col-md-12 text-center">
+                            <div class="md-form form-sm mt-2">
+                                <button [disabled]="isSelected.length===0" type="button" title="ok" (click)="save()"
+                                    mdbBtn color="success" size="sm" mdbWavesEffect><i
+                                        class="fas fa-check-circle"></i></button>
+                                <button [disabled]="isSelected.length===0" type="button" title="désistement" mdbBtn
+                                    color="warning" size="sm" (click)="disclaimer()" mdbWavesEffect><i
+                                        class="fas fa-ban"></i></button>
+                                <button [disabled]="isSelected.length===0" type="button" title="joignable" mdbBtn
+                                    color="success" size="sm" (click)="reachable()" mdbWavesEffect><i
+                                        class="fa fa-phone" aria-hidden="true"></i></button>
+                                <button [disabled]="isSelected.length===0" type="button" title="injoignable" mdbBtn
+                                    color="warning" size="sm" (click)="unReachable()" mdbWavesEffect><i
+                                        class="fas fa-phone-slash"></i></button>
+
+                            </div>
                         </div>
 
                         <div *ngFor="let user of filteredUsers | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index"
                             class="col-md-3 my-5" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+                           
                             <app-callSheet-card [user]="user" [index]="i" (setSelection)="setSelection($event)">
                             </app-callSheet-card>
+                            <span *ngIf="user.nok===1">injoingnable</span>
+                            <span *ngIf="user.nok===2">NOK</span>
                         </div>
                         <!-- PAGINATION CONTROL -->
                         <div class="col-md-12 mt-3" *ngIf="users?.length">

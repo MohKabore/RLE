@@ -23,14 +23,14 @@ namespace RLE.API.Controllers
     public class StockController : ControllerBase
     {
         private readonly DataContext _context;
-        private readonly IEducNotesRepository _repo;
+        private readonly IStockRepository _repo;
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         string password;
 
         private readonly UserManager<User> _userManager;
         int operatorTypeId;
-        public StockController(IConfiguration config, DataContext context, IEducNotesRepository repo,
+        public StockController(IConfiguration config, DataContext context, IStockRepository repo,
         UserManager<User> userManager, IMapper mapper)
         {
             _userManager = userManager;
@@ -48,17 +48,23 @@ namespace RLE.API.Controllers
         [HttpGet("StoreTablets/{storeId}")]
         public async Task<IActionResult> StoreTablets(int storeId)
         {
-            var tablets = await _context.Tablets.Where(s => s.StoreId == storeId)
-                                                .OrderBy(a => a.Imei).ToListAsync();
-            return Ok(tablets);
+            var tablets = await _repo.StoreTablets(storeId);
+
+            if (tablets.Count() > 0)
+                return Ok(tablets);
+
+            return NotFound();
         }
 
-         [HttpGet("MaintainerTablets/{maintainerId}")]
+        [HttpGet("MaintainerTablets/{maintainerId}")]
         public async Task<IActionResult> MaintainerTablets(int maintainerId)
         {
-            var tablets = await _context.Tablets.Include(s =>s.Store).Where(s => s.Store.EmployeeId == maintainerId)
-                                                .OrderBy(a => a.Imei).ToListAsync();
-            return Ok(tablets);
+            var tablets = await _repo.MaintainairTablets(maintainerId);
+
+            if (tablets.Count() > 0)
+                return Ok(tablets);
+
+            return NotFound();
         }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////// P O S T///////////////////////////////////////////////////////
@@ -66,77 +72,9 @@ namespace RLE.API.Controllers
         [HttpPost("StockAllocation/{insertUserId}")]
         public async Task<IActionResult> StockAllocation(int insertUserId, StockAllocationDto stockAllocationDto)
         {
-            int ToStoreId = Convert.ToInt32(stockAllocationDto.ToStoreId);
-            int ceiStoreid = _config.GetValue<int>("AppSettings:CEIStoreId");
-            if (ToStoreId == ceiStoreid)
-            {
-                var toStore = await _context.Stores.FirstOrDefaultAsync
-                                            (a => a.RegionId == stockAllocationDto.RegionId && a.DepartmentId == stockAllocationDto.DepartmentId);
-                if (toStore == null)
-                {
-                    // creation d'un nouveau store
-                    var newStore = new Store
-                    {
-                        StorePId = ceiStoreid,
-                        StoreTypeId = _config.GetValue<int>("AppSettings:clientStoretypeId"),
-                        Name = "MAG CEI - " + (await _context.Departments.FirstOrDefaultAsync(a => a.Id == Convert.ToInt32(stockAllocationDto.DepartmentId))).Name,
-                        RegionId = stockAllocationDto.RegionId,
-                        DepartmentId = stockAllocationDto.DepartmentId
-                    };
-                    _context.Add(newStore);
-                    ToStoreId = newStore.Id;
-                }
-                else
-                {
-                    ToStoreId = toStore.Id;
-                }
-            }
-            int inventOpTypeId = (int)InventOpType.TypeEnum.StockEntry;
-            var stckMvt = new StockMvt
-            {
-                InsertUserId = insertUserId,
-                ToStoreId = ToStoreId,
-                FromStoreId = stockAllocationDto.FromStoreId,
-                MvtDate = stockAllocationDto.Mvtdate,
-                RefNum = stockAllocationDto.RefNum,
-                InventOpTypeId = inventOpTypeId
-            };
-            _context.Add(stckMvt);
-
-            foreach (var imei in stockAllocationDto.Imeis)
-            {
-                var tablet = new Tablet
-                {
-                    Imei = imei,
-                    StoreId = ToStoreId,
-                    Type = false,
-                    Status = 1,
-                    Active = false
-                };
-                _context.Add(tablet);
-
-                var inventOp = new InventOp
-                {
-                    InsertUserId = insertUserId,
-                    FormNum = stockAllocationDto.RefNum,
-                    OpDate = stockAllocationDto.Mvtdate,
-                    FromStoreId = stockAllocationDto.FromStoreId,
-                    ToStoreId = ToStoreId,
-                    TabletId = tablet.Id,
-                    InventOpTypeId = inventOpTypeId
-                };
-                _context.Add(inventOp);
-
-                var stkMvtinventOp = new StockMvtInventOp
-                {
-                    StockMvtId = stckMvt.Id,
-                    InventOpId = inventOp.Id
-                };
-                _context.Add(stkMvtinventOp);
-            }
+            await _repo.StockAllocation(insertUserId, stockAllocationDto);
             if (await _repo.SaveAll())
                 return Ok();
-
             return BadRequest();
         }
 
@@ -144,42 +82,7 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> TabletAllocation(int insertUserId, StockAllocationDto stockAllocationDto)
         {
 
-            int inventOpTypeId = (int)InventOpType.TypeEnum.StockTransfer;
-            var stckMvt = new StockMvt
-            {
-                ToStoreId = stockAllocationDto.ToStoreId,
-                FromStoreId = stockAllocationDto.FromStoreId,
-                MvtDate = stockAllocationDto.Mvtdate,
-                InsertUserId = insertUserId,
-                RefNum = stockAllocationDto.RefNum,
-                InventOpTypeId = inventOpTypeId
-            };
-            _context.Add(stckMvt);
-
-            foreach (var tablet in stockAllocationDto.Tablets)
-            {
-                tablet.StoreId = stockAllocationDto.ToStoreId;
-                _context.Update(tablet);
-
-                var inventOp = new InventOp
-                {
-                InsertUserId = insertUserId,
-                    FormNum = stockAllocationDto.RefNum,
-                    OpDate = stockAllocationDto.Mvtdate,
-                    FromStoreId = stockAllocationDto.FromStoreId,
-                    ToStoreId = stockAllocationDto.ToStoreId,
-                    TabletId = tablet.Id,
-                    InventOpTypeId = inventOpTypeId
-                };
-                _context.Add(inventOp);
-
-                var stkMvtinventOp = new StockMvtInventOp
-                {
-                    StockMvtId = stckMvt.Id,
-                    InventOpId = inventOp.Id
-                };
-                _context.Add(stkMvtinventOp);
-            }
+           _repo.TabletAllocation(insertUserId, stockAllocationDto);
             if (await _repo.SaveAll())
                 return Ok();
 
@@ -200,7 +103,7 @@ namespace RLE.API.Controllers
                 {
                     EmployeeId = approSphareDto.ToEmployeeId,
                     RegionId = employee.RegionId,
-                    StoreTypeId =  _config.GetValue<int>("AppSettings:magStoretypeId"),
+                    StoreTypeId = _config.GetValue<int>("AppSettings:magStoretypeId"),
                     DepartmentId = employee.DepartmentId,
                     StorePId = _config.GetValue<int>("AppSettings:ATStoreId")
                 };
@@ -221,14 +124,14 @@ namespace RLE.API.Controllers
 
             foreach (var tabletId in approSphareDto.TabletIds)
             {
-                var tablet  = await _context.Tablets.FirstOrDefaultAsync(t=>t.Id == tabletId);
+                var tablet = await _context.Tablets.FirstOrDefaultAsync(t => t.Id == tabletId);
                 tablet.StoreId = toStoreId;
                 _context.Update(tablet);
 
                 var inventOp = new InventOp
                 {
                     FormNum = approSphareDto.RefNum,
-                InsertUserId = insertUserId,
+                    InsertUserId = insertUserId,
                     OpDate = approSphareDto.Mvtdate,
                     FromStoreId = approSphareDto.FromStoreId,
                     ToStoreId = toStoreId,
@@ -285,7 +188,7 @@ namespace RLE.API.Controllers
 
             foreach (var tabletId in backTabletDto.TabletIds)
             {
-                var tablet  = await _context.Tablets.FirstOrDefaultAsync(t=>t.Id == tabletId);
+                var tablet = await _context.Tablets.FirstOrDefaultAsync(t => t.Id == tabletId);
                 tablet.StoreId = backTabletDto.ToStoreId;
                 _context.Update(tablet);
 
@@ -293,7 +196,7 @@ namespace RLE.API.Controllers
                 {
                     FormNum = backTabletDto.RefNum,
                     OpDate = backTabletDto.Mvtdate,
-                InsertUserId = insertUserId,
+                    InsertUserId = insertUserId,
                     FromStoreId = fromStoreId,
                     ToStoreId = backTabletDto.ToStoreId,
                     TabletId = tablet.Id,

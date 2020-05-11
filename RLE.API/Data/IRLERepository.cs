@@ -8,7 +8,7 @@ using RLE.API.Models;
 
 namespace RLE.API.Data
 {
-    public interface IEducNotesRepository
+    public interface IRleRepository
     {
         void Add<T>(T entity) where T : class;
         void Update<T>(T entity) where T : class;
@@ -23,6 +23,7 @@ namespace RLE.API.Data
         Task<User> GetUserByEmail(string email);
 
         Task<bool> SendResetPasswordLink(string email, string code);
+      
         // Task<PagedList<User>> GetUsers(UserParams userParams);
         // Task<IEnumerable<User>> GetChildren(int parentId);
         // Task<IEnumerable<User>> GetClassStudents(int classId);

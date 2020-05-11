@@ -20,7 +20,7 @@ namespace RLE.API.Models
 
         public  Municipality Municipality { get; set; }
         // public  ICollection<Ecdeployment> Ecdeployment { get; set; }
-        // public  ICollection<User> Employee { get; set; }
+        public  ICollection<User> Employee { get; set; }
         // public  ICollection<InventOp> InventOp { get; set; }
         // public  ICollection<SdcardTablet> SdcardTablet { get; set; }
     }

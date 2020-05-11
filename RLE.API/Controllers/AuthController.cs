@@ -34,7 +34,7 @@ namespace RLE.API.Controllers
         private readonly IMapper _mapper;
         private readonly UserManager<User> _userManager;
         private readonly SignInManager<User> _signInManager;
-        private readonly IEducNotesRepository _repo;
+        private readonly IRleRepository _repo;
         private readonly DataContext _context;
         private readonly IOptions<CloudinarySettings> _cloudinaryConfig;
         private Cloudinary _cloudinary;
@@ -44,7 +44,7 @@ namespace RLE.API.Controllers
         int typeOperatorId, typeMaintenancierId;
         string password;
 
-        public AuthController(IConfiguration config, IMapper mapper, IEducNotesRepository repo,
+        public AuthController(IConfiguration config, IMapper mapper, IRleRepository repo,
             UserManager<User> userManager, SignInManager<User> signInManager, DataContext context,
             IOptions<CloudinarySettings> cloudinaryConfig)
         {
@@ -906,6 +906,7 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> MunEnrolmentCenters(int municipaltyId)
         {
             var ecs = await _context.EnrolmentCenters
+                                    .Include(d => d.Employee)
                                     .Include(d => d.Municipality)
                                     .ThenInclude(d => d.City)
                                     .ThenInclude(d => d.Department)
@@ -914,6 +915,10 @@ namespace RLE.API.Controllers
                                     .OrderBy(a => a.Name)
                                     .ToListAsync();
             var ecsToReturn = _mapper.Map<IEnumerable<EcsForListDto>>(ecs);
+            foreach (var ec in ecsToReturn)
+            {
+                ec.Operators = _mapper.Map<List<UserForListDto>>(ecs.FirstOrDefault(c => c.Id == ec.Id).Employee);
+            }
             return Ok(ecsToReturn);
         }
 
@@ -1065,7 +1070,7 @@ namespace RLE.API.Controllers
             foreach (var userForRegisterDto in usersForRegisterDto)
             {
 
-                if (userForRegisterDto.LastName != null && userForRegisterDto.FirstName != null && userForRegisterDto.PhoneNumber!=null)
+                if (userForRegisterDto.LastName != null && userForRegisterDto.FirstName != null && userForRegisterDto.PhoneNumber != null)
                 {
                     var ops = await _context.Users.FirstOrDefaultAsync(u => u.LastName.ToUpper() == userForRegisterDto.LastName.ToUpper()
                                                                                    && u.FirstName.ToUpper() == userForRegisterDto.FirstName.ToUpper()
@@ -1155,23 +1160,25 @@ namespace RLE.API.Controllers
             }
 
             photoForCreationDto.Url = uploadResult.Uri.ToString();
-            string photoUrl =  uploadResult.Uri.ToString();
+            string photoUrl = uploadResult.Uri.ToString();
             photoForCreationDto.PublicId = uploadResult.PublicId;
 
 
             var photo = _mapper.Map<Photo>(photoForCreationDto);
-             photo.IsMain = true;
-                photo.IsApproved = true;
+            photo.IsMain = true;
+            photo.IsApproved = true;
 
             foreach (var p in user.Photos)
             {
-            p.IsMain = false;
+                p.IsMain = false;
             }
             user.Photos.Add(photo);
 
             if (await _repo.SaveAll())
-                return Ok(new {
-                   photoUrl =  photoUrl });
+                return Ok(new
+                {
+                    photoUrl = photoUrl
+                });
 
             return BadRequest("Could not add the photo");
         }
@@ -1225,9 +1232,9 @@ namespace RLE.API.Controllers
                         //  d = emps.Where(a => a.LastName.ToLower() == user.LastName.ToLower() && a.FirstName == user.FirstName.ToLower()
                         //                     && a.PhoneNumber == user.PhoneNumber  && a.Id > user.Id).ToList();
 
-                        
-                                d = emps.Where(a => a.LastName.ToLower() == user.LastName.ToLower() && a.FirstName == user.FirstName.ToLower()
-                                                && a.Id > user.Id).ToList();
+
+                        d = emps.Where(a => a.LastName.ToLower() == user.LastName.ToLower() && a.FirstName == user.FirstName.ToLower()
+                                        && a.Id > user.Id).ToList();
                         if (d.Count() > 0)
                         {
                             doublons.AddRange(d);
@@ -1246,6 +1253,27 @@ namespace RLE.API.Controllers
 
                 return BadRequest();
             }
+
+        }
+        [HttpGet("GetEcByCode/{ecCode}")]
+        public async Task<IActionResult> GetEcByCode(string ecCode)
+        {
+            var enrolmentCenter = await _context.EnrolmentCenters.Include(c => c.Municipality)
+                                                                    .ThenInclude(c => c.City)
+                                                                    .ThenInclude(c => c.Department)
+                                                                    .ThenInclude(c => c.Region)
+                                                                    .FirstOrDefaultAsync(c => c.Municipality.City.Department.Region.Code + "-" +
+                                                                    c.Municipality.City.Department.Code + "-" +
+                                                                    c.Municipality.City.Code + "-" +
+                                                                    c.Municipality.Code + "-" +
+                                                                    c.Code == ecCode);
+            if (enrolmentCenter == null)
+                return NotFound();
+
+            var ecToReturn = _mapper.Map<EcsForListDto>(enrolmentCenter);
+            return Ok(ecToReturn);
+
+
 
         }
 

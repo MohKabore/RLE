@@ -36,6 +36,7 @@ import { RetrofitProductsComponent } from './retrofit/retro-stores/retrofit-prod
 import { ForgotComponent } from './views/sessions/forgot/forgot.component';
 import { ResetPasswordComponent } from './registration/reset-password/reset-password.component';
 import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
+import { EcsComponent } from './operation/ecs/ecs.component';
 
 
 export const appRoutes: Routes = [
@@ -66,6 +67,7 @@ export const appRoutes: Routes = [
             { path: 'approSphare', component: ApproSpareComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'assignment', component: AssignmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'ecs', component: EcsComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier'] } },
             { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'retrofitStores', component: RetroStoresComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'retrofitStockEntry', component: RetrofitStockEntryComponent, data: { roles: ['Admin', 'AgentHotline'] } },

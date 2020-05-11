@@ -48,6 +48,7 @@ namespace RLE.API.Dtos
         public bool OnTraining { get; set; }
         public bool Reserved { get; set; }
         public int Step { get; set; }
+        public int Nok { get; set; }
         public string Details { get; set; }
         public string EnrolmentCenterName { get; set; }
         public int? EnrolmentCenterId { get; set; }

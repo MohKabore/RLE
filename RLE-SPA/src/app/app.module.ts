@@ -71,6 +71,7 @@ import { RetrofitStockHistoriesComponent } from './retrofit/retro-stores/retrofi
 import { RetrofitProductsComponent } from './retrofit/retro-stores/retrofit-products/retrofit-products.component';
 import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
 import { MemberPasswordSettingComponent } from './registration/member-password-setting/member-password-setting.component';
+import { EcsComponent } from './operation/ecs/ecs.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -117,7 +118,8 @@ export function tokenGetter() {
   RetrofitStockAllocationComponent,
   RetrofitStockHistoriesComponent,
   RetrofitProductsComponent,
-  MemberPasswordSettingComponent
+  MemberPasswordSettingComponent,
+  EcsComponent
   // SignupComponent
   ],
   imports: [

@@ -28,4 +28,12 @@ export class OperationService {
     return this.http.post(this.baseUrl + 'AffectNewUsers/' + insertUserid, newEmps);
   }
 
+  addEnrolmentCenter(ecModel) {
+    return this.http.post(this.baseUrl + 'AddEnrolmentCenter', ecModel);
+  }
+
+  updateEnrolmentCenter(enrolmentCenterId,ecModel) {
+    return this.http.put(this.baseUrl + enrolmentCenterId + '/UpdateEnrolmentCenter', ecModel);
+  }
+
 }
