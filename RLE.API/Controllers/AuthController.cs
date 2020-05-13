@@ -785,6 +785,8 @@ namespace RLE.API.Controllers
                 var roleName = "";
                 if (user.TypeEmpId == 1)
                     roleName = "admin";
+                else if(user.TypeEmpId == 11)
+                 roleName = "AgentHotline";
                 else
                 {
                     var role = await _context.Roles.FirstOrDefaultAsync(a => a.Id == user.TypeEmpId);

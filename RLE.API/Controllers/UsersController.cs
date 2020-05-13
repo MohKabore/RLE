@@ -692,7 +692,7 @@ namespace RLE.API.Controllers
             var allDepartments = await _context.Departments.ToArrayAsync();
             var allCities = await _context.Cities.ToArrayAsync();
             int operatorTypeId = _config.GetValue<int>("AppSettings:OperatorTypeId");
-            var allOperators = await _context.Users.Where(u => u.TypeEmpId == operatorTypeId).ToListAsync();
+            var allOperators = await _context.Users.Where(u => u.TypeEmpId == operatorTypeId && u.PreSelected==true && u.Nok==0).ToListAsync();
 
             var recap = new CitiesRecap();
             recap.TotalCities = allCities.Count();
@@ -727,19 +727,6 @@ namespace RLE.API.Controllers
 
                         var cityOps = allOperators.Where(a => a.ResCityId == c.Id).ToList();
                         int t = cityOps.Count();
-                        // d.Cities.Add(new CityForDetailDto
-                        // {
-                        //     Id = c.Id,
-                        //     Name = c.Name,
-                        //     Code = c.Code,
-                        //     DepartmentId = c.DepartmentId,
-                        //     NbEmpNeeded = c.NbEmpNeeded,
-                        //     TotalRegistered = t,
-                        //     PrctRegistered = Math.Round(100 * ((double)t / (double)(c.NbEmpNeeded * inscrpitionQuota)), 2),
-                        //     TotalRegisteredPrct = Convert.ToInt32(c.NbEmpNeeded * inscrpitionQuota),
-                        //     TotalReserveToHave = Convert.ToInt32((c.NbEmpNeeded * inscrpitionQuota) - c.NbEmpNeeded)
-                        // });
-
                         var cc = new CityForDetailDto
                         {
                             Id = c.Id,

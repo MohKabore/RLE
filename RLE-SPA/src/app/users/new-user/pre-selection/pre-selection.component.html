@@ -85,7 +85,8 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12 text-center">
+                        <!-- <div class="col-md-12 text-center" *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']"> -->
+                        <div class="col-md-12 text-center" *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">
                             <div class="md-form form-sm mt-2">
                                 <button [disabled]="isSelected.length===0" type="button" title="ok" (click)="save()"
                                     mdbBtn color="success" size="sm" mdbWavesEffect><i
@@ -105,7 +106,7 @@
 
                         <div *ngFor="let user of filteredUsers | paginate: { itemsPerPage: pageSize, currentPage: page }; let i = index"
                             class="col-md-3 my-5" [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
-                           
+
                             <app-callSheet-card [user]="user" [index]="i" (setSelection)="setSelection($event)">
                             </app-callSheet-card>
                             <span *ngIf="user.nok===1">injoingnable</span>

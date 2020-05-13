@@ -27,7 +27,7 @@ export class PreSelectionComponent implements OnInit {
   usersDiv = false;
   showRegions = false;
   page = 1;
-  pageSize = 8;
+  pageSize = 12;
   typeEmpId: number;
 
   constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }

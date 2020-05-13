@@ -15,7 +15,8 @@
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/inscription']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">inscription</a>
-
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/preSelection']"
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">pré-selection</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/opHandling']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">rélocalisation</a>
 
@@ -25,8 +26,7 @@
         [routerLink]="['/assignAccount']">assigner compte</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/detailInscription']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">Point Inscription</a>
-      <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/preSelection']"
-        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">pré-selection</a>
+     
       <!-- <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/formations']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">formations</a> -->
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/trainingResult']"
