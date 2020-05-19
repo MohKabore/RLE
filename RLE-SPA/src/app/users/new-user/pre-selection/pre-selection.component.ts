@@ -29,6 +29,8 @@ export class PreSelectionComponent implements OnInit {
   page = 1;
   pageSize = 12;
   typeEmpId: number;
+  totalInjoignable = 0;
+  totalNok = 0;
 
   constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
 
@@ -104,10 +106,23 @@ export class PreSelectionComponent implements OnInit {
     this.users = [];
     this.noResult = '';
     this.usersDiv = true;
+    this.totalInjoignable = 0;
+    this.totalNok = 0;
     this.userService.searchEmps(searchValues).subscribe((res: User[]) => {
       if (res.length > 0) {
         this.users = res;
         this.filteredUsers = res;
+        for (let i = 0; i < res.length; i++) {
+          const element = res[i];
+          if (element.nok === 2) {
+            this.totalNok = this.totalNok + 1;
+          }
+
+          if (element.nok === 1) {
+            this.totalInjoignable = this.totalInjoignable + 1;
+          }
+
+        }
       } else {
         this.noResult = 'aucune personne trouvée...';
       }

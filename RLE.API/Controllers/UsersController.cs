@@ -92,7 +92,7 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> SearchPreSelectedEmps(EmpSearchModelDto searchModel)
         {
             var users = new List<User>();
-            string req = "select * from AspnetUsers where PreSelected=1 and Ontraining=0" +
+            string req = "select * from AspnetUsers where PreSelected=1 and nok=0 and Ontraining=0" +
             " and Active=0 and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
             if (searchModel.RegionId != null)
                 req += "and RegionId =" + Convert.ToInt32(searchModel.RegionId);
