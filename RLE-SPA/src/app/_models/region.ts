@@ -8,12 +8,12 @@ export class Region {
   public districtId: number;
 
   public code: string;
-
+  totalSelected : number;
+  totalReserved : number;
   public active: number;
   totalOnTraining: number;
   totalPreSelected: number;
   totalRegistered: number;
-  totalSelected: number;
   nbEmpNeeded: number;
   prctRegistered: number;
   prctPreselected: number;

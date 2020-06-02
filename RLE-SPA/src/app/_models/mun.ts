@@ -1,25 +1,13 @@
-import { Department } from './department';
-import { Mun } from './mun';
 
-export class City {
-  id: number;
-
+export class Mun {
   code: string;
 
   name: string;
 
-  departmentId: number;
-
-  cityTypeId: number;
-
-  kits: number;
-
-  pollingPlaces: number;
 
   nbEmpNeeded: number;
 
-  active: number;
-  Department: Department;
+
   totalOnTraining: number;
   totalPreSelected: number;
   totalRegistered: number;
@@ -32,6 +20,5 @@ export class City {
   totalRegisteredPrct: number;
   totalReserveToHave: number;
   totalReserved: number;
-  municipalities :  Mun[];
 
 }

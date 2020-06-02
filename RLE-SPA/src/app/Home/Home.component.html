@@ -1,9 +1,9 @@
-<div class="container mt-5" *ngIf="!regions">
+<div class="container mt-5" *ngIf="!regionsDetails">
   <h4>chargement en cours...</h4>
   <mdb-progress-bar class="progress primary-color-dark" mode="indeterminate"></mdb-progress-bar>
 </div>
 
-<div class="container mt-5 animated mb-1 bounceInDown" *ngIf="regions">
+<!-- <div class="container mt-5 animated mb-1 bounceInDown" *ngIf="regions">
   <div class="row">
     <div class="col-md-4">
       <mdb-card class="text-black-50" bgColor="bg-light">
@@ -100,50 +100,6 @@
                   </div>
                 </div>
               </div>
-              <!-- <table style="width: 100%;">
-                <tr *ngFor="let city of dept.cities">
-                  <td style="width: 15%;text-align: center;"><b class="text-right">{{city.name}}</b></td>
-                  <td style="width: 1%;">:</td>
-                  <td>
-                    <div class="progress text-left mr-1" *ngIf="city.prctRegistered<=65" style="height: 40px;">
-                      <div class="progress-bar bg-danger" role="progressbar" aria-valuenow="0"
-                        style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
-                        aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
-                          {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
-                          {{city.totalReserveToHave}} reservistes attendus)</b></div>
-                    </div>
-  
-                    <div class="progress text-left mr-1" *ngIf="city.prctRegistered>65 && city.prctRegistered<90"
-                      style="height: 40px;">
-                      <div class="progress-bar bg-warning" role="progressbar" aria-valuenow="0"
-                        style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
-                        aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
-                          {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
-                          {{city.totalReserveToHave}} reservistes attendus)</b></div>
-                    </div>
-  
-                    <div class="progress text-left mr-1" *ngIf="city.prctRegistered>=90 && city.prctRegistered<100"
-                      style="height: 40px;">
-                      <div class="progress-bar bg-primary" role="progressbar" aria-valuenow="0"
-                        style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
-                        aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
-                          {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
-                          {{city.totalReserveToHave}} reservistes attendus)</b></div>
-                    </div>
-  
-                    <div class="progress text-left mr-1" *ngIf="city.prctRegistered>=100" style="height: 40px;">
-                      <div class="progress-bar bg-success" role="progressbar" aria-valuenow="0"
-                        style="text-align: center; font-size: 25px;" [ngStyle]="{'width': city.prctRegistered +'%'  }"
-                        aria-valuemin="0" aria-valuemax="100"> <b style="text-align: center; font-size: 22px;">
-                          {{city.prctRegistered}}% ({{city.totalRegistered}}/{{city.totalRegisteredPrct}}.
-                          {{city.totalReserveToHave}} reservistes attendus)</b></div>
-                    </div>
-  
-  
-  
-                    </td>
-                </tr>
-              </table> -->
             </mdb-card-body>
           </mdb-card>
 
@@ -151,5 +107,120 @@
         </div>
       </mdb-card-body>
     </mdb-card>
+  </div>
+</div> -->
+
+
+<div class="container mt-5 animated mb-1 bounceInDown" *ngIf="regionsDetails">
+
+  <div  class="col-md-12 mb-2">
+    <mdb-card>
+      <mdb-card-body>
+    
+
+        <table style="width: 100%;">
+          <tr>
+            <td>Inscrits</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{recap.totalRegistered}}/{{recap.totalRegisteredPrct}},dont
+                {{recap.totalReserveToHave}} reservistes</b>
+            </td>
+          </tr>
+      
+          <tr>
+            <td>Programés pour formation</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{recap.totalOnTraining}}  
+              </b>
+            </td>
+          </tr>
+      
+          <tr>
+            <td>Récrutés</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{recap.totalSelected}}  
+              </b>
+            </td>
+          </tr>
+      
+          <tr>
+            <td>Réservistes</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{recap.totalReserved}}  
+              </b>
+            </td>
+          </tr>
+          
+          </table>
+
+
+      </mdb-card-body>
+    </mdb-card>
+
+  </div>
+
+  <div *ngFor="let reg of regionsDetails" class="col-md-12 mb-2">
+    <mdb-card>
+      <mdb-card-body>
+        <mdb-card-title class="">
+          <h4>{{reg.name}}({{reg.nbEmpNeeded}})</h4>
+        </mdb-card-title>
+        <hr>
+
+        <table style="width: 100%;">
+          <tr>
+            <td>Inscrits</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{reg.totalRegistered}}/{{reg.totalRegisteredPrct}},dont
+                {{reg.totalReserveToHave}} reservistes</b>
+            </td>
+          </tr>
+      
+          <tr>
+            <td>Programés pour formation</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{reg.totalOntraining}}  
+              </b>
+            </td>
+          </tr>
+      
+          <tr>
+            <td>Récrutés</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{reg.totalSelected}}  
+              </b>
+            </td>
+          </tr>
+      
+          <tr>
+            <td>Réservistes</td>
+            <td>:</td>
+            <td>
+              <b style="text-align: center; font-size: 22px;">
+                {{reg.totalReserved}}  
+              </b>
+            </td>
+          </tr>
+          
+          </table>
+
+
+      </mdb-card-body>
+    </mdb-card>
+
   </div>
 </div>

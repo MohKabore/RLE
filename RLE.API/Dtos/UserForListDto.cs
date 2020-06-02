@@ -51,6 +51,9 @@ namespace RLE.API.Dtos
         public int Nok { get; set; }
         public string Details { get; set; }
         public string EnrolmentCenterName { get; set; }
+        public int MunicipalityId { get; set; }
+        public string MunicipalityName { get; set; }
+        public string MunicipalityCode { get; set; }
         public int? EnrolmentCenterId { get; set; }
         public EnrolmentCenter EnrolmentCenter { get; set; }
         public int? TabletId { get; set; }

@@ -61,7 +61,7 @@ export class TrainingClassUsersComponent implements OnInit {
       // const imgHeight = canvas.height * imgWidth / canvas.width;
       // const heightLeft = imgHeight;
 
-      const contentDataURL = canvas.toDataURL('image/png')
+      const contentDataURL = canvas.toDataURL('image/png');
       const pdf = new jspdf('p', 'mm', 'a4');
       let position = 0;
       const imgWidth = 210;

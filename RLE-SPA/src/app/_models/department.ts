@@ -23,6 +23,7 @@ export class Department {
   activeforInscription: boolean;
   totalRegisteredPrct: number;
   totalReserveToHave:number;
+  totalReserved : number;
 
   Region: Region;
   cities: City[];

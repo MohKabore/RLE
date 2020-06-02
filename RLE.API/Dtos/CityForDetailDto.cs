@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace RLE.API.Dtos
 {
     public class CityForDetailDto
@@ -18,6 +20,7 @@ namespace RLE.API.Dtos
             TotalOnTrainingPrct =0;
             TotalSelectedPrct=0;
             TotalReserveToHave = 0;
+            TotalReserved = 0;
 
         }
 
@@ -42,6 +45,8 @@ namespace RLE.API.Dtos
         public double PrctOnTraining { get; set; }
         public double PrctSelected { get; set; }
         public int TotalReserveToHave { get; set; }
+        public int TotalReserved { get; set; }
+        public List<MunForDetailDto> Municipalities { get; set; }
 
     }
 }

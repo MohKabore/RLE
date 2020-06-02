@@ -22,6 +22,8 @@ namespace RLE.API.Dtos
             TotalOnTrainingPrct =0;
             TotalSelectedPrct=0;
             TotalReserveToHave = 0;
+            TotalReserved =0;
+            ToTalSelected =0;
         }
         public int Id { get; set; }
         public string Code { get; set; }
@@ -49,5 +51,7 @@ namespace RLE.API.Dtos
         public int TotalOnTrainingPrct { get; set; }
         public int TotalSelectedPrct { get; set; }
         public int TotalReserveToHave { get; set; }
+        public int ToTalSelected { get; set; }
+        public int ToTalRegistered { get; set; }
     }
 }

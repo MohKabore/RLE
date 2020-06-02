@@ -65,7 +65,7 @@
         {{noResult}}
       </div>
       <div *ngIf="users.length>0">
-        <b class="text-center" >Nouvelle localité</b> <hr>
+        <b class="text-center" >Nouvelle localité(pour les réaffectation)</b> <hr>
         <form style="color: #757575;" [formGroup]="affectationForm">
           <div class="row">
 
@@ -79,14 +79,25 @@
 
             <div class="col-md-3">
               <div class="md-form form-sm  m-0">
-                <mdb-select id="resCityId" [options]="affectationCities" placeholder="ville ou commune"
-                  formControlName="resCityId">
+                <mdb-select id="resCityId" [options]="affectationCities" placeholder="sous-prefecture"
+                (ngModelChange)="getMuns()" formControlName="resCityId">
                 </mdb-select>
               </div>
             </div>
-
-            <div class="col-md-6">
+            <div class="col-md-3">
               <div class="md-form form-sm  m-0">
+                <mdb-select id="munId" [options]="muns" placeholder="commune"
+                  formControlName="municipalityId">
+                </mdb-select>
+              </div>
+            </div>
+            <div class="col-md-3">
+              <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="cancel()">reprendre la recherche</button>
+
+            </div>
+
+            <div class="col-md-12">
+              <div class="md-form form-sm  m-0" >
                 <!-- <button title="enregistrer" (click)="save()" type="button" mdbBtn size="sm" color="success" mdbWavesEffect
                   [disabled]=" !searchForm.valid || isSelected.length===0">réaffecter</button> -->
                 <button title="réaffecter" type="button" mdbBtn size="sm" color="primary" mdbWavesEffect
@@ -94,13 +105,16 @@
                   [disabled]="!affectationForm.valid || isSelected.length===0">réaffecter</button>
                 <button title="suppimer"  (click)="basicModal1.show()"  [disabled]="isSelected.length===0" type="button" size="sm" mdbBtn color="danger"
                   mdbWavesEffect>supprmier</button>
-                <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect (click)="cancel()">annuler</button>
+                <button type="button" [disabled]="isSelected.length===0" mdbBtn color="primary" size="sm" mdbWavesEffect  (click)="selectUsers()">récruter</button>
+                <button type="button" [disabled]="isSelected.length===0" mdbBtn color="light" size="sm" mdbWavesEffect (click)="removeSelectedUsers()">annuler le récrutement</button>
+                <button type="button" [disabled]="isSelected.length===0" mdbBtn color="primary" size="sm" mdbWavesEffect  (click)="reserveUsers()">réservistes</button>
+                <button type="button" [disabled]="isSelected.length===0" mdbBtn color="light" size="sm" mdbWavesEffect (click)="removeReservedUsers()">annuler réservation</button>
               </div>
             </div>
 
           </div>
         </form>
-        <span>-{{users.length}} personnes(s) trouvée(s)</span> <br>
+        <span>-{{users.length}} personnes(s) trouvée(s), {{totalSelected}} récrutés , {{totalReserved}} réservistes</span> <br>
         <span>-{{isSelected.length}} ligne(s) sélectionnée(s)</span>
 
         <table style="width: 100%;" id="tableSortExample" mdbTable mdbTableScroll scrollY="true" maxHeight="600"
@@ -114,18 +128,21 @@
             </tr>
           </thead>
           <tbody>
-            <tr *ngFor="let el of users; let i = index">
+            <tr *ngFor="let el of users; let i = index" [ngClass]="{'alert alert-success': el.selected , 'alert alert-primary': el.reserved }" >
               <th scope="row">
-                <mdb-checkbox [(ngModel)]="el.selected" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
+                <mdb-checkbox [(ngModel)]="el.sel" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
               </th>
               <td>{{el.lastName}}</td>
               <td>{{el.firstName}}</td>
               <td>{{el.phoneNumber}}</td>
               <td>{{el.secondPhoneNumber}}</td>
-              <td>{{el.Email}}</td>
               <td>{{el.regionName}}</td>
               <td>{{el.departmentName}}</td>
               <td>{{el.resCityName}}</td>
+              <td>
+                <span *ngIf="el.municipalityId">{{el.municipalityName}} ({{el.municipalityCode}})</span>
+                <span *ngIf="!el.municipalityId">N/A</span>
+              </td>
             </tr>
           </tbody>
         </table>

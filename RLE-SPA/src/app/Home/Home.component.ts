@@ -13,19 +13,31 @@ import { Department } from '../_models/department';
 export class HomeComponent implements OnInit {
   regions: any[];
   recap: any;
-  region: any = {};
+  // region: any = {};
+  regionsDetails: any[];
   regionList: any = [];
   showDetails = false;
 
   constructor(private userService: UserService) { }
 
   ngOnInit() {
-    this.getRegionsData();
+    // this.getRegionsData();
+    this.getRegionsTrainingDetails();
   }
 
   getRegionsData() {
-    this.userService.getAllRegionsOpDetails().subscribe((res : any) => {
+    this.userService.getAllRegionsOpDetails().subscribe((res: any) => {
       this.regions = res.regions;
+      this.recap = res.recap;
+
+    }, error => {
+      console.log(error);
+    });
+  }
+
+  getRegionsTrainingDetails() {
+    this.userService.getAllRegionsTrainingDetails().subscribe((res: any) => {
+      this.regionsDetails = res.regions;
       this.recap = res.recap;
 
     }, error => {

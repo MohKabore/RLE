@@ -4,13 +4,13 @@
     </div>
     <div class="animated bounceInDown" *ngIf="users.length>0">
         <button type="button" size="sm" mdbBtn color="success" (click)="selectUsers()"
-            [disabled]="isSelected.length===0" mdbWavesEffect>sélectionner</button>
+            [disabled]="isSelected.length===0" mdbWavesEffect>déclarer apte</button>
         <button type="button" size="sm" mdbBtn color="light" (click)="removeSelectedUsers()"
-            [disabled]="isSelected.length==0" mdbWavesEffect>désélectionner</button>
+            [disabled]="isSelected.length==0" mdbWavesEffect>annuler la sélection</button>
         <button type="button" size="sm" mdbBtn color="primary" (click)="reserveUsers()"
-            [disabled]="isSelected.length===0" mdbWavesEffect>réserviste</button>
+            [disabled]="isSelected.length===0" mdbWavesEffect>déclarer réserviste</button>
         <button type="button" size="sm" mdbBtn color="light" (click)="removeReservedUsers()"
-            [disabled]="isSelected.length===0" mdbWavesEffect>non-réserviste</button>
+            [disabled]="isSelected.length===0" mdbWavesEffect>annuler réservistion</button>
         <p><b>{{totalSelected}}  sélectionné(s), {{totalReserved}} en reserve, {{users.length}} participant(s)</b></p>
 
         <div class="row">

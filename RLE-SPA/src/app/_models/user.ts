@@ -50,6 +50,7 @@ export class User {
   selected: boolean;
   reserved: boolean;
   active: boolean;
+  sel: boolean;
   nok: number;
 
   step: number;

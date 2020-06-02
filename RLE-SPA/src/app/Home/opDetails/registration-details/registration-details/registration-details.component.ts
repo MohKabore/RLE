@@ -12,12 +12,12 @@ import { UserService } from 'src/app/_services/user.service';
 })
 export class RegistrationDetailsComponent implements OnInit {
   searchForm: FormGroup;
-  region: Region;
+  region: any;
   showRegions = false;
   showDetails = false;
   show = false;
   regions: any = [];
-  noResult ='';
+  noResult = '';
   regionId: number;
 
   constructor(private fb: FormBuilder, private route: ActivatedRoute, private authService: AuthService, private userService: UserService) { }
@@ -58,7 +58,9 @@ export class RegistrationDetailsComponent implements OnInit {
       this.regionId = this.searchForm.value.regionId;
     }
 
-    this.userService.regionOpDetails(this.regionId).subscribe((res: Region) => {
+    //  this.userService.regionOpDetails(this.regionId).subscribe((res: Region) => {
+    this.userService.regionTrainingDetails(this.regionId).subscribe((res: any) => {
+      console.log(res);
       if (res != null) {
         this.region = res;
         this.show = true;

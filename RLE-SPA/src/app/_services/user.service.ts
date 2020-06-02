@@ -128,6 +128,11 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/AllRegionOpDetails');
   }
 
+
+  getAllRegionsTrainingDetails() {
+    return this.http.get(this.baseUrl + 'users/AllRegionsTrainingDetails');
+  }
+
   searchUsers(data: any) {
     return this.http.post(this.baseUrl + 'users/SearchUsers', data);
   }
@@ -174,6 +179,10 @@ export class UserService {
 
   searchPreSelectedEmps(params) {
     return this.http.post(this.baseUrl + 'users/SearchPreSelectedEmps', params);
+  }
+
+  searchEmpToRelocate(params) {
+    return this.http.post(this.baseUrl + 'users/SearchEmpToRelocate', params);
   }
 
 
@@ -227,8 +236,13 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/EditTrainingClass/' + trainingClassId + '/' + insertUserId, trainingClass);
   }
 
-  regionOpDetails(regionId: number){
+  regionOpDetails(regionId: number) {
     return this.http.get(this.baseUrl + 'users/' + regionId + '/GetRegionRegistrationDetails');
+  }
+
+
+  regionTrainingDetails(regionId: number) {
+    return this.http.get(this.baseUrl + 'users/' + regionId + '/GetRegionTrainingDetails');
   }
 
   allRegions(): Observable<Region[]> {
@@ -295,8 +309,8 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/EmployeeDetails/' + userId);
   }
 
-  reAssignOps(cityId,departmentId, userIds) {
-    return this.http.post(this.baseUrl + 'users/ReAssignOps/' + cityId + '/' + departmentId, userIds);
+  reAssignOps(cityId, departmentId, municipalityId, userIds) {
+    return this.http.post(this.baseUrl + 'users/ReAssignOps/' + cityId + '/' + departmentId + '/' + municipalityId, userIds);
   }
 
   deleteOps(userIds) {

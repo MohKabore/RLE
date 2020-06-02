@@ -1027,6 +1027,10 @@ namespace RLE.API.Controllers
             var userName = Guid.NewGuid();
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
             userToCreate.PreSelected = true;
+            if(userToCreate.TypeEmpId==2)
+            userToCreate.Selected=true;
+            if(userToCreate.TypeEmpId ==9)
+            userToCreate.TypeEmpId = typeOperatorId;
             userToCreate.UserName = userName.ToString();
             userToCreate.ValidationCode = userName.ToString();
             var result = await _userManager.CreateAsync(userToCreate, password);
