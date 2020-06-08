@@ -66,13 +66,20 @@ namespace RLE.API.Controllers
 
             return NotFound();
         }
+
+        [HttpGet("TabletTypes")]
+        public async Task<IActionResult> TabletTypes()
+        {
+            var tabletTypes = await _context.TabletTypes.OrderBy(t=>t.Name).ToListAsync();
+            return Ok(tabletTypes);
+        }
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////// P O S T///////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        [HttpPost("StockAllocation/{insertUserId}")]
-        public async Task<IActionResult> StockAllocation(int insertUserId, StockAllocationDto stockAllocationDto)
+        [HttpPost("StockAllocation/{tabletTypeId}/{insertUserId}")]
+        public async Task<IActionResult> StockAllocation(int insertUserId,int tabletTypeId, StockAllocationDto stockAllocationDto)
         {
-            await _repo.StockAllocation(insertUserId, stockAllocationDto);
+            await _repo.StockAllocation(insertUserId,tabletTypeId, stockAllocationDto);
             if (await _repo.SaveAll())
                 return Ok();
             return BadRequest();

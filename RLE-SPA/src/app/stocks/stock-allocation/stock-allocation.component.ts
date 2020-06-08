@@ -23,7 +23,9 @@ export class StockAllocationComponent implements OnInit {
   showTablets = false;
   wait = false;
   regions: any = [];
+  tabletTypes: any = [];
   departments: any = [];
+  tabletTypeId: number;
 
   stores = environment.mainStores;
   cieStoreId = environment.ceiStoreId;
@@ -35,6 +37,7 @@ export class StockAllocationComponent implements OnInit {
     this.createStockForm();
     this.currentUserId = this.authService.currentUser.id;
     this.getRegions();
+    this.getTabletTypes();
   }
 
   createStockForm() {
@@ -49,7 +52,17 @@ export class StockAllocationComponent implements OnInit {
     });
   }
 
+  getTabletTypes() {
+    this.stockService.getTabletTypes().subscribe((res: any[]) => {
+      for (let i = 0; i < res.length; i++) {
+        const element = { value: res[i].id, label: res[i].name };
+        this.tabletTypes = [...this.tabletTypes, element];
+      }
+    });
+  }
+
   onFileChange(ev) {
+    this.tabletTypeId = null;
     let workBook = null;
     let jsonData = null;
     const reader = new FileReader();
@@ -70,7 +83,6 @@ export class StockAllocationComponent implements OnInit {
         const la_ligne = d.tablettes[i];
         this.tablets = [...this.tablets, la_ligne.imei];
       }
-      console.log(this.tablets);
       this.showTablets = true;
 
     };
@@ -82,7 +94,7 @@ export class StockAllocationComponent implements OnInit {
     const formData = this.stockForm.value;
     formData.mvtDate = Utils.inputDateDDMMYY(formData.mvtDate, '/');
     formData.imeis = this.tablets;
-    this.stockService.createStockAllocation(this.currentUserId, formData).subscribe((res) => {
+    this.stockService.createStockAllocation(this.currentUserId, formData,this.tabletTypeId).subscribe((res) => {
       this.alertify.success('enregistrement terminé...');
       this.stockForm.reset();
       this.showTablets = false;

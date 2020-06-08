@@ -22,8 +22,8 @@ export class StockService {
     return this.http.get(this.baseUrl + 'MaintainerTablets/' + maintainerid);
   }
 
-  createStockAllocation(currentUserId: number, allocationModel) {
-    return this.http.post(this.baseUrl + 'StockAllocation/' + currentUserId, allocationModel);
+  createStockAllocation(currentUserId: number, allocationModel, tabletTypeId) {
+    return this.http.post(this.baseUrl + 'StockAllocation/'+ tabletTypeId + '/' + currentUserId, allocationModel);
   }
 
   createTabletAllocation(currentUserId: number, allocationModel) {
@@ -36,6 +36,10 @@ export class StockService {
 
   saveBackTablet(currentUserId: number, approSphareModel) {
     return this.http.post(this.baseUrl + 'BackSphare/' + currentUserId, approSphareModel);
+  }
+
+  getTabletTypes() {
+    return this.http.get(this.baseUrl + 'TabletTypes' );
   }
 
 

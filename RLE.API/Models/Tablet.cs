@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
+﻿
 namespace RLE.API.Models
 {
     public partial class Tablet
@@ -12,8 +10,11 @@ namespace RLE.API.Models
         public byte Status { get; set; }
         public bool Active { get; set; }
         public bool Type { get; set; }
-
         public  Store Store { get; set; }
+        
+        public int TabletTypeId { get; set; }
+        public TabletType TabletType { get; set; }
+        // public TabletType TabletType { get; set; }
         // public  ICollection<User> Employee { get; set; }
         // public  ICollection<Failure> FailureTablet { get; set; }
         // public  ICollection<Failure> FailureTabletEx { get; set; }

@@ -98,6 +98,7 @@ namespace RLE.API.Data {
         public  DbSet<RetrofitStoreProduct>  RetrofitStoreProducts { get; set; }
         public  DbSet<RetrofitStockMvt>  RetrofitStockMvts { get; set; }
         public  DbSet<RetrofitStockMvtInventOp>  RetrofitStockMvtInventOps { get; set; }
+        public  DbSet<TabletType>  TabletTypes { get; set; }
 
 
 

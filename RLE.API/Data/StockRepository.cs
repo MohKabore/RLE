@@ -64,7 +64,7 @@ namespace RLE.API.Data
         }
 
 
-        public async Task StockAllocation(int insertUserId, StockAllocationDto stockAllocationDto)
+        public async Task StockAllocation(int insertUserId,int tabletTypeId, StockAllocationDto stockAllocationDto)
         {
             int ToStoreId = Convert.ToInt32(stockAllocationDto.ToStoreId);
             int ceiStoreid = _config.GetValue<int>("AppSettings:CEIStoreId");
@@ -111,7 +111,8 @@ namespace RLE.API.Data
                     StoreId = ToStoreId,
                     Type = false,
                     Status = 1,
-                    Active = false
+                    Active = false,
+                    TabletTypeId = tabletTypeId
                 };
                 Add(tablet);
 

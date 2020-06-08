@@ -49,10 +49,13 @@
       </div>
       <div class="col-md-8 animated bounceInRight" *ngIf="showTablets">
         <p>{{tablets.length}} tablette(s) importée(s)</p>
-        <div class="row" style="overflow-y: scroll; height:160px;">
-          <div class="col-md-1" *ngFor="let tablet of tablets"><span>{{tablet}}</span></div>
+        <div class="md-form">
+          <mdb-select [options]="tabletTypes" placeholder="Choisir le type de tablette" [(ngModel)]="tabletTypeId"></mdb-select>
         </div>
-        <button size="sm" type="button" [disabled]="!stockForm.valid" mdbBtn color="success" (click)="basicModal.show()"
+        <!-- <div class="row" style="overflow-y: scroll; height:160px;">
+          <div class="col-md-1" *ngFor="let tablet of tablets"><span>{{tablet}}</span></div>
+        </div> -->
+        <button size="sm" type="button" [disabled]="!stockForm.valid || !tabletTypeId" mdbBtn color="success" (click)="basicModal.show()"
           mdbWavesEffect>enregistrer</button>
       </div>
 
