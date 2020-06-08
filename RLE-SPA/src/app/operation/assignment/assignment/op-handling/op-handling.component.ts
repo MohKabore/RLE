@@ -41,7 +41,7 @@ export class OpHandlingComponent implements OnInit {
 
   ngOnInit() {
     this.currentUserId = this.authService.decodedToken.nameid;
-      if (this.authService.isMaintenancier()) {
+    if (this.authService.isMaintenancier()) {
       this.regionId = Number(this.authService.currentUser.regionId);
       this.isMaintenancier = true;
       this.getDepartments();

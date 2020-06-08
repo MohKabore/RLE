@@ -321,4 +321,10 @@ export class UserService {
     // debugger
     return this.http.put(this.baseUrl + 'users/UpdateUser/' + userId, user);
   }
+
+  
+  createMunicipality(mun: any) {
+    return this.http.post(this.baseUrl + 'users/CreateMunicipality', mun);
+  }
+
 }

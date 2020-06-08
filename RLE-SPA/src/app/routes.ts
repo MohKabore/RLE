@@ -37,6 +37,7 @@ import { ForgotComponent } from './views/sessions/forgot/forgot.component';
 import { ResetPasswordComponent } from './registration/reset-password/reset-password.component';
 import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
 import { EcsComponent } from './operation/ecs/ecs.component';
+import { MunDetailComponent } from './operation/mun-detail/mun-detail.component';
 
 
 export const appRoutes: Routes = [
@@ -58,9 +59,9 @@ export const appRoutes: Routes = [
             { path: 'preSelection', component: PreSelectionComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'employees', component: EmployeesComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'opHandling', component: OpHandlingComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'opHandling', component: OpHandlingComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'trainingClassResult/:id', component: TrainingClassResultComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
             { path: 'stockEntry', component: StockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
@@ -73,6 +74,7 @@ export const appRoutes: Routes = [
             { path: 'retrofitStockEntry', component: RetrofitStockEntryComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'products', component: RetrofitProductsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'retrofitStockTransfer', component: RetrofitStockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'communes', component: MunDetailComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'retrofitStockHistories', component: RetrofitStockHistoriesComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             {
                 path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
