@@ -22,6 +22,13 @@ export class StockService {
     return this.http.get(this.baseUrl + 'MaintainerTablets/' + maintainerid);
   }
 
+  getDeptTablets(departmentId: number) {
+    return this.http.get(this.baseUrl + 'DepartmentTablets/' + departmentId);
+  }
+  getTabletByImei(imei: string) {
+    return this.http.get(this.baseUrl + 'GetTabletByImei/'+ imei);
+  }
+
   createStockAllocation(currentUserId: number, allocationModel, tabletTypeId) {
     return this.http.post(this.baseUrl + 'StockAllocation/'+ tabletTypeId + '/' + currentUserId, allocationModel);
   }
@@ -38,8 +45,23 @@ export class StockService {
     return this.http.post(this.baseUrl + 'BackSphare/' + currentUserId, approSphareModel);
   }
 
+  saveFailure(currentUserId: number, failureModel) {
+    return this.http.post(this.baseUrl + 'SaveFailure/' + currentUserId, failureModel);
+  }
+
+  saveMaintenance(failureId : number,currentUserId: number, maintenanceModel) {
+    return this.http.post(this.baseUrl + 'SaveMaintenance/' +failureId + '/' + currentUserId, maintenanceModel);
+  }
+
   getTabletTypes() {
     return this.http.get(this.baseUrl + 'TabletTypes' );
+  }
+
+  getDeclaredFailures() {
+    return this.http.get(this.baseUrl + 'getdeclaredfailures' );
+  }
+  getFailure(failureId: number) {
+    return this.http.get(this.baseUrl + 'getFailure/'+ failureId );
   }
 
 

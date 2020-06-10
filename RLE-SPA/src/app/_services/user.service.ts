@@ -153,6 +153,9 @@ export class UserService {
   getSelectedMaintsByRegionId(regionId: number) {
     return this.http.get(this.baseUrl + 'users/' + regionId + '/GetSelectedMaintsByRegionId');
   }
+  getSelectedMaintsByDeptId(departmentId: number) {
+    return this.http.get(this.baseUrl + 'users/' + departmentId + '/GetSelectedMaintsByDeptId');
+  }
 
   getTrainingDetails(trainingid: number) {
     return this.http.get(this.baseUrl + 'users/' + trainingid + '/GetTrainingDetails');
@@ -299,6 +302,10 @@ export class UserService {
 
   verifytrainingClassStatus(trainingClassId) {
     return this.http.get(this.baseUrl + 'users/TrainingClassStatus/' + trainingClassId);
+  }
+
+  getHotliners() {
+    return this.http.get(this.baseUrl + 'users/Hotliners');
   }
 
   veriftTrainerClass(trainerId, trainingClassId) {

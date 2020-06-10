@@ -71,7 +71,31 @@
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">retour tablette</a>
     </div>
   </li>
+  <li class="nav-item dropdown btn-group" dropdown
+  *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">
+  <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
+    maintenance
+  </a>
+  <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
+    <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/failure']"
+      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">déclaration panne</a>
 
+      <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/failures']"
+      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">pannes déclarées</a>
+  </div>
+</li>
+<li class="nav-item dropdown btn-group" dropdown
+*appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">
+<a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
+  export
+</a>
+<div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
+  <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/sdcard']"
+    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Ajout SDCARD</a>
+
+  
+</div>
+</li>
 
   <li class="nav-item dropdown btn-group" dropdown
     *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">

@@ -183,5 +183,14 @@ namespace RLE.API.Data
                 _context.Add(stkMvtinventOp);
             }
         }
+
+        public async Task<Tablet> GetTabletByImei(string imei)
+        {
+            var tablet = await _context.Tablets.FirstOrDefaultAsync(a=>a.Imei == imei);
+            if(tablet!=null)
+            return tablet;
+
+            return null;
+        }
     }
 }

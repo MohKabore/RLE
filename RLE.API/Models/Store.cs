@@ -26,6 +26,6 @@ namespace RLE.API.Models
         // public  ICollection<Repair> RepairToStore { get; set; }
         // public  ICollection<StockMvt> StockMvtFromStore { get; set; }
         // public  ICollection<StockMvt> StockMvtToStore { get; set; }
-        // public  ICollection<Tablet> Tablet { get; set; }
+        public  ICollection<Tablet> Tablets { get; set; }
     }
 }

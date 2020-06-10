@@ -82,6 +82,10 @@ namespace RLE.API.Helpers
             CreateMap<UserForUpdateDto, User>();
             CreateMap<NewEcDto, EnrolmentCenter>();
              CreateMap<MunicipalityForCreationDto, Municipality>();
+            CreateMap<Tablet, TabletDetailDto>();
+            CreateMap<FailureToSaveDto, Failure>();
+
+
 
         }
     }

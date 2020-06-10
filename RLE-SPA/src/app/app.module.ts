@@ -73,6 +73,10 @@ import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
 import { MemberPasswordSettingComponent } from './registration/member-password-setting/member-password-setting.component';
 import { EcsComponent } from './operation/ecs/ecs.component';
 import { MunDetailComponent } from './operation/mun-detail/mun-detail.component';
+import { FailureComponent } from './maintenance/failure/failure.component';
+import { FailureReportsComponent } from './maintenance/failure-reports/failure-reports.component';
+import { FailureReportComponent } from './maintenance/failure-report/failure-report.component';
+import { SdcardComponent } from './export/sdcard/sdcard.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -121,7 +125,11 @@ export function tokenGetter() {
   RetrofitProductsComponent,
   MemberPasswordSettingComponent,
   EcsComponent,
-  MunDetailComponent
+  MunDetailComponent,
+  FailureComponent,
+  FailureReportsComponent,
+  FailureReportComponent,
+  SdcardComponent
   // SignupComponent
   ],
   imports: [

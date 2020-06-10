@@ -127,6 +127,27 @@ namespace RLE.API.Controllers
 
 
 
+        [HttpGet("AllDepartments")]
+        public async Task<IActionResult> AllDepartments()
+        {
+            var departments = await _context.Departments.OrderBy(a=>a.Name).ToListAsync();
+            return Ok(departments);
+        }
+
+        [HttpGet("FailureList")]
+        public async Task<IActionResult> FailureList()
+        {
+            var failureList = await _context.FailureLists.ToListAsync();
+            return Ok(failureList);
+        }
+
+         [HttpGet("RepairAction")]
+        public async Task<IActionResult> RepairAction()
+        {
+            var repairActions = await _context.RepairActions.ToListAsync();
+            return Ok(repairActions);
+        }
+
 
 
         [HttpGet("{email}/ForgotPassword")]

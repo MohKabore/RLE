@@ -14,6 +14,7 @@ namespace RLE.API.Data
         Task<bool> SaveAll();
         Task<IEnumerable<Tablet>> MaintainairTablets(int maintenairId);
         Task<IEnumerable<Tablet>> StoreTablets(int storeId);
+        Task<Tablet> GetTabletByImei(string imei);
         Task StockAllocation(int insertUserId,int tabletTypeId, StockAllocationDto stockAllocationDto);
         void TabletAllocation(int insertUserId, StockAllocationDto stockAllocationDto);
     }

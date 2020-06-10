@@ -126,6 +126,19 @@ export class AuthService {
     return this.http.get(this.baseUrl + email + '/ForgotPassword');
   }
 
+  allDepartments() {
+    return this.http.get(this.baseUrl +  'AllDepartments');
+  }
+
+  failureList() {
+    return this.http.get(this.baseUrl +  'FailureList');
+  }
+
+  failureAction() {
+    return this.http.get(this.baseUrl +  'RepairAction');
+  }
+
+
   codeValidation(model: any) {
     return this.http.post(this.baseUrl + 'codeValidation', model);
   }

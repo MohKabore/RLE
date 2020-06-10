@@ -23,6 +23,7 @@ namespace RLE.API.Data
         Task<User> GetUserByEmail(string email);
 
         Task<bool> SendResetPasswordLink(string email, string code);
+        Task<List<User>> Hotliners();
       
         // Task<PagedList<User>> GetUsers(UserParams userParams);
         // Task<IEnumerable<User>> GetChildren(int parentId);

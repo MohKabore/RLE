@@ -414,6 +414,14 @@ namespace RLE.API.Controllers
             return NotFound();
         }
 
+         [HttpGet("Hotliners")]
+         public async Task<IActionResult> Hotliners() 
+         {
+          var h = await _repo.Hotliners();
+          var hotliners = _mapper.Map<List<UserForListDto>>(h);
+          return Ok(hotliners);
+         }
+
 
         [HttpGet("{regionId}/GetSelectedMaintsByRegionId")]
         public async Task<IActionResult> GetCities(int regionId)
@@ -425,6 +433,23 @@ namespace RLE.API.Controllers
                                     .ThenBy(a => a.FirstName)
                                     .ToListAsync();
             return Ok(maints);
+        }
+
+         [HttpGet("{departmentId}/GetSelectedMaintsByDeptId")]
+        public async Task<IActionResult> GetSelectedMaintsByDeptId(int departmentId)
+        {
+            var department = await _context.Departments.FirstOrDefaultAsync(a=>a.Id == departmentId);
+            if(department!=null)
+            {
+            var maints = await _context.Users
+                                    .Where(a => a.RegionId == department.RegionId && a.Selected == true
+                                    && a.TypeEmpId == _config.GetValue<int>("AppSettings:maintenancierTypeId"))
+                                    .OrderBy(a => a.LastName)
+                                    .ThenBy(a => a.FirstName)
+                                    .ToListAsync();
+            return Ok(maints);
+            }
+            return NotFound();
         }
 
         [HttpGet("{regionId}/RegionTrainings")]

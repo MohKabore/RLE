@@ -158,6 +158,17 @@ namespace RLE.API.Data
                 "Merci,";
 
         }
+
+        public async Task<List<User>> Hotliners()
+        {
+            int hotlinerTypeId = _config.GetValue<int>("AppSettings:HotlinerTypeId");
+
+            var hotliners = await _context.Users.Where(j => j.TypeEmpId == hotlinerTypeId)
+                                           .OrderBy(j => j.LastName)
+                                           .ThenBy(j => j.FirstName)
+                                               .ToListAsync();
+            return hotliners;
+        }
         // public List<int> GetWeekDays(DateTime date)
         // {
         //     var dayDate = (int)date.DayOfWeek;

@@ -10,7 +10,6 @@ import { PreSelectionComponent } from './users/new-user/pre-selection/pre-select
 import { TrainingsComponent } from './users/training/trainings/trainings.component';
 import { TrainingDetailsComponent } from './users/training/training-details/training-details.component';
 import { TrainingDetailResolver } from './_resolvers/training-detail.resolver';
-// import { HomeResolver } from './_resolvers/home.resolve';
 import { RegistrationDetailsComponent } from './Home/opDetails/registration-details/registration-details/registration-details.component';
 import { RegistrationLocalitiesComponent } from './users/registration-localities/registration-localities.component';
 import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
@@ -38,6 +37,10 @@ import { ResetPasswordComponent } from './registration/reset-password/reset-pass
 import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
 import { EcsComponent } from './operation/ecs/ecs.component';
 import { MunDetailComponent } from './operation/mun-detail/mun-detail.component';
+import { FailureComponent } from './maintenance/failure/failure.component';
+import { FailureReportsComponent } from './maintenance/failure-reports/failure-reports.component';
+import { FailureReportComponent } from './maintenance/failure-report/failure-report.component';
+import { SdcardComponent } from './export/sdcard/sdcard.component';
 
 
 export const appRoutes: Routes = [
@@ -67,6 +70,10 @@ export const appRoutes: Routes = [
             { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'approSphare', component: ApproSpareComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'assignment', component: AssignmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'failure', component: FailureComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'failures', component: FailureReportsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'failureReport/:id', component: FailureReportComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'sdcard', component: SdcardComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'ecs', component: EcsComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier'] } },
             { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline'] } },
