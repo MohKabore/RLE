@@ -84,6 +84,7 @@ namespace RLE.API.Helpers
              CreateMap<MunicipalityForCreationDto, Municipality>();
             CreateMap<Tablet, TabletDetailDto>();
             CreateMap<FailureToSaveDto, Failure>();
+            CreateMap<EcDataToSaveDto, EcData>();
 
 
 

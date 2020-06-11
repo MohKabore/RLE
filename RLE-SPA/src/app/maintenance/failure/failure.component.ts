@@ -31,6 +31,7 @@ export class FailureComponent implements OnInit {
   myDatePickerOptions = Utils.myDatePickerOptions;
   currentUserId: number;
 
+
   constructor(private fb: FormBuilder, private userService: UserService,
     private stockService: StockService, private router: Router, private alertify: AlertifyService, private authService: AuthService) { }
 
@@ -59,16 +60,7 @@ export class FailureComponent implements OnInit {
       }
     });
   }
-  // getDepartments() {
-  //   this.authService.allDepartments().subscribe((res: any[]) => {
-  //     for (let index = 0; index < res.length; index++) {
-  //       const element = { value: res[index].id, label: res[index].name };
-  //       this.departments = [...this.departments, element];
-  //     }
-  //     // console.table(this.departments);
-  //   });
-  // }
-
+  
   getSelectedMaints() {
     const departmentId = this.failureForm.value.regionId;
     this.maints = [];
@@ -184,9 +176,6 @@ export class FailureComponent implements OnInit {
   show() {
     this.showMaintDiv = true;
   }
-
-
-
   save() {
     const formData = this.failureForm.value;
     const startDateData = this.failureForm.value.startDate.split('/');

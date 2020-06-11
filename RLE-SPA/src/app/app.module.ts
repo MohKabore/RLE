@@ -77,6 +77,7 @@ import { FailureComponent } from './maintenance/failure/failure.component';
 import { FailureReportsComponent } from './maintenance/failure-reports/failure-reports.component';
 import { FailureReportComponent } from './maintenance/failure-report/failure-report.component';
 import { SdcardComponent } from './export/sdcard/sdcard.component';
+import { EcDataComponent } from './operation/ec-data/ec-data.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -129,7 +130,8 @@ export function tokenGetter() {
   FailureComponent,
   FailureReportsComponent,
   FailureReportComponent,
-  SdcardComponent
+  SdcardComponent,
+  EcDataComponent
   // SignupComponent
   ],
   imports: [

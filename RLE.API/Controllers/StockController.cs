@@ -120,6 +120,13 @@ namespace RLE.API.Controllers
             return Ok(tablet);
         }
 
+        [HttpGet("GetStoreTabletByImei/{storeId}/{imei}")]
+        public async Task<IActionResult> GetStoreTabletByImei(int storeId, string imei)
+        {
+            var tablet = await _context.Tablets.FirstOrDefaultAsync(t => t.StoreId == storeId && t.Imei == imei);
+            return Ok(tablet);
+        }
+
         [HttpGet("GetDeclaredFailures")]
         public async Task<IActionResult> GetDeclaredFailures()
         {
@@ -321,8 +328,8 @@ namespace RLE.API.Controllers
                     repaired = (int)Failure.RepairedEnum.WaitingMaint;
             }
 
-          var tablet = await _context.Tablets.FirstOrDefaultAsync(a => a.Id == failureToSaveDto.TabletId);
-            
+            var tablet = await _context.Tablets.FirstOrDefaultAsync(a => a.Id == failureToSaveDto.TabletId);
+
 
             using (var identityContextTransaction = _context.Database.BeginTransaction())
             {
@@ -440,6 +447,50 @@ namespace RLE.API.Controllers
             return BadRequest();
 
         }
+
+        [HttpPost("SaveEcData/{insertUserId}")]
+        public async Task<IActionResult> SaveEcData(int insertUserId, EcDataToSaveDto ecDataToSaveDto)
+        {
+            var finalResult = false;
+            var ecdataToCreate = _mapper.Map<EcData>(ecDataToSaveDto);
+            ecdataToCreate.InsertUserId = insertUserId;
+            int inventOpTypeId = (int)InventOpType.TypeEnum.TabletData;
+
+            using (var identityContextTransaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _repo.Add(ecdataToCreate);
+
+                    var inventOp = new InventOp
+                    {
+                        InventOpTypeId = inventOpTypeId,
+                        TabletId = ecDataToSaveDto.TabletId,
+                        OpDate = ecDataToSaveDto.OpDate,
+                        EcDataId = ecdataToCreate.Id
+                    };
+                    _repo.Add(inventOp);
+
+                    if (await _repo.SaveAll())
+                    {
+                        finalResult = true;
+                        identityContextTransaction.Commit();
+                    }
+
+                }
+                catch (System.Exception)
+                {
+                    identityContextTransaction.Rollback();
+                    finalResult = false;
+                }
+            }
+
+            if (finalResult)
+                return Ok();
+
+            return BadRequest();
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////// P U T ///////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

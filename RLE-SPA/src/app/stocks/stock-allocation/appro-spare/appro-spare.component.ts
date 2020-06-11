@@ -18,6 +18,7 @@ export class ApproSpareComponent implements OnInit {
 
   myDatePickerOptions = Utils.myDatePickerOptions;
   stockForm: FormGroup;
+  searchForm: FormGroup;
   tablets: any = [];
   filteredTablets: any = [];
   currentUserId;
@@ -34,6 +35,7 @@ export class ApproSpareComponent implements OnInit {
   step = 0;
   currentStep = 0;
   currentIds = [];
+  tablet: any;
 
   stores = environment.mainStores;
   cieStoreId = environment.ceiStoreId;
@@ -43,6 +45,7 @@ export class ApproSpareComponent implements OnInit {
 
   ngOnInit() {
     this.createStockForm();
+    this.createSearchForm();
     this.currentUserId = this.authService.currentUser.id;
     this.getRegions();
     // this.searchControl.valueChanges.pipe(debounceTime(200)).subscribe(value => {
@@ -99,9 +102,14 @@ export class ApproSpareComponent implements OnInit {
       mvtDate: [null, Validators.required],
       fromStoreId: [null, Validators.required],
       regionId: [null, Validators.required],
-      toEmployeeId: [null, Validators.required],
-      tabletIds: [null, Validators.required]
+      toEmployeeId: [null, Validators.required]
 
+    });
+  }
+
+  createSearchForm() {
+    this.searchForm = this.fb.group({
+      imei: ['']
     });
   }
   getRegions() {
@@ -126,31 +134,71 @@ export class ApproSpareComponent implements OnInit {
     });
   }
 
+  clearImei() {
+    this.searchForm.reset();
+  }
+
+  verifyImei() {
+
+    this.noResult = '';
+    this.tablet = null;
+    const storeId = this.stockForm.value.fromStoreId;
+    const imei = this.searchForm.value.imei;
+    if (imei.length === 5) {
+
+      this.stockService.getStoreTabletByImei(storeId, imei).subscribe((tablet: any) => {
+        if (tablet === null) {
+          this.noResult = 'imei non trouvé...';
+        } else if (tablet.status === 0) {
+          this.noResult = 'tablette déjà en panne...';
+        } else {
+          this.tablet = tablet;
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
+
+  }
+
+  add() {
+    this.tablets = [...this.tablets, this.tablet];
+    this.searchForm.controls['imei'].setValue('');
+    this.tablet = null;
+    this.noResult = '';
+    // console.table(this.tablets);
+
+  }
 
   getSourceTablets() {
-    this.showTablets = true;
-    this.noResult = '';
-    const fromStoreId = this.stockForm.value.fromStoreId;
-    this.tablets = [];
-    this.stockService.getStoreTablets(fromStoreId).subscribe((res: any[]) => {
-      if (res.length > 0) {
-        for (let i = 0; i < res.length; i++) {
-          const element = { value: res[i].id, label: res[i].imei };
-          this.tablets = [...this.tablets, element];
-        }
-        // this.filteredTablets = this.tablets;
-        // this.filteredTablets = res;
-      } else {
-        this.noResult = 'aucune tablette trouvée...';
-      }
-    }, error => {
-      console.log(error);
-    });
+    // this.showTablets = true;
+    // this.noResult = '';
+    // const fromStoreId = this.stockForm.value.fromStoreId;
+    // this.tablets = [];
+    // this.stockService.getStoreTablets(fromStoreId).subscribe((res: any[]) => {
+    //   if (res.length > 0) {
+    //     for (let i = 0; i < res.length; i++) {
+    //       const element = { value: res[i].id, label: res[i].imei };
+    //       this.tablets = [...this.tablets, element];
+    //     }
+    //     // this.filteredTablets = this.tablets;
+    //     // this.filteredTablets = res;
+    //   } else {
+    //     this.noResult = 'aucune tablette trouvée...';
+    //   }
+    // }, error => {
+    //   console.log(error);
+    // });
   }
 
   save() {
     const formData = this.stockForm.value;
-    formData.tabletIds = this.tabletIds;
+    let tIds: number[]=[];
+    for (let index = 0; index < this.tablets.length; index++) {
+      const eltId = this.tablets[index].id;
+      tIds = [...tIds, eltId];
+    }
+    formData.tabletIds = tIds;
     formData.mvtDate = Utils.inputDateDDMMYY(formData.mvtDate, '/');
     this.stockService.saveApproSphare(this.currentUserId, formData).subscribe((res) => {
       this.alertify.success('enregistrement terminé...');

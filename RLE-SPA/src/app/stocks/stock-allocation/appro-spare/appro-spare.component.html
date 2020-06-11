@@ -48,26 +48,31 @@
             </div>
           </div>
           <div class="col-md-6  form-sm">
-            <div class="animated bounceInRight" *ngIf="showTablets">
-              <div *ngIf="!noResult && tablets.length===0">
+            <div class="animated bounceInRight" *ngIf="stockForm.value.fromStoreId">
+              <!-- <div *ngIf="!noResult && tablets.length===0">
                 <h4> patientez...</h4>
               </div>
               <div *ngIf="noResult">
                 {{noResult}}
-              </div>
-              <div *ngIf="tablets.length>0" class="animated bounceInRight">
-                  <div class="md-form form-sm">
-                    <mdb-select formControlName="tabletIds" [multiple]="true" [highlightFirst]="true"
-                      [options]="tablets" placeholder="Choisir les tablettes"></mdb-select>
+              </div> -->
+              <div *ngIf="stockForm.value.fromStoreId" class="animated bounceInRight">
+                <button type="button" size="sm" mdbBtn color="light" class="relative waves-light"
+                  (click)="basicModal1.show();clearImei()" mdbWavesEffect>rechercher</button>
+
+                <div class="row">
+                  <div class="col-md-1 ml-1" *ngFor="let tablet of tablets">
+                    <div class="chip">
+                      {{tablet.imei}}
+                    </div>
                   </div>
-                <p></p>
+                </div>
               </div>
             </div>
           </div>
 
           <div class="md-form">
-            <button size="sm" type="button" [disabled]="!stockForm.valid" mdbBtn color="success"
-              (click)="basicModal.show();recap()" mdbWavesEffect>enregistrer</button>
+            <button size="sm" type="button" [disabled]="!stockForm.valid || !tablets" mdbBtn color="success"
+              (click)="basicModal.show()" mdbWavesEffect>enregistrer</button>
           </div>
         </div>
 
@@ -89,7 +94,7 @@
         <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
       </div>
       <div class="modal-body">
-        <p>tablette(s) séléctionnéé(s) : {{filteredTablets.length}}</p>
+        <p>tablette(s) séléctionnéé(s) : {{tablets.length}}</p>
         <hr>
         <div class="row">
           <div class="col-md-1" *ngFor="let tablet of filteredTablets">
@@ -104,10 +109,40 @@
       <div class="modal-footer">
         <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
           (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
-        <button type="button" [disabled]="waitForValidation" mdbBtn color="success" size="sm"
+        <button type="button" mdbBtn color="success" size="sm"
           class="relative waves-light" mdbWavesEffect (click)="[basicModal.hide(),save()]">enregistrer</button>
       </div>
     </div>
 
+  </div>
+</div>
+
+<!-- <button type="button" mdbBtn color="primary" class="relative waves-light" (click)="basicModal1.show()" mdbWavesEffect>Launch demo modal</button> -->
+
+<div mdbModal #basicModal1="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">recherche imei</h4>
+      </div>
+      <div class="modal-body">
+        <form style="color: #757575;" [formGroup]="searchForm">
+        <div class="md-form">
+          <input mdbInput type="text"formControlName="imei" id="imei" (ngModelChange)="verifyImei()" class="form-control">
+          <label for="imei">Entrer l'imei</label>
+        </div>
+      </form>
+        <button *ngIf="tablet" size type="button" size="sm" color="success" (click)="add()" mdbBtn mdbWavesEffect>ajouter <i class="fa fa-check" aria-hidden="true"></i> </button>
+<span *ngIf="noResult" class="text-danger">{{noResult}}</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
+          (click)="basicModal1.hide()" mdbWavesEffect>annuler</button>
+      </div>
+    </div>
   </div>
 </div>

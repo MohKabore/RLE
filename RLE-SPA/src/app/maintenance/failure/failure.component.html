@@ -91,7 +91,7 @@
           <td valign="bottom">
             <div class="md-form">
               <div class="form-check form-check-inline">
-                <input type="radio" checked class="form-check-input" id="materialInline1" [value]="1" (change)="hide($event)"
+                <input type="radio" checked class="form-check-input" id="materialInline1" [value]="1" (change)="hide()"
                   formControlName="repaired" name="repaired"  mdbInput>
                 <label class="form-check-label" for="materialInline1">Oui</label>
               </div>
@@ -99,7 +99,7 @@
               <!-- Material inline 2 -->
               <div class="form-check form-check-inline ">
                 <input type="radio" class="form-check-input" formControlName="repaired" id="materialInline2" [value]="0"
-                name="repaired" (change)="show($event)"  mdbInput>
+                name="repaired" (change)="show()"  mdbInput>
                 <label class="form-check-label" for="materialInline2">Non</label>
               </div>
             </div>

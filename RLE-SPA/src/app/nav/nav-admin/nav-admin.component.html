@@ -50,6 +50,9 @@
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/ecs']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">centre d'enrôlement </a>
+
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/ecdata']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">point tablette </a>
       
 
     </div>

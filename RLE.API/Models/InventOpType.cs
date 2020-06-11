@@ -17,7 +17,7 @@ namespace RLE.API.Models
             ToRepair = 7,
             FromRepair = 8,
             Maintenance = 9,
-            EmpExchange = 10,
+            TabletData = 10,
             InventOp = 11,
             EmpMvtToEC = 12,
             TabletCorrection = 13,

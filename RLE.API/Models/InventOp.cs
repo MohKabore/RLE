@@ -24,8 +24,10 @@ namespace RLE.API.Models
         public int? SdcardId { get; set; }
         public string FormNum { get; set; }
         public byte Status { get; set; }
+        public int EcDataId { get; set; }
         public DateTime InsertDate { get; set; }
         public int? InsertUserId { get; set; }
+
 
         public  EnrolmentCenter EnrolmentCenter { get; set; }
         public  Failure Failure { get; set; }
@@ -38,6 +40,7 @@ namespace RLE.API.Models
         public  User ToEmployee { get; set; }
          public  User InsertUser { get; set; }
         public  Store ToStore { get; set; }
+        public EcData EcData { get; set; }
         // public  ICollection<StockMvtInventOp> StockMvtInventOp { get; set; }
     }
 }

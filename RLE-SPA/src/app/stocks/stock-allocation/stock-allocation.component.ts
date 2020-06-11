@@ -117,11 +117,11 @@ export class StockAllocationComponent implements OnInit {
   }
 
   cheickStoreTypeId() {
-    if (this.stockForm.value.toStoreId === this.cieStoreId) {
-      this.showRegion = true;
-    } else {
-      this.showRegion = false;
-    }
+    // if (this.stockForm.value.toStoreId === this.cieStoreId) {
+    //   this.showRegion = true;
+    // } else {
+    //   this.showRegion = false;
+    // }
   }
 
   getDepartments() {

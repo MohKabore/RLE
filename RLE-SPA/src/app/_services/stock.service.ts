@@ -26,11 +26,15 @@ export class StockService {
     return this.http.get(this.baseUrl + 'DepartmentTablets/' + departmentId);
   }
   getTabletByImei(imei: string) {
-    return this.http.get(this.baseUrl + 'GetTabletByImei/'+ imei);
+    return this.http.get(this.baseUrl + 'GetTabletByImei/' + imei);
+  }
+
+  getStoreTabletByImei(storeId: number, imei: string) {
+    return this.http.get(this.baseUrl + 'GetStoreTabletByImei/' + storeId + '/' + imei);
   }
 
   createStockAllocation(currentUserId: number, allocationModel, tabletTypeId) {
-    return this.http.post(this.baseUrl + 'StockAllocation/'+ tabletTypeId + '/' + currentUserId, allocationModel);
+    return this.http.post(this.baseUrl + 'StockAllocation/' + tabletTypeId + '/' + currentUserId, allocationModel);
   }
 
   createTabletAllocation(currentUserId: number, allocationModel) {
@@ -49,19 +53,23 @@ export class StockService {
     return this.http.post(this.baseUrl + 'SaveFailure/' + currentUserId, failureModel);
   }
 
-  saveMaintenance(failureId : number,currentUserId: number, maintenanceModel) {
-    return this.http.post(this.baseUrl + 'SaveMaintenance/' +failureId + '/' + currentUserId, maintenanceModel);
+  saveMaintenance(failureId: number, currentUserId: number, maintenanceModel) {
+    return this.http.post(this.baseUrl + 'SaveMaintenance/' + failureId + '/' + currentUserId, maintenanceModel);
   }
 
   getTabletTypes() {
-    return this.http.get(this.baseUrl + 'TabletTypes' );
+    return this.http.get(this.baseUrl + 'TabletTypes');
   }
 
   getDeclaredFailures() {
-    return this.http.get(this.baseUrl + 'getdeclaredfailures' );
+    return this.http.get(this.baseUrl + 'getdeclaredfailures');
   }
   getFailure(failureId: number) {
-    return this.http.get(this.baseUrl + 'getFailure/'+ failureId );
+    return this.http.get(this.baseUrl + 'getFailure/' + failureId);
+  }
+
+  saveEcData(currentUserId: number, failureModel) {
+    return this.http.post(this.baseUrl + 'SaveEcData/' + currentUserId, failureModel);
   }
 
 

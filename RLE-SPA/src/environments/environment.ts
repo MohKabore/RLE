@@ -12,11 +12,11 @@ export const environment = {
   mainStores: [
     { value: 1, label: 'MAG AT' },
     { value: 2, label: 'MAG MORPHO' },
-    { value: 3, label: 'MAG CEI' }
+    { value: 4, label: 'MAG CEI' }
   ],
   atStoreId: 1,
   morhphoStoreId: 2,
-  ceiStoreId: 3,
+  ceiStoreId: 4,
   defaultLink : 'http://localhost:4200/'
 };
 
