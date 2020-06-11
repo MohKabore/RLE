@@ -68,6 +68,10 @@ export class StockService {
     return this.http.get(this.baseUrl + 'getFailure/' + failureId);
   }
 
+  searchTabletDetails(tabletId: number) {
+    return this.http.get(this.baseUrl + 'TabletDetails/' + tabletId);
+  }
+
   saveEcData(currentUserId: number, failureModel) {
     return this.http.post(this.baseUrl + 'SaveEcData/' + currentUserId, failureModel);
   }

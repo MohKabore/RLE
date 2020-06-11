@@ -24,7 +24,7 @@ namespace RLE.API.Models
         public int? SdcardId { get; set; }
         public string FormNum { get; set; }
         public byte Status { get; set; }
-        public int EcDataId { get; set; }
+        public int? EcDataId { get; set; }
         public DateTime InsertDate { get; set; }
         public int? InsertUserId { get; set; }
 

@@ -1,0 +1,99 @@
+<div class="mt-5 animated bounceInDown">
+    <div class="row d-flex justify-content-center">
+        <mdb-card class="col-md-10">
+            <form style="color: #757575;" [formGroup]="searchForm">
+                <div class="form-row">
+                    <div class="col">
+                        <div class="md-form form-sm">
+                            <input mdbInput type="text" id="imei" formControlName="imei" class="form-control"
+                                (ngModelChange)="verifyImei()">
+                            <label for="imei">Entrer l'imei</label>
+                            <mdb-error *ngIf="noResult">{{noResult}}</mdb-error>
+                            <mdb-success *ngIf="tablet"><span class="text-success"><i class="fa fa-check"></i></span>
+                            </mdb-success>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="md-form form-sm">
+                            <button type="button" (click)="searchTabletDetails()" [disabled]="!tablet" size="sm" mdbBtn
+                                color="primary" mdbWavesEffect>rechercher</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+
+        </mdb-card>
+        <mdb-card *ngIf="showSearchDiv" class="col-md-10 mt-2">
+            <table class="table table-striped table-sm" style="font-size: 14px;">
+                <tr>
+                    <th style="width: 20%;">Type</th>
+                    <th style="width: 20%;"> Date</th>
+                    <th>Observation</th>
+                </tr>
+                <tr *ngFor="let item of inventOps ; let i = index"
+                    [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+                    <td>
+                        <b>
+                            <span *ngIf="item.inventOpTypeId === 5 && item.tabletId===tablet.id">Panne</span>
+                            <span *ngIf="item.inventOpTypeId === 10">Point Tablette</span>
+                            <span *ngIf="item.inventOpTypeId === 6">Export</span>
+                            <span *ngIf="item.inventOpTypeId === 1">Entrée Stock</span>
+                            <span *ngIf="item.inventOpTypeId === 4">Allocation Stock</span>
+                            <span *ngIf="item.inventOpTypeId === 9">Maintenance </span>
+                        </b>
+                    </td>
+                    <td>
+                        <span
+                            *ngIf="item.inventOpTypeId === 5 || item.inventOpTypeId === 10 || item.inventOpTypeId === 9">
+                            {{item.opDate|date:'dd/MM/yyyy'}} à
+                            {{item.opDate|date:'HH:mm:ss'}}
+                        </span>
+                        <span
+                            *ngIf="item.inventOpTypeId !== 5 && item.inventOpTypeId !== 10 && item.inventOpTypeId !== 9">
+                            {{item.opDate|date:'dd/MM/yyyy'}}
+                        </span>
+                    </td>
+
+                    <td>
+                        <span *ngIf="item.inventOpTypeId === 5 && item.tabletId===tablet.id">
+                            {{item.failure.failureList1.name}} <span *ngIf="item.failure.note1">(
+                                {{item.failure.note1}})</span>
+                        </span>
+                        <span *ngIf="item.inventOpTypeId === 10">
+                            Cat 1 : <b>{{item.ecData.cat1}}</b> | Cat 2 :<b>{{item.ecData.cat2}}</b>
+                        </span>
+                        <span *ngIf="item.inventOpTypeId === 6">Export</span>
+                        <span *ngIf="item.inventOpTypeId === 1">
+                            De <span *ngIf="item.fromStore.employeeId"> magasin {{item.fromStore.employee.lastname}}
+                                {{item.fromStore.employee.firstName}}</span>
+                            <span *ngIf="!item.fromStore.employeeId"> {{item.fromStore.name}}</span>
+                            vers
+                            <span *ngIf="item.toStore.employeeId"> magasin {{item.toStore.employee.lastname}}
+                                {{item.toStore.employee.lastname}}</span>
+                            <span *ngIf="!item.toStore.employeeId"> {{item.toStore.name}}</span>
+                        </span>
+                        <span *ngIf="item.inventOpTypeId === 4">Allocation Stock</span>
+                        <span *ngIf="item.inventOpTypeId === 9">
+                            <span *ngIf="!item.tabletExId">
+                                maintenance sur la tablette <b>{{item.tablet.imei}}</b>
+                                
+                            </span>
+                            <span *ngIf="item.tabletExId">
+                                tablette <b>{{item.tablet.imei}}</b> échangée par <b>{{item.tabletEx.imei}}</b>
+                               
+                            </span>
+                            
+
+                        </span>
+
+
+                    </td>
+
+                </tr>
+            </table>
+        </mdb-card>
+
+    </div>
+
+
+</div>

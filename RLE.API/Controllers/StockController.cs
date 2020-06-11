@@ -145,6 +145,31 @@ namespace RLE.API.Controllers
             return NotFound();
         }
 
+        [HttpGet("TabletDetails/{tabletId}")]
+        public async Task<IActionResult> TabletDetails(int tabletId)
+        {
+            var inventOp = await _context.InventOps
+                                .Include(a => a.FromStore)
+                                .Include(a => a.ToStore)
+                                .Include(a => a.Failure)
+                                .Include(a => a.Failure.FailureList1)
+                                .Include(a => a.Failure.FailureList2)
+                                .Include(a => a.Failure.RepairAction1)
+                                .Include(a => a.Failure.RepairAction2)
+                                .Include(a => a.FromStore)
+                                .Include(a => a.FromStore.Employee)
+                                .Include(a => a.ToStore.Employee)
+                                .Include(a => a.Tablet)
+                                .Include(a => a.EcData)
+                                .Include(a => a.TabletEx)
+                                .Where(a => a.TabletId == tabletId || a.TabletExId == tabletId)
+                                .OrderBy(a=>a.OpDate)
+                                .ThenBy(a=>a.InsertDate)
+                                .ToListAsync();
+
+            return Ok(inventOp);
+        }
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////// P O S T///////////////////////////////////////////////////////
