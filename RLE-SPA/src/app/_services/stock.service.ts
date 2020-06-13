@@ -68,6 +68,10 @@ export class StockService {
     return this.http.get(this.baseUrl + 'getFailure/' + failureId);
   }
 
+  getSdCardBySdnum(sdnum: string) {
+    return this.http.get(this.baseUrl + 'GetSdCardBySdNum/' + sdnum);
+  }
+
   searchTabletDetails(tabletId: number) {
     return this.http.get(this.baseUrl + 'TabletDetails/' + tabletId);
   }
@@ -81,6 +85,10 @@ export class StockService {
   }
   removeEcDate(ecDataId: number) {
     return this.http.post(this.baseUrl + 'DeletecData/' + ecDataId, {});
+  }
+
+  removeSdCard(sdcardId: number) {
+    return this.http.post(this.baseUrl + 'DeleteSdcard/' + sdcardId, {});
   }
 
   

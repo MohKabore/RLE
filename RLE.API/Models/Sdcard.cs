@@ -14,8 +14,9 @@ namespace RLE.API.Models
         public User Employee { get; set; }
         public Export Export { get; set; }
         public int RegionId { get; set; }
+        public Region Region { get; set; }
         public int InsertUserId { get; set; }
         // public  ICollection<InventOp> InventOp { get; set; }
-        // public  ICollection<SdcardTablet> SdcardTablet { get; set; }
+        public  ICollection<SdcardTablet> SdcardTablets { get; set; }
     }
 }

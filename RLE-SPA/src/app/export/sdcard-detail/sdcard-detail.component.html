@@ -1,0 +1,103 @@
+<div class="mt-5 container animated bounceInDown">
+  <div class="animated shake" *ngIf="wait">
+    <mdb-card>
+      <mdb-card-body>
+        <h3 class="text-center">
+          <p>Patientez...</p>
+        </h3>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+  <div *ngIf="!wait" class="row d-flex justify-content-center">
+    <mdb-card class="col-md-10">
+      <form style="color: #757575;" [formGroup]="searchForm">
+        <div class="form-row">
+          <div class="col">
+            <div class="md-form form-sm">
+              <input mdbInput mdbValidate minlength="10" maxlength="10" type="text" id="sdnum" formControlName="sdnum"
+                class="form-control">
+              <label for="sdnum">Entrer le numéro de la sdcard</label>
+            </div>
+          </div>
+
+          <div class="col">
+            <div class="md-form form-sm">
+              <button type="button" (click)="searchSdCard()" [disabled]="!searchForm.valid" size="sm" mdbBtn
+                color="primary" mdbWavesEffect>rechercher</button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </mdb-card>
+    <mdb-card class="col-md-10 mt-2 mb-2" *ngIf="showSearchDiv">
+      <span *ngIf="!noResult && !sdcard" >patienter...</span>
+      <span *ngIf="noResult">sdcard introuvable...</span>
+      <div *ngIf="sdcard">
+        <table style="width: 50%;">
+          <tr>
+            <td>Region</td>
+            <td>:</td>
+            <td>{{sdcard.region.name}}</td>
+          </tr>
+          <tr>
+            <td>Maintenancier</td>
+            <td>:</td>
+            <td>{{sdcard.employee.lastName}} {{sdcard.employee.firstName}}</td>
+          </tr>
+          <tr>
+            <td>Full export</td>
+            <td>:</td>
+            <td>
+              <mdb-checkbox [disabled]="true" [(ngModel)]="sdcard.fullExport"></mdb-checkbox>
+            </td>
+          </tr>
+
+        </table>
+        <table class="table table-condensed table-sm table-striped">
+          <tr>
+            <th>IMEI</th>
+            <th>DATE</th>
+            <th>CAT 1</th>
+            <th>CAT 2</th>
+            <th>Numero Export</th>
+            <th>NistCat 1</th>
+            <th>NistCat 2</th>
+          </tr>
+          <tr *ngFor="let tablet of sdcard.sdcardTablets">
+            <td>{{tablet.tablet.imei}}</td>
+            <td>{{tablet.exportDate|date : 'dd-MM-yyyy'}}</td>
+            <td>{{tablet.cat1}}</td>
+            <td>{{tablet.cat2}}</td>
+            <td>{{tablet.numExport}}</td>
+            <td>{{tablet.nistCat1}}</td>
+            <td>{{tablet.nistCat2}}</td>
+          </tr>
+        </table>
+        <div class="text-center">
+          <button type="button" mdbBtn color="danger" (click)="basicModal.show()"  mdbWavesEffect size="sm" *ngIf="sdcard.insertUserId===currentUserId">supprimer</button>
+        </div >
+      </div>
+    </mdb-card>
+  </div>
+</div>
+
+  
+  <div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+            <span aria-hidden="true">×</span>
+          </button>
+          <h4 class="modal-title w-100" id="myModalLabel">Modal title</h4>
+        </div>
+        <div class="modal-body">
+          <h4 class="text-danger"> voulez-vous vraiment supprimer cette sdcard?</h4>
+        </div>
+        <div class="modal-footer">
+          <button type="button" size="sm" mdbBtn color="light" class="waves-light" aria-label="Close" (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
+          <button type="button" size="sm" mdbBtn color="primary" class="relative waves-light" (click)="basicModal.hide();deleteSdcard()" mdbWavesEffect>supprimer</button>
+        </div>
+      </div>
+    </div>
+  </div>

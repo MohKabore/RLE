@@ -172,6 +172,17 @@ namespace RLE.API.Controllers
         }
 
 
+
+        [HttpGet("GetSdCardBySdNum/{sdnum}")]
+        public async Task<IActionResult> GetSdCardBySdNum(string sdnum)
+        {
+            var sdc = await _context.Sdcards.Include(a => a.Region).Include(a => a.Employee).Include(a => a.SdcardTablets).ThenInclude(a => a.Tablet).FirstOrDefaultAsync(a => a.Sdnum == sdnum);
+            if (sdc != null)
+                return Ok(sdc);
+
+            return Ok(null);
+        }
+
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////// P O S T///////////////////////////////////////////////////////
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -599,6 +610,29 @@ namespace RLE.API.Controllers
             }
             return NotFound();
         }
+
+        [HttpPost("DeleteSdcard/{sdcardId}")]
+        public async Task<IActionResult> DeleteSdcard(int sdcardId)
+        {
+            var inventOp = await _context.InventOps.FirstOrDefaultAsync(a => a.SdcardId == sdcardId);
+            if (inventOp != null)
+            {
+                _repo.Delete(inventOp);
+                var sdtablets = await _context.SdcardTablets.Where(b => b.SdcardId == sdcardId).ToListAsync();
+                _context.RemoveRange(sdtablets);
+
+                var sdcard = await _context.Sdcards.FirstOrDefaultAsync(a => a.Id == sdcardId);
+                _repo.Delete(sdcard);
+
+
+                if (await _repo.SaveAll())
+                    return Ok();
+
+                return BadRequest();
+            }
+            return NotFound();
+        }
+
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         ///////////////////////////////////////////////////////// P U T ///////////////////////////////////////////////////////

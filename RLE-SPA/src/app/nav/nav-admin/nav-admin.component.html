@@ -98,6 +98,8 @@
 <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
   <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/sdcard']"
     *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Ajout SDCARD</a>
+    <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/sdcardDetails']"
+    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">SDCARD</a>
 
   
 </div>
