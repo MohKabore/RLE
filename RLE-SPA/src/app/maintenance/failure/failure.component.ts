@@ -30,6 +30,9 @@ export class FailureComponent implements OnInit {
   showMaintDiv = false;
   myDatePickerOptions = Utils.myDatePickerOptions;
   currentUserId: number;
+  wait = false;
+  buttonLabel = 'enregistrer';
+
 
 
   constructor(private fb: FormBuilder, private userService: UserService,
@@ -60,7 +63,7 @@ export class FailureComponent implements OnInit {
       }
     });
   }
-  
+
   getSelectedMaints() {
     const departmentId = this.failureForm.value.regionId;
     this.maints = [];
@@ -177,6 +180,8 @@ export class FailureComponent implements OnInit {
     this.showMaintDiv = true;
   }
   save() {
+    this.wait = true;
+    this.buttonLabel = 'patienter...';
     const formData = this.failureForm.value;
     const startDateData = this.failureForm.value.startDate.split('/');
     const startTimeDate = this.failureForm.value.startTime.split(':');
@@ -188,6 +193,8 @@ export class FailureComponent implements OnInit {
       this.failureForm.reset();
       this.tabletId = null;
       this.noResult = '';
+      this.wait = false;
+      this.buttonLabel = 'enregistrer';
 
     }, error => {
       this.router.navigate(['/error']);

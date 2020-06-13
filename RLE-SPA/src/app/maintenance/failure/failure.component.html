@@ -1,3 +1,4 @@
+
 <div class="container mt-5 animated bounceInDown">
   <form style="color: #757575;" [formGroup]="failureForm">
     <mdb-card class="pb-3 pl-3">
@@ -131,7 +132,7 @@
     </mdb-card>
     <mdb-card>
       <div class="text-center">
-        <button type="button" mdbBtn color="primary" [disabled]="!failureForm.valid || !tabletId" size="sm" mdbWavesEffect (click)="basicModal.show()"> ENREGISTRER</button>
+        <button type="button" mdbBtn color="primary" [disabled]="!failureForm.valid || !tabletId || this.wait" size="sm" mdbWavesEffect (click)="basicModal.show()"> {{buttonLabel}}</button>
       </div>
     </mdb-card>
   </form>

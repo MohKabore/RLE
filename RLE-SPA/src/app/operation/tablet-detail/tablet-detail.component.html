@@ -38,7 +38,7 @@
                             <span *ngIf="item.inventOpTypeId === 10">Point Tablette</span>
                             <span *ngIf="item.inventOpTypeId === 6">Export</span>
                             <span *ngIf="item.inventOpTypeId === 1">Entrée Stock</span>
-                            <span *ngIf="item.inventOpTypeId === 4">Allocation Stock</span>
+                            <span *ngIf="item.inventOpTypeId === 3">Transfert Stock</span>
                             <span *ngIf="item.inventOpTypeId === 9">Maintenance </span>
                         </b>
                     </td>
@@ -72,17 +72,25 @@
                                 {{item.toStore.employee.lastname}}</span>
                             <span *ngIf="!item.toStore.employeeId"> {{item.toStore.name}}</span>
                         </span>
-                        <span *ngIf="item.inventOpTypeId === 4">Allocation Stock</span>
+                        <span *ngIf="item.inventOpTypeId === 3">
+                            De <span *ngIf="item.fromStore.employeeId"> magasin {{item.fromStore.employee.lastname}}
+                                {{item.fromStore.employee.firstName}}</span>
+                            <span *ngIf="!item.fromStore.employeeId"> {{item.fromStore.name}}</span>
+                            vers
+                            <span *ngIf="item.toStore.employeeId"> magasin {{item.toStore.employee.lastname}}
+                                {{item.toStore.employee.lastname}}</span>
+                            <span *ngIf="!item.toStore.employeeId"> {{item.toStore.name}}</span>
+                        </span>
                         <span *ngIf="item.inventOpTypeId === 9">
                             <span *ngIf="!item.tabletExId">
                                 maintenance sur la tablette <b>{{item.tablet.imei}}</b>
-                                
+
                             </span>
                             <span *ngIf="item.tabletExId">
                                 tablette <b>{{item.tablet.imei}}</b> échangée par <b>{{item.tabletEx.imei}}</b>
-                               
+
                             </span>
-                            
+
 
                         </span>
 

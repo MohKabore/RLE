@@ -8,8 +8,8 @@ namespace RLE.API.Models
         public int Id { get; set; }
         public int TabletId { get; set; }
         public int SdcardId { get; set; }
-        public int EnrolmentCenterId { get; set; }
-        public int OperatorId { get; set; }
+        public int? EnrolmentCenterId { get; set; }
+        public int? OperatorId { get; set; }
         public int NumExport { get; set; }
         public int Cat1 { get; set; }
         public int Cat2 { get; set; }

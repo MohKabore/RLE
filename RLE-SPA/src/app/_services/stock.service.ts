@@ -76,6 +76,12 @@ export class StockService {
     return this.http.post(this.baseUrl + 'SaveEcData/' + currentUserId, failureModel);
   }
 
+  saveSdCard(currentUserId: number, sdcardModel) {
+    return this.http.post(this.baseUrl + 'SaveSdCard/' + currentUserId, sdcardModel);
+  }
+
+  
+
 
 
 }

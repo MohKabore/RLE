@@ -1,5 +1,4 @@
 {
     "appService.preDeployTask": "publish-release",
-    "appService.deploySubpath": "",
-    "appService.defaultWebAppToDeploy": "/subscriptions/0055b48a-d5f9-4845-927b-1ab82fb6766b/resourceGroups/rle-ressource-group/providers/Microsoft.Web/sites/rle2020"
+    "appService.deploySubpath": ""
 }

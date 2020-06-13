@@ -163,8 +163,8 @@ namespace RLE.API.Controllers
                                 .Include(a => a.EcData)
                                 .Include(a => a.TabletEx)
                                 .Where(a => a.TabletId == tabletId || a.TabletExId == tabletId)
-                                .OrderBy(a=>a.OpDate)
-                                .ThenBy(a=>a.InsertDate)
+                                .OrderBy(a => a.OpDate)
+                                .ThenBy(a => a.InsertDate)
                                 .ToListAsync();
 
             return Ok(inventOp);
@@ -442,7 +442,8 @@ namespace RLE.API.Controllers
                             OpDate = Convert.ToDateTime(failureToSaveDto.MaintDate),
                             InventOpTypeId = InventOpTypeId,
                             FromStoreId = tabletExStoreId,
-                            ToStoreId = tabletStoreId
+                            ToStoreId = tabletStoreId,
+                            FailureId = failureId
                         };
                         _repo.Add(inventOp);
                         tabletEx.StoreId = tabletStoreId;
@@ -495,6 +496,58 @@ namespace RLE.API.Controllers
                         EcDataId = ecdataToCreate.Id
                     };
                     _repo.Add(inventOp);
+
+                    if (await _repo.SaveAll())
+                    {
+                        finalResult = true;
+                        identityContextTransaction.Commit();
+                    }
+
+                }
+                catch (System.Exception)
+                {
+                    identityContextTransaction.Rollback();
+                    finalResult = false;
+                }
+            }
+
+            if (finalResult)
+                return Ok();
+
+            return BadRequest();
+        }
+
+        [HttpPost("SaveSdCard/{insertUserId}")]
+        public async Task<IActionResult> SaveSdCard(int insertUserId, SdCardDto sdCardDto)
+        {
+            var finalResult = false;
+            // var ecdataToCreate = _mapper.Map<EcData>(ecDataToSaveDto);
+            var sdcardCreate = _mapper.Map<Sdcard>(sdCardDto);
+            sdcardCreate.InsertUserId = insertUserId;
+            int inventOpTypeId = (int)InventOpType.TypeEnum.Export;
+
+            using (var identityContextTransaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _repo.Add(sdcardCreate);
+
+                    foreach (var sdtab in sdCardDto.SdcardTablets)
+                    {
+                        var sdcardTabCreate = _mapper.Map<SdcardTablet>(sdtab);
+                        sdcardTabCreate.SdcardId = sdcardCreate.Id;
+                        _repo.Add(sdcardTabCreate);
+
+                        var inventop = new InventOp
+                        {
+                            OpDate = sdtab.ExportDate,
+                            TabletId = sdtab.TabletId,
+                            SdcardId = sdcardCreate.Id,
+                            InventOpTypeId = inventOpTypeId
+                        };
+                        _repo.Add(inventop);
+                    }
+
 
                     if (await _repo.SaveAll())
                     {

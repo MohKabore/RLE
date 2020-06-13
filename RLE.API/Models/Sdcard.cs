@@ -11,9 +11,10 @@ namespace RLE.API.Models
         public string Sdnum { get; set; }
         public bool FullExport { get; set; }
         public byte Status { get; set; }
-
-        public  User Employee { get; set; }
-        public  Export Export { get; set; }
+        public User Employee { get; set; }
+        public Export Export { get; set; }
+        public int RegionId { get; set; }
+        public int InsertUserId { get; set; }
         // public  ICollection<InventOp> InventOp { get; set; }
         // public  ICollection<SdcardTablet> SdcardTablet { get; set; }
     }

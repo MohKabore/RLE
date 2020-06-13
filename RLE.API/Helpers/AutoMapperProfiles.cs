@@ -85,6 +85,8 @@ namespace RLE.API.Helpers
             CreateMap<Tablet, TabletDetailDto>();
             CreateMap<FailureToSaveDto, Failure>();
             CreateMap<EcDataToSaveDto, EcData>();
+            CreateMap<SdCardDto, Sdcard>();
+            CreateMap<SdCardTabletDto, SdcardTablet>();
 
 
 
