@@ -11,7 +11,7 @@ namespace RLE.API.Models
       }
 
         public int Id { get; set; }
-        public int TabletId { get; set; }
+        public int? TabletId { get; set; }
         public int? TabletExId { get; set; }
         public int? InventOpTypeId { get; set; }
         public DateTime OpDate { get; set; }

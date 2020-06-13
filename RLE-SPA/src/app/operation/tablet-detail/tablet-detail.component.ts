@@ -3,6 +3,7 @@ import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { StockService } from 'src/app/_services/stock.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { SharedAnimations } from 'src/app/shared/animations/shared-animations';
+import { AuthService } from 'src/app/_services/auth.service';
 
 @Component({
   selector: 'app-tablet-detail',
@@ -16,11 +17,15 @@ export class TabletDetailComponent implements OnInit {
   inventOps: any[];
   noResult = '';
   showSearchDiv = false;
+  ecdataId: number;
+  currentUserId: number;
 
-  constructor(private fb: FormBuilder, private stockService: StockService, private alertify: AlertifyService) { }
+  constructor(private fb: FormBuilder, private authService: AuthService, private stockService: StockService, private alertify: AlertifyService) { }
 
 
   ngOnInit() {
+    this.currentUserId = this.authService.currentUser.id;
+
     this.createSearchForm();
   }
 
@@ -62,6 +67,16 @@ export class TabletDetailComponent implements OnInit {
     }, error => {
       console.log(error);
     });
+  }
+  removeEcData() {
+    this.stockService.removeEcDate(this.ecdataId).subscribe(() => {
+      this.alertify.success('enregistrement terminé...');
+      this.searchTabletDetails();
+    });
+  }
+
+  getSelectedId(id: number) {
+    this.ecdataId = id;
   }
 
 }

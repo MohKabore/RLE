@@ -18,7 +18,7 @@ namespace RLE.API.Models
         }
         public int Id { get; set; }
         public string Ticket { get; set; }
-        public int TabletId { get; set; }//
+        public int? TabletId { get; set; }//
         public int? TabletExId { get; set; }
         public int FailureList1Id { get; set; }//
         public int? FailureList2Id { get; set; }//
@@ -37,6 +37,7 @@ namespace RLE.API.Models
         public string Note2 { get; set; }
         public int? User1Id { get; set; }
         public int? User2Id { get; set; }
+        public int? DepartmentId { get; set; }
         public DateTime InsertDate { get; set; }
 
         public FailureList FailureList1 { get; set; }

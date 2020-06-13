@@ -60,7 +60,8 @@
                                 {{item.failure.note1}})</span>
                         </span>
                         <span *ngIf="item.inventOpTypeId === 10">
-                            Cat 1 : <b>{{item.ecData.cat1}}</b> | Cat 2 :<b>{{item.ecData.cat2}}</b>
+                            Cat 1 : <b>{{item.ecData.cat1}}</b> | Cat 2 :<b>{{item.ecData.cat2}}</b> . region : <b>{{item.ecData.region.name}}</b> 
+                            <button *ngIf="currentUserId === item.ecData.insertUserId" type="button" mdbBtn color="danger" size="sm" mdbWavesEffect  (click)="getSelectedId(item.ecDataId);basicModal.show()" >supprimer</button>
                         </span>
                         <span *ngIf="item.inventOpTypeId === 6">Export</span>
                         <span *ngIf="item.inventOpTypeId === 1">
@@ -104,4 +105,26 @@
     </div>
 
 
+</div>
+
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">confirmation</h4>
+      </div>
+      <div class="modal-body">
+        <h3 class="text-danger">confirmer vous cette suppression?</h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close" (click)="basicModal.hide()" mdbWavesEffect>fermer</button>
+        <button type="button" (click)="removeEcData();basicModal.hide()" mdbBtn color="danger" size="sm"  class="relative waves-light" mdbWavesEffect>supprimer</button>
+      </div>
+    </div>
+  </div>
 </div>

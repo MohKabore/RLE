@@ -1,5 +1,7 @@
 
-<div class="container mt-5 animated bounceInDown">
+
+
+<div  class="container mt-5 animated bounceInDown">
   <form style="color: #757575;" [formGroup]="failureForm">
     <mdb-card class="pb-3 pl-3">
       <table style="width: 100%;">
@@ -11,7 +13,7 @@
           <td style="width: 30%;">Agent Hotline*</td>
           <td>:</td>
           <td>
-            <mdb-select [options]="hotliners" formControlName="hotliner1Id"></mdb-select>
+            <mdb-select [options]="hotliners"  formControlName="hotliner1Id"></mdb-select>
             
           </td>
         </tr>
@@ -19,7 +21,16 @@
           <td>Region</td>
           <td>:</td>
           <td>
-            <mdb-select [options]="regions" formControlName="regionId" (ngModelChange)="getSelectedMaints()"></mdb-select>
+            <mdb-select [options]="regions" formControlName="regionId" (ngModelChange)="getDepartments()" (ngModelChange)="getSelectedMaints()"></mdb-select>
+
+          </td>
+        </tr>
+
+        <tr>
+          <td>Département</td>
+          <td>:</td>
+          <td>
+            <mdb-select [options]="depts" formControlName="departmentId" (ngModelChange)="getSelectedMaints()"></mdb-select>
 
           </td>
         </tr>
@@ -131,8 +142,9 @@
         </table>
     </mdb-card>
     <mdb-card>
-      <div class="text-center">
-        <button type="button" mdbBtn color="primary" [disabled]="!failureForm.valid || !tabletId || this.wait" size="sm" mdbWavesEffect (click)="basicModal.show()"> {{buttonLabel}}</button>
+      <div  class="text-center">
+      <span *ngIf="wait"> patienter...</span>
+        <button type="button"  mdbBtn color="primary" [disabled]="!failureForm.valid || wait" size="sm" mdbWavesEffect (click)="basicModal.show()"> {{buttonLabel}}</button>
       </div>
     </mdb-card>
   </form>

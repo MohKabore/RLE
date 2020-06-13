@@ -79,6 +79,9 @@ export class StockService {
   saveSdCard(currentUserId: number, sdcardModel) {
     return this.http.post(this.baseUrl + 'SaveSdCard/' + currentUserId, sdcardModel);
   }
+  removeEcDate(ecDataId: number) {
+    return this.http.post(this.baseUrl + 'DeletecData/' + ecDataId, {});
+  }
 
   
 

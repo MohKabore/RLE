@@ -25,6 +25,7 @@ export class FailureComponent implements OnInit {
   maints: any[] = [];
   tablets: any[] = [];
   regions: any[] = [];
+  depts: any[] = [];
   tabletId: number;
   noResult = '';
   showMaintDiv = false;
@@ -67,14 +68,16 @@ export class FailureComponent implements OnInit {
   getSelectedMaints() {
     const departmentId = this.failureForm.value.regionId;
     this.maints = [];
-    this.userService.getSelectedMaintsByRegionId(departmentId).subscribe((res: any[]) => {
-      for (let i = 0; i < res.length; i++) {
-        const element = { value: res[i].id, label: res[i].lastName + ' ' + res[i].firstName };
-        this.maints = [...this.maints, element];
-      }
-    }, error => {
-      console.log(error);
-    });
+    if (departmentId) {
+      this.userService.getSelectedMaintsByRegionId(departmentId).subscribe((res: any[]) => {
+        for (let i = 0; i < res.length; i++) {
+          const element = { value: res[i].id, label: res[i].lastName + ' ' + res[i].firstName };
+          this.maints = [...this.maints, element];
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
   }
 
   createFailureForm() {
@@ -82,14 +85,15 @@ export class FailureComponent implements OnInit {
       hotliner1Id: [null, Validators.required],
       startDate: [null, Validators.required],
       startTime: [null, Validators.required],
-      joined: [false, Validators.required],
+      joined: [false],
       imei: ['', Validators.required],
       failureList1Id: [null, Validators.required],
       repairAction1Id: [null, Validators.required],
       repaired: [null, Validators.required],
       fieldTech1Id: [null],
       note1: [''],
-      regionId: [null, Validators.required]
+      regionId: [null, Validators.required],
+      departmentId: [null, Validators.required]
 
     });
   }
@@ -150,6 +154,20 @@ export class FailureComponent implements OnInit {
     });
   }
 
+  getDepartments() {
+    this.depts = [];
+    const regionId = this.failureForm.value.regionId
+    if (regionId) {
+      this.authService.getInscDeptsByRegionid(regionId).subscribe((res: any[]) => {
+        for (let i = 0; i < res.length; i++) {
+          const element = { value: res[i].id, label: res[i].name };
+          this.depts = [...this.depts, element];
+        }
+      });
+    }
+  }
+
+
   verifyImei() {
 
     const imei = this.failureForm.value.imei;
@@ -158,7 +176,7 @@ export class FailureComponent implements OnInit {
     if (imei.length === 5) {
 
       this.stockService.getTabletByImei(imei).subscribe((tablet: any) => {
-        if (tablet === 0) {
+        if (tablet === null) {
           this.noResult = 'imei non trouvé...';
         } else if (tablet.status === 0) {
           this.noResult = 'tablette déjà en panne...';
@@ -189,12 +207,15 @@ export class FailureComponent implements OnInit {
       startDateData[0], startTimeDate[0], startTimeDate[1]);
     formData.tabletId = this.tabletId;
     this.stockService.saveFailure(this.currentUserId, formData).subscribe(() => {
-      this.alertify.success('enregistrement terminé...');
-      this.failureForm.reset();
+
       this.tabletId = null;
       this.noResult = '';
       this.wait = false;
+      this.input.nativeElement.value = '';
       this.buttonLabel = 'enregistrer';
+      this.alertify.success('enregistrement terminé...');
+      this.failureForm.reset();
+      this.failureForm.controls['joined'].setValue(false);
 
     }, error => {
       this.router.navigate(['/error']);

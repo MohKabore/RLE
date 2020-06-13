@@ -157,6 +157,7 @@ namespace RLE.API.Controllers
                                 .Include(a => a.Failure.RepairAction1)
                                 .Include(a => a.Failure.RepairAction2)
                                 .Include(a => a.FromStore)
+                                .Include(a => a.EcData.Region)
                                 .Include(a => a.FromStore.Employee)
                                 .Include(a => a.ToStore.Employee)
                                 .Include(a => a.Tablet)
@@ -337,6 +338,7 @@ namespace RLE.API.Controllers
             hour = hour.Length == 1 ? "0" + hour : hour;
             string min = now.Minute.ToString();
             min = min.Length == 1 ? "0" + min : min;
+            var tablet = new Tablet();
 
             string ticket = year.Substring(2) + month + day + hour + min + "-" + failureToSaveDto.Imei;
 
@@ -352,8 +354,8 @@ namespace RLE.API.Controllers
                 else
                     repaired = (int)Failure.RepairedEnum.WaitingMaint;
             }
-
-            var tablet = await _context.Tablets.FirstOrDefaultAsync(a => a.Id == failureToSaveDto.TabletId);
+            if (failureToSaveDto.TabletId != null)
+                tablet = await _context.Tablets.FirstOrDefaultAsync(a => a.Id == failureToSaveDto.TabletId);
 
 
             using (var identityContextTransaction = _context.Database.BeginTransaction())
@@ -365,21 +367,24 @@ namespace RLE.API.Controllers
                     failureToCreate.User1Id = insertUserId;
                     failureToCreate.Repaired = repaired;
                     _repo.Add(failureToCreate);
-                    if (failureToSaveDto.Repaired != 1)
+                    if (failureToSaveDto.Repaired != 1 && failureToSaveDto.TabletId != null)
                     {
                         tablet.Status = 0;
                         _repo.Update(tablet);
                     }
-                    var InventOp = new InventOp
+                    if (failureToSaveDto.TabletId != null)
                     {
-                        TabletId = failureToSaveDto.TabletId,
-                        OpDate = failureToSaveDto.FailureDate,
-                        FailureId = failureToCreate.Id,
-                        InventOpTypeId = InventOpTypeId,
-                        FromStoreId = tablet.StoreId
-                    };
+                        var InventOp = new InventOp
+                        {
+                            TabletId = Convert.ToInt32(failureToSaveDto.TabletId),
+                            OpDate = failureToSaveDto.FailureDate,
+                            FailureId = failureToCreate.Id,
+                            InventOpTypeId = InventOpTypeId,
+                            FromStoreId = tablet.StoreId
+                        };
 
-                    _repo.Add(InventOp);
+                        _repo.Add(InventOp);
+                    }
 
                     if (await _repo.SaveAll())
                     {
@@ -428,16 +433,21 @@ namespace RLE.API.Controllers
                     _repo.Update(savedFailure);
                     if (failureToSaveDto.TabletExId != null) // echange tablette
                     {
-                        var tablet = await _context.Tablets.FirstOrDefaultAsync(u => u.Id == savedFailure.TabletId);
-                        int? tabletStoreId = tablet.StoreId;
+                        int? tabletStoreId = null, tabletExStoreId = null;
+                        var tablet = new Tablet();
+                        if (failureToSaveDto.TabletId != null)
+                        {
+                            tablet = await _context.Tablets.FirstOrDefaultAsync(u => u.Id == savedFailure.TabletId);
+                            tabletStoreId = tablet.StoreId;
+                        }
                         var tabletEx = await _context.Tablets.FirstOrDefaultAsync(u => u.Id == savedFailure.TabletExId);
-                        int? tabletExStoreId = tabletEx.StoreId;
+                        tabletExStoreId = tabletEx.StoreId;
 
                         int InventOpTypeId = (int)InventOpType.TypeEnum.Maintenance;
 
                         var inventOp = new InventOp
                         {
-                            TabletId = tablet.Id,
+                            TabletId = failureToSaveDto.TabletId,
                             TabletExId = tabletEx.Id,
                             OpDate = Convert.ToDateTime(failureToSaveDto.MaintDate),
                             InventOpTypeId = InventOpTypeId,
@@ -449,8 +459,11 @@ namespace RLE.API.Controllers
                         tabletEx.StoreId = tabletStoreId;
                         _repo.Update(tabletEx);
 
-                        tablet.StoreId = tabletExStoreId;
-                        _repo.Update(tablet);
+                        if (failureToSaveDto.TabletId != null)
+                        {
+                            tablet.StoreId = tabletExStoreId;
+                            _repo.Update(tablet);
+                        }
 
                     }
                     if (await _repo.SaveAll())
@@ -567,6 +580,24 @@ namespace RLE.API.Controllers
                 return Ok();
 
             return BadRequest();
+        }
+
+        [HttpPost("DeletecData/{ecDataId}")]
+        public async Task<IActionResult> DeletecData(int ecDataId)
+        {
+            var inventOp = await _context.InventOps.FirstOrDefaultAsync(a => a.EcDataId == ecDataId);
+            if (inventOp != null)
+            {
+                _repo.Delete(inventOp);
+                var eccdata = await _context.EcData.FirstOrDefaultAsync(b => b.Id == ecDataId);
+                _repo.Delete(eccdata);
+
+                if (await _repo.SaveAll())
+                    return Ok();
+
+                return BadRequest();
+            }
+            return NotFound();
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
