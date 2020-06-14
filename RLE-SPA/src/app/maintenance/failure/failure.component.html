@@ -21,7 +21,7 @@
           <td>Region</td>
           <td>:</td>
           <td>
-            <mdb-select [options]="regions" formControlName="regionId" (ngModelChange)="getDepartments()" (ngModelChange)="getSelectedMaints()"></mdb-select>
+            <mdb-select [options]="regions" formControlName="regionId" (ngModelChange)="getSelectedMaints();getDepartments()"></mdb-select>
 
           </td>
         </tr>

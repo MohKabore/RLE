@@ -91,8 +91,12 @@ export class StockService {
     return this.http.post(this.baseUrl + 'DeleteSdcard/' + sdcardId, {});
   }
 
-  
+  getSdCardForExport(regionId: number) {
+    return this.http.get(this.baseUrl + 'GetRegionSdcardForExport/' + regionId);
+  }
 
-
+  createExport(exportmodel: any) {
+    return this.http.post(this.baseUrl + 'CreateExport' , exportmodel);
+  }
 
 }

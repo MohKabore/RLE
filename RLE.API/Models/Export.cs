@@ -5,6 +5,11 @@ namespace RLE.API.Models
 {
     public partial class Export
     {
+        public Export()
+        {
+            InsertDate = DateTime.Now;
+            Status = 0;
+        }
 
         public int Id { get; set; }
         public int EmployeeId { get; set; }

@@ -44,6 +44,7 @@ import { SdcardComponent } from './export/sdcard/sdcard.component';
 import { EcDataComponent } from './operation/ec-data/ec-data.component';
 import { TabletDetailComponent } from './operation/tablet-detail/tablet-detail.component';
 import { SdcardDetailComponent } from './export/sdcard-detail/sdcard-detail.component';
+import { ExportComponent } from './export/export/export.component';
 
 
 export const appRoutes: Routes = [
@@ -77,6 +78,7 @@ export const appRoutes: Routes = [
             { path: 'failures', component: FailureReportsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'failureReport/:id', component: FailureReportComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'sdcard', component: SdcardComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'exports', component: ExportComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'sdcardDetails', component: SdcardDetailComponent , data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
             { path: 'ecs', component: EcsComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier'] } },

@@ -80,6 +80,7 @@ import { SdcardComponent } from './export/sdcard/sdcard.component';
 import { EcDataComponent } from './operation/ec-data/ec-data.component';
 import { TabletDetailComponent } from './operation/tablet-detail/tablet-detail.component';
 import { SdcardDetailComponent } from './export/sdcard-detail/sdcard-detail.component';
+import { ExportComponent } from './export/export/export.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -135,7 +136,8 @@ export function tokenGetter() {
   SdcardComponent,
   EcDataComponent,
   TabletDetailComponent,
-  SdcardDetailComponent
+  SdcardDetailComponent,
+  ExportComponent
   // SignupComponent
   ],
   imports: [

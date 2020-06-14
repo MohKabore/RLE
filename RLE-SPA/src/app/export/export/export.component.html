@@ -1,0 +1,66 @@
+<div class="mt-5 container animated bounceInDown">
+  <div class="animated shake" *ngIf="wait">
+    <mdb-card>
+      <mdb-card-body>
+        <h3 class="text-center">
+          <p>Patientez...</p>
+        </h3>
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+  <div *ngIf="!wait">
+    <mdb-tabset [buttonClass]="'classic-tabs tabs-blue'" [contentClass]="'card'" class="classic-tabs">
+      <!--Panel 1-->
+      <mdb-tab heading="ENREGISTRMENT" class="animated bounceInLeft">
+          <form style="color: #757575;" [formGroup]="exportForm">
+            <div class="md-form form-sm">
+              <mdb-date-picker name="mydate" [inline]="true" [options]="myDatePickerOptions"
+              [placeholder]="'choisir la date'" formControlName="exportDate"></mdb-date-picker>
+            </div>
+            <div class="md-form form-sm">
+              <mdb-select [options]="regions" formControlName="regionId" placeholder="choisir la region" (ngModelChange)="getSelectedMaints();getSdcards()">
+              </mdb-select>
+            </div>
+            <div class="md-form form-sm">
+              <mdb-select [options]="maints" formControlName="employeeId"  placeholder="choisir la maintenancier" >
+              </mdb-select>
+            </div>
+           
+            <div class="md-form form-sm">
+              <mdb-select [options]="sdcards" formControlName="sdcardIds" [multiple]="true"  placeholder="choisir les sdcards" >
+              </mdb-select>
+            </div>
+            <div class="text-center">
+              <button type="button" [disabled]="!exportForm.valid" (click)="generateRenum();basicModal.show()" size="sm" mdbBtn color="primary" mdbWavesEffect>enregistrer</button>
+            </div>
+            
+          </form>
+      </mdb-tab>
+      <!--Panel 2-->
+      <mdb-tab heading="RECHERCHE" class="animated bounceInRight">
+
+      </mdb-tab>
+    </mdb-tabset>
+  </div>
+</div>
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
+      </div>
+      <div class="modal-body">
+        Numéro Enveloppe: <b>{{renum}}</b> . l'enregistrer ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn size="sm" color="light" class="waves-light" aria-label="Close" (click)="basicModal.hide()" mdbWavesEffect>fermer</button>
+        <button type="button" mdbBtn size="sm" color="primary" class="relative waves-light" (click)="basicModal.hide();save()" mdbWavesEffect>enrgistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
