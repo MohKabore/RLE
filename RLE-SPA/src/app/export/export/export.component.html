@@ -11,7 +11,7 @@
   <div *ngIf="!wait">
     <mdb-tabset [buttonClass]="'classic-tabs tabs-blue'" [contentClass]="'card'" class="classic-tabs">
       <!--Panel 1-->
-      <mdb-tab heading="ENREGISTRMENT" class="animated bounceInLeft">
+      <mdb-tab heading="ENREGISTRMENT" class="">
           <form style="color: #757575;" [formGroup]="exportForm">
             <div class="md-form form-sm">
               <mdb-date-picker name="mydate" [inline]="true" [options]="myDatePickerOptions"
@@ -35,10 +35,82 @@
             </div>
             
           </form>
+        
       </mdb-tab>
       <!--Panel 2-->
       <mdb-tab heading="RECHERCHE" class="animated bounceInRight">
+        <form style="color: #757575;" [formGroup]="searchForm">
+          <div class="form-row">
+            <div class="col">
+              <div class="md-form form-sm">
+                <input mdbInput mdbValidate minlength="13" maxlength="13" type="text" id="sdnum" formControlName="renum"
+                  class="form-control">
+                <label for="sdnum">Entrer le numéro de l'enveloppe</label>
+              </div>
+            </div>
+  
+            <div class="col">
+              <div class="md-form form-sm">
+                <button type="button" (click)="searchExport()" [disabled]="!searchForm.valid" size="sm" mdbBtn
+                  color="primary" mdbWavesEffect>rechercher</button>
+              </div>
+            </div>
+          </div>
+        </form>
 
+        <div *ngIf="showSearchDiv" class="animated bounceInUp">
+          <span *ngIf="!noResult && !export">patienter</span>
+          <span *ngIf="noResult">{{noResult}}</span>
+          <div *ngIf="export">
+            <table style="width: 100%;">
+              <tr>
+                <td style="width: 20%;">Numero Enveloppe</td>
+                <td>:</td>
+                <td>
+                <b>  {{export?.renum}}</b>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Date</td>
+                <td>:</td>
+                <td>
+                 <b> {{export?.exportDate|date :'dd-MM-yyyy'}}</b>
+                </td>
+              </tr>
+
+              <tr>
+                <td>Maintenancier</td>
+                <td>:</td>
+                <td>
+                <b>  {{export?.employee.lastName}} {{export?.employee.firstName}}</b>
+                </td>
+              </tr>
+
+              <tr>
+                <td>carte Sd</td>
+                <td>:</td>
+                <td>
+                  <span *ngFor="let card of export?.sdcards">
+                    <span class="chip">
+                      {{card.sdnum}}
+                    </span>
+                  </span>
+                </td>
+              </tr>
+              <tr>
+                <td colspan="3"> <hr></td>
+              </tr>
+
+              <tr>
+                <td colspan="3">
+                  <button type="button" (click)="basicModal1.show()"  mdbBtn color="danger" mdbWavesEffect size="sm">supprimer</button>
+
+                </td>
+              </tr>
+            </table>
+          </div >
+        </div>
       </mdb-tab>
     </mdb-tabset>
   </div>
@@ -60,6 +132,27 @@
       <div class="modal-footer">
         <button type="button" mdbBtn size="sm" color="light" class="waves-light" aria-label="Close" (click)="basicModal.hide()" mdbWavesEffect>fermer</button>
         <button type="button" mdbBtn size="sm" color="primary" class="relative waves-light" (click)="basicModal.hide();save()" mdbWavesEffect>enrgistrer</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div mdbModal #basicModal1="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal1.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Confirmation</h4>
+      </div>
+      <div class="modal-body">
+       <span class="text-danger">confirmer vous la suppression de cette enveloppe region ?</span>
+      </div>
+      <div class="modal-footer">
+        <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close" (click)="basicModal1.hide()" mdbWavesEffect>fermer</button>
+        <button type="button" mdbBtn color="danger" size="sm" class="relative waves-light" (click)="basicModal1.hide();deleteExport()" mdbWavesEffect>supprimer</button>
       </div>
     </div>
   </div>

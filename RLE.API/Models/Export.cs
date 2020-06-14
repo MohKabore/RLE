@@ -19,6 +19,6 @@ namespace RLE.API.Models
         public DateTime InsertDate { get; set; }
 
         public  User Employee { get; set; }
-        // public  ICollection<Sdcard> Sdcard { get; set; }
+        public  ICollection<Sdcard> Sdcards { get; set; }
     }
 }

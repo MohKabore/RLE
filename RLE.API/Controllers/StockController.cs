@@ -1,20 +1,15 @@
 using System;
 using System.Collections.Generic;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using RLE.API.Data;
 using RLE.API.Dtos;
-using RLE.API.Helpers;
 using RLE.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using System.Globalization;
-using System.Text.Encodings.Web;
 
 namespace RLE.API.Controllers
 {
@@ -188,6 +183,13 @@ namespace RLE.API.Controllers
         {
             var sdcards = await _context.Sdcards.Where(a => a.ExportId == null && a.RegionId == regionId).ToListAsync();
             return Ok(sdcards);
+        }
+
+        [HttpGet("SearchExport/{renum}")]
+        public async Task<IActionResult> SearchExport(string renum)
+        {
+            var export = await _context.Exports.Include(a => a.Employee).Include(a => a.Sdcards).FirstOrDefaultAsync(a => a.Renum == renum);
+            return Ok(export);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -511,7 +513,7 @@ namespace RLE.API.Controllers
             var ec = await _context.EcData
               .FirstOrDefaultAsync(a => a.TabletId == ecDataToSaveDto.TabletId && a.Cat1 == ecDataToSaveDto.Cat1
                 && a.Cat2 == ecDataToSaveDto.Cat2 && a.OpDate == ecDataToSaveDto.OpDate);
-            if (ec != null)
+            if (ec == null)
             {
                 var finalResult = false;
                 var ecdataToCreate = _mapper.Map<EcData>(ecDataToSaveDto);
@@ -647,22 +649,45 @@ namespace RLE.API.Controllers
             return NotFound();
         }
 
-         [HttpPost("CreateExport")]
+        [HttpPost("CreateExport")]
         public async Task<IActionResult> CreateExport(ExportToCreateDto exportToCreateDto)
         {
-                        var export = _mapper.Map<Export>(exportToCreateDto);
-                        _repo.Add(export);
-                        foreach (var sdcardid in exportToCreateDto.SdcardIds)
-                        {
-                            var sd =await _context.Sdcards.FirstOrDefaultAsync(a=>a.Id == sdcardid);
-                            sd.ExportId = export.Id;
-                        }
-                        if(await _repo.SaveAll())
-                        return Ok();
+            var export = _mapper.Map<Export>(exportToCreateDto);
+            _repo.Add(export);
+            foreach (var sdcardid in exportToCreateDto.SdcardIds)
+            {
+                var sd = await _context.Sdcards.FirstOrDefaultAsync(a => a.Id == sdcardid);
+                sd.ExportId = export.Id;
+            }
+            if (await _repo.SaveAll())
+                return Ok();
 
-                        return BadRequest();
-           
+            return BadRequest();
         }
+
+
+        [HttpPost("DeleteExport/{exportId}")]
+        public async Task<IActionResult> DeleteExport(int exportId)
+        {
+            var export = await _context.Exports.FirstOrDefaultAsync(a => a.Id == exportId);
+            if (export != null)
+            {
+                var sds = await _context.Sdcards.Where(a => a.ExportId == exportId).ToListAsync();
+                foreach (var sd in sds)
+                {
+                    sd.ExportId = null;
+                    _repo.Update(sd);
+                }
+                _context.Remove(export);
+
+                if (await _repo.SaveAll())
+                    return Ok();
+
+                return BadRequest();
+            }
+            return NotFound();
+        }
+
 
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

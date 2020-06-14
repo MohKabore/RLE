@@ -99,4 +99,16 @@ export class StockService {
     return this.http.post(this.baseUrl + 'CreateExport' , exportmodel);
   }
 
+  searchExportByRenum(renum: string) {
+    return this.http.get(this.baseUrl + 'SearchExport/' + renum);
+  }
+
+  deleteExport(exportId: number) {
+    return this.http.post(this.baseUrl + 'DeleteExport/' + exportId, {});
+  }
+
+
+
+
+
 }

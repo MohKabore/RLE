@@ -24,7 +24,10 @@ export class ExportComponent implements OnInit {
   regions: any[] = [];
   reg: Region[] = [];
   renum = '';
+  export: any;
   myDatePickerOptions = Utils.myDatePickerOptions;
+  showSearchDiv = false;
+  noResult;
 
 
 
@@ -35,6 +38,7 @@ export class ExportComponent implements OnInit {
 
   ngOnInit() {
     this.createExportForm();
+    this.createSearchForm();
     this.getRegions();
 
   }
@@ -48,14 +52,11 @@ export class ExportComponent implements OnInit {
     });
   }
 
-  // createSearchForm() {
-  //   this.sear = this.fb.group({
-  //     regionId: [null, Validators.required],
-  //     employeeId: [null, Validators.required],
-  //     exportDate: [null, Validators.required],
-  //     sdcardIds: [null, Validators.required]
-  //   });
-  // }
+  createSearchForm() {
+    this.searchForm = this.fb.group({
+      renum: ['', Validators.required]
+    });
+  }
 
   getRegions() {
     this.authService.getRegions().subscribe((res: any[]) => {
@@ -112,15 +113,39 @@ export class ExportComponent implements OnInit {
     this.stockService.createExport(formData).subscribe(() => {
       this.alertify.success('enregistrement terminé...');
       this.exportForm.reset();
-      this.maints =[];
+      this.maints = [];
       this.sdcards = [];
-      this.renum='';
-     this.exportForm.controls['exportDate'].setValue(null);
+      this.renum = '';
+      this.exportForm.controls['exportDate'].setValue(null);
 
     }, error => {
       this.router.navigate(['/error']);
     });
   }
 
+  searchExport() {
+    this.export = null;
+    const renum = this.searchForm.value.renum;
+    this.noResult = '';
+    this.showSearchDiv = true;
+    this.stockService.searchExportByRenum(renum).subscribe((res: any) => {
+      if (res !== null) {
+        this.export = res;
+      } else {
+        this.noResult = 'enveloppe introuvable...';
+      }
+    });
+  }
+
+  deleteExport() {
+    this.stockService.deleteExport(this.export.id).subscribe(()=> {
+      this.alertify.success('suppression terminée...');
+      this.showSearchDiv = false;
+      this.noResult='';
+      this.searchForm.reset();
+    }, error => {
+      this.router.navigate(['/error']);
+    });
+  }
 
 }
