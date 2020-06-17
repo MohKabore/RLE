@@ -13,8 +13,8 @@
             <td>:</td>
             <td style="text-align: center;">
               <b class="text-center">
-                <a  [routerLink]="['/failureReport/', failure.id]" 
-                             > <b> {{failure.ticket}} </b>
+                <a   [routerLink]="['/failureReport/', failure.id]" 
+                             > <b> {{failure?.ticket}} </b>
                             </a>
                </b>
             </td>
@@ -24,14 +24,15 @@
             <td style="text-align: center;">IMEI</td>
             <td>:</td>
             <td style="text-align: center;">
-              <b class="text-center"> {{failure.tablet.imei}}</b>
+              <b class="text-center" *ngIf="failure.tabletId"> {{failure?.tablet.imei}}</b>
+              <b  *ngIf="!failure.tabletId">introuvable</b>
             </td>
           </tr>
           <tr>
             <td>Date</td>
             <td>:</td>
             <td class="text-center">
-              <b class="text-center">{{failure.failureDate|date:'dd/MM/yyyy'}} à
+              <b class="text-center">{{failure?.failureDate|date:'dd/MM/yyyy'}} à
                 {{failure.failureDate|date:'HH:mm:ss'}}</b>
             </td>
           </tr>

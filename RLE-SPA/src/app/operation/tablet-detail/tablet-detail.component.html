@@ -1,3 +1,4 @@
+  
 <div class="mt-5 animated bounceInDown">
     <div class="row d-flex justify-content-center">
         <mdb-card class="col-md-10">
@@ -9,8 +10,15 @@
                                 (ngModelChange)="verifyImei()">
                             <label for="imei">Entrer l'imei</label>
                             <mdb-error *ngIf="noResult">{{noResult}}</mdb-error>
-                            <mdb-success *ngIf="tablet"><span class="text-success"><i class="fa fa-check"></i></span>
-                            </mdb-success>
+                            <div *ngIf="tablet"><span class="text-success"><i class="fa fa-check"></i> <b
+                                        class="text-center" *ngIf="tablet">
+                                        <span *ngIf="tablet.status===0"> en panne </span>
+                                        <span *ngIf="!tablet.store.employeeId">dans le {{tablet.store.name}}</span>
+                                        <span *ngIf="tablet.store.employeeId">dans le sac de
+                                            {{tablet.store.employee.lastName}}
+                                            {{tablet.store.employee.lastName}}({{tablet.store.employee.region.name}})</span>
+                                    </b></span>
+                            </div>
                         </div>
                     </div>
                     <div class="col">
@@ -19,6 +27,7 @@
                                 color="primary" mdbWavesEffect>rechercher</button>
                         </div>
                     </div>
+
                 </div>
             </form>
 
@@ -31,6 +40,16 @@
                     <th>Observation</th>
                 </tr>
                 <tr *ngFor="let item of inventOps ; let i = index"
+                [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+                <td>{{item.type}}</td>
+                <td>{{item.opDate}}</td>
+                <td> <div [innerHTML]="item.details"></div> 
+                    <button *ngIf="item.inventOpTypeId === 10" type="button" mdbBtn
+                    color="danger" size="sm" mdbWavesEffect
+                    (click)="getSelectedId(item.ecDataId);basicModal.show()">supprimer</button>
+                </td>
+                </tr>
+                <!-- <tr *ngFor="let item of inventOps ; let i = index"
                     [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
                     <td>
                         <b>
@@ -94,14 +113,12 @@
                                 tablette <b>{{item.tablet.imei}}</b> échangée par <b>{{item.tabletEx.imei}}</b>
 
                             </span>
-
-
                         </span>
 
 
                     </td>
 
-                </tr>
+                </tr> -->
             </table>
         </mdb-card>
 

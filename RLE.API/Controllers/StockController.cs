@@ -10,6 +10,7 @@ using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Identity;
+using System.Globalization;
 
 namespace RLE.API.Controllers
 {
@@ -19,6 +20,8 @@ namespace RLE.API.Controllers
     {
         private readonly DataContext _context;
         private readonly IStockRepository _repo;
+        CultureInfo frC = new CultureInfo("fr-FR");
+
         private readonly IMapper _mapper;
         private readonly IConfiguration _config;
         string password;
@@ -143,14 +146,22 @@ namespace RLE.API.Controllers
         [HttpGet("TabletDetails/{tabletId}")]
         public async Task<IActionResult> TabletDetails(int tabletId)
         {
+            var inventOpsToReturn = new List<TabletInventOpDetailDto>();
+
             var inventOp = await _context.InventOps
                                 .Include(a => a.FromStore)
                                 .Include(a => a.ToStore)
+                                .Include(a => a.InventOpType)
                                 .Include(a => a.Failure)
                                 .Include(a => a.Failure.FailureList1)
                                 .Include(a => a.Failure.FailureList2)
                                 .Include(a => a.Failure.RepairAction1)
                                 .Include(a => a.Failure.RepairAction2)
+                                .Include(a => a.Failure.RepairAction2)
+                                .Include(a => a.Failure.Region)
+                                .Include(a => a.Sdcard.Region)
+                                .Include(a => a.Sdcard)
+                                .ThenInclude(a => a.SdcardTablets)
                                 .Include(a => a.FromStore)
                                 .Include(a => a.EcData.Region)
                                 .Include(a => a.FromStore.Employee)
@@ -162,8 +173,61 @@ namespace RLE.API.Controllers
                                 .OrderBy(a => a.OpDate)
                                 .ThenBy(a => a.InsertDate)
                                 .ToListAsync();
+            foreach (var inv in inventOp)
+            {
+                var invDto = new TabletInventOpDetailDto
+                {
+                    Type = inv.InventOpType.Name
+                };
+                if (inv.InventOpTypeId == (int)InventOpType.TypeEnum.Failure || inv.InventOpTypeId == (int)InventOpType.TypeEnum.TabletData
+                || inv.InventOpTypeId == (int)InventOpType.TypeEnum.Maintenance)
+                    invDto.OpDate = inv.OpDate.ToString("dd/MM/yyyy hh:mm:ss", frC);
 
-            return Ok(inventOp);
+                else
+                    invDto.OpDate = inv.OpDate.ToString("dd/MM/yyyy", frC);
+
+                if (inv.InventOpTypeId == (int)InventOpType.TypeEnum.Failure)
+                    invDto.Details = inv.Failure.FailureList1.Name + " (" + inv.Failure.Note1 + ") . Region:" + inv.Failure.Region.Name;
+                if (inv.InventOpTypeId == (int)InventOpType.TypeEnum.TabletData)
+                {
+                    invDto.Details = inv.EcData.Region.Name + " . Cat 1:<b>" + inv.EcData.Cat1 + "</b> . Cat 2:<b>" + inv.EcData.Cat2 + "</b>";
+                    invDto.InsertUserId = inv.EcData.InsertUserId;
+                    invDto.EcDataId = inv.EcData.Id;
+                }
+                if (inv.InventOpTypeId == (int)InventOpType.TypeEnum.Export)
+                {
+                    var sdcardTablets = inv.Sdcard.SdcardTablets.FirstOrDefault(a => a.TabletId == inv.TabletId && a.SdcardId == inv.SdcardId);
+                    invDto.Details = "Region : " + inv.Sdcard.Region.Name + ".<b> Cat 1 :" + sdcardTablets.Cat1 + " Cat 2 :" + sdcardTablets.Cat2
+                    + " Num Export :" + sdcardTablets.NumExport + " NistCat1 :" + sdcardTablets.NistCat1 + " NistCat2 :" + sdcardTablets.NistCat2;
+
+                }
+                if (inv.InventOpTypeId == (int)InventOpType.TypeEnum.StockEntry)
+                    invDto.Details = "de " + inv.FromStore.Name + " vers " + inv.ToStore.Name;
+
+                if (inv.InventOpTypeId == (int)InventOpType.TypeEnum.StockAllocation || inv.InventOpTypeId == (int)InventOpType.TypeEnum.StockTransfer)
+                {
+                    if (inv.FromStore.EmployeeId != null)
+                        invDto.Details = "Du maintenancier " + inv.FromStore.Employee.LastName + " " + inv.FromStore.Employee.FirstName;
+                    else
+                        invDto.Details = "De " + inv.FromStore.Name;
+                    if (inv.ToStore.EmployeeId != null)
+                        invDto.Details += "vers le  maintenancier " + inv.ToStore.Employee.LastName + " " + inv.ToStore.Employee.FirstName;
+                    else
+                        invDto.Details += " vers " + inv.ToStore.Name;
+                }
+
+                if (inv.InventOpTypeId == (int)InventOpType.TypeEnum.Maintenance)
+                {
+                    if (inv.TabletExId != null && inv.TabletId != null)
+                        invDto.Details = "<b>" + inv.Tablet.Imei + "<b> échangée par la <b>" + inv.TabletEx.Imei + "</b>";
+                    if (inv.TabletExId == null && inv.TabletId != null)
+                        invDto.Details = "Maintenance sur la tablette <b>" + inv.Tablet.Imei + "</b>";
+                    if (inv.TabletExId != null && inv.TabletId == null)
+                        invDto.Details = "la tablette " + inv.TabletEx.Imei + "</b> remplace une autre tablette(N/A)";
+                }
+                inventOpsToReturn.Add(invDto);
+            }
+            return Ok(inventOpsToReturn);
         }
 
 
@@ -178,6 +242,41 @@ namespace RLE.API.Controllers
             return Ok(null);
         }
 
+        // [HttpGet("Reattribution")]
+        // public async Task<IActionResult> Reattribution()
+        // {
+        //     var failures = await _context.Failures.Where(a => a.TabletExId != null).ToListAsync();
+        //     foreach (var panne in failures)
+        //     {
+        //         var tablet1 = await _context.Tablets.FirstOrDefaultAsync(a => a.Id == panne.TabletId);
+        //         var tablet2 = await _context.Tablets.FirstOrDefaultAsync(a => a.Id == panne.TabletExId);
+        //         var mainStore = await _context.Stores.FirstOrDefaultAsync(a => a.EmployeeId == panne.FieldTech2Id);
+        //         if (tablet1 != null)
+        //         {
+        //             if (mainStore != null)
+        //                 tablet1.StoreId = mainStore.Id;
+        //             else
+        //             {
+        //                 var st = new Store
+        //                 {
+        //                     EmployeeId = panne.FieldTech2Id,
+        //                     StoreTypeId = 1
+        //                 };
+        //                 _context.Add(st);
+        //                 tablet1.StoreId = st.Id;
+        //             }
+        //         _context.Update(tablet1);
+
+        //         }
+
+        //         tablet2.StoreId = 4;
+        //         _context.Update(tablet2);
+        //     }
+        //     if (await _repo.SaveAll())
+        //         return Ok();
+        //     return Ok(false);
+        // }
+
         [HttpGet("GetRegionSdcardForExport/{regionId}")]
         public async Task<IActionResult> GetRegionSdcardForExport(int regionId)
         {
@@ -185,11 +284,78 @@ namespace RLE.API.Controllers
             return Ok(sdcards);
         }
 
+        [HttpGet("MiseAjourInventOp")]
+        public async Task<IActionResult> MiseAjourInventOp()
+        {
+            var failures = await _context.Failures.Where(m => m.MaintDate != null).ToListAsync();
+            foreach (var fail in failures)
+            {
+                var inv = await _context.InventOps.FirstOrDefaultAsync(i => i.FailureId == fail.Id && i.InventOpTypeId == 9);
+                if (inv != null)
+                {
+                    inv.TabletId = fail.TabletId;
+                    _repo.Update(inv);
+                }
+            }
+            if (await _repo.SaveAll())
+                return Ok("terminé");
+            return Ok("non ok");
+
+        }
+
         [HttpGet("SearchExport/{renum}")]
         public async Task<IActionResult> SearchExport(string renum)
         {
             var export = await _context.Exports.Include(a => a.Employee).Include(a => a.Sdcards).FirstOrDefaultAsync(a => a.Renum == renum);
             return Ok(export);
+        }
+
+        [HttpPost("GetFailures")]
+        public async Task<IActionResult> GetFailures(FailuresSearchDto searchDto)
+        {
+            var failures = new List<Failure>();
+            if (searchDto.StartDate == null && searchDto.EndDate != null)
+            {
+                failures = await _context.Failures.Include(a => a.FailureList1)
+                                                    .Include(a => a.FailureList2)
+                                                    .Include(a => a.FieldTech1)
+                                                    .Include(a => a.FieldTech2)
+                                                    .Include(a => a.Tablet)
+                                                    .Include(a => a.TabletEx)
+                                                    .Include(a => a.Region)
+                                                    .Include(a => a.Department)
+                                                    .Where(a => a.FailureDate <= searchDto.EndDate)
+                                                    .ToListAsync();
+            }
+
+            else if (searchDto.StartDate != null && searchDto.EndDate == null)
+            {
+                failures = await _context.Failures.Include(a => a.FailureList1)
+                                                    .Include(a => a.FailureList2)
+                                                    .Include(a => a.FieldTech1)
+                                                    .Include(a => a.FieldTech2)
+                                                     .Include(a => a.Tablet)
+                                                    .Include(a => a.TabletEx)
+                                                    .Include(a => a.Region)
+                                                    .Include(a => a.Department)
+                                                    .Where(a => a.FailureDate >= searchDto.StartDate)
+                                                    .ToListAsync();
+            }
+
+            else
+            {
+                failures = await _context.Failures.Include(a => a.FailureList1)
+                                                    .Include(a => a.FailureList2)
+                                                    .Include(a => a.FieldTech1)
+                                                    .Include(a => a.FieldTech2)
+                                                     .Include(a => a.Tablet)
+                                                    .Include(a => a.TabletEx)
+                                                    .Include(a => a.Region)
+                                                    .Include(a => a.Department)
+                                                    .Where(a => a.FailureDate >= searchDto.StartDate && a.FailureDate <= searchDto.EndDate)
+                                                    .ToListAsync();
+            }
+            return Ok(failures);
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -461,13 +627,27 @@ namespace RLE.API.Controllers
                             tabletStoreId = tablet.StoreId;
                         }
                         var tabletEx = await _context.Tablets.FirstOrDefaultAsync(u => u.Id == savedFailure.TabletExId);
-                        tabletExStoreId = tabletEx.StoreId;
+                        var maintStore = await _context.Stores.FirstOrDefaultAsync(s => s.EmployeeId == failureToSaveDto.FieldTech2Id);
+                        if (maintStore != null)
+                            tabletExStoreId = maintStore.Id;
+                        else
+                        {
+                            var store = new Store
+                            {
+                                EmployeeId = failureToSaveDto.FieldTech2Id,
+                                StoreTypeId = 1
+                            };
+                            _repo.Add(store);
+                            tabletExStoreId = store.Id;
+                        }
+
+
 
                         int InventOpTypeId = (int)InventOpType.TypeEnum.Maintenance;
 
                         var inventOp = new InventOp
                         {
-                            TabletId = failureToSaveDto.TabletId,
+                            TabletId = savedFailure.TabletId,
                             TabletExId = tabletEx.Id,
                             OpDate = Convert.ToDateTime(failureToSaveDto.MaintDate),
                             InventOpTypeId = InventOpTypeId,
@@ -519,6 +699,7 @@ namespace RLE.API.Controllers
                 var ecdataToCreate = _mapper.Map<EcData>(ecDataToSaveDto);
                 ecdataToCreate.InsertUserId = insertUserId;
                 int inventOpTypeId = (int)InventOpType.TypeEnum.TabletData;
+                ecdataToCreate.TabletRepairCounter = (await _context.Tablets.FirstOrDefaultAsync(a => a.Id == ecDataToSaveDto.TabletId)).RepairCounter;
 
                 using (var identityContextTransaction = _context.Database.BeginTransaction())
                 {
@@ -630,10 +811,10 @@ namespace RLE.API.Controllers
         [HttpPost("DeleteSdcard/{sdcardId}")]
         public async Task<IActionResult> DeleteSdcard(int sdcardId)
         {
-            var inventOp = await _context.InventOps.FirstOrDefaultAsync(a => a.SdcardId == sdcardId);
-            if (inventOp != null)
+            var inventOp = await _context.InventOps.Where(a => a.SdcardId == sdcardId).ToListAsync();
+            if (inventOp.Count() > 0)
             {
-                _repo.Delete(inventOp);
+                _context.RemoveRange(inventOp);
                 var sdtablets = await _context.SdcardTablets.Where(b => b.SdcardId == sdcardId).ToListAsync();
                 _context.RemoveRange(sdtablets);
 

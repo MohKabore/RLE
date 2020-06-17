@@ -266,7 +266,7 @@ export class OpHandlingComponent implements OnInit {
 
   removeReservedUsers() {
     if (confirm('confirmez-vous la selection ??')) {
-      debugger;
+     // debugger;
       this.userService.unReserveUsers(this.isSelected, this.currentUserId).subscribe((res) => {
         this.alertify.success('enregistrement terminé...');
         this.searchEmp();

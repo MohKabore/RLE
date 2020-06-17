@@ -10,6 +10,7 @@ namespace RLE.API.Models
         public int Cat2 { get; set; }
         public int TabletId { get; set; }
         public int RegionId { get; set; }
+        public int? TabletRepairCounter { get; set; }
         public DateTime OpDate { get; set; }
         public DateTime InsertDate { get; set; }
         public int InsertUserId { get; set; }

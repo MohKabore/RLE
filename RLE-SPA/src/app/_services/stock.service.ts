@@ -107,6 +107,10 @@ export class StockService {
     return this.http.post(this.baseUrl + 'DeleteExport/' + exportId, {});
   }
 
+  getFailures(interval: any) {
+    return this.http.post(this.baseUrl + 'GetFailures', interval);
+  }
+
 
 
 

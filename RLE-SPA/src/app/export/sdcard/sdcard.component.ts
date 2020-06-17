@@ -13,8 +13,8 @@ import { Utils } from 'src/app/shared/utils';
   styleUrls: ['./sdcard.component.scss']
 })
 export class SdcardComponent implements OnInit {
-  regions: any[] = [];
-  maints: any[] = [];
+  regions: any[];
+  maints: any[];
   wait = false;
   myDatePickerOptions = Utils.myDatePickerOptions;
   sdNum = '';
@@ -38,10 +38,18 @@ export class SdcardComponent implements OnInit {
 
 
   ngOnInit() {
+    this.regions = [];
+    this.maints = [];
     this.inittablets();
     this.currentUserId = this.authService.currentUser.id;
     this.getRegions();
     this.createSdCardForm();
+    this.sdNum = '';
+    this.noResult1 = '';
+    this.noResult2 = '';
+    this.noResult3 = '';
+    this.noResult4 = '';
+    this.noResult5 = '';
 
   }
 
@@ -90,7 +98,7 @@ export class SdcardComponent implements OnInit {
 
     if (this.sdcard3.exportDate) {
       this.sdcard3.exportDate = Utils.inputDateDDMMYY(this.sdcard3.exportDate, '/');
-      sdcardTablets = [...sdcardTablets, this.sdcard2];
+      sdcardTablets = [...sdcardTablets, this.sdcard3];
     }
 
     if (this.sdcard4.exportDate) {
@@ -106,11 +114,9 @@ export class SdcardComponent implements OnInit {
     sdData.sdnum = this.sdNum;
     // console.log(sdData);
     this.stockService.saveSdCard(this.currentUserId, sdData).subscribe((res) => {
-      this.sdcardForm.reset();
-      this.inittablets();
-      this.sdNum = '';
       this.alertify.success('enregistrement terminé...');
       this.wait = false;
+      this.ngOnInit();
     }, error => {
       this.router.navigate(['/error']);
     });

@@ -51,6 +51,7 @@ namespace RLE.API.Models
         public Tablet Tablet { get; set; }
         public Tablet TabletEx { get; set; }
         public Region Region { get; set; }
+        public Department Department { get; set; }
         // public  ICollection<InventOp> InventOp { get; set; }
     }
 }

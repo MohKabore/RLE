@@ -102,7 +102,7 @@ export class ExportComponent implements OnInit {
     const regionId = this.exportForm.value.regionId;
     const regCode = this.reg.find(a => a.id === regionId).code;
     const mat = this.employees.find(a => a.id === employeeId).idnum;
-    this.renum = Number(regCode) + '-' + mat + '-' + f.charAt(0) + f.charAt(1) + f.charAt(3) + f.charAt(4);
+    this.renum = Number(regCode) + '-' + f.charAt(0) + f.charAt(1) + f.charAt(3) + f.charAt(4) + '-' + mat;
     console.log(this.renum);
   }
 
@@ -138,10 +138,10 @@ export class ExportComponent implements OnInit {
   }
 
   deleteExport() {
-    this.stockService.deleteExport(this.export.id).subscribe(()=> {
+    this.stockService.deleteExport(this.export.id).subscribe(() => {
       this.alertify.success('suppression terminée...');
       this.showSearchDiv = false;
-      this.noResult='';
+      this.noResult = '';
       this.searchForm.reset();
     }, error => {
       this.router.navigate(['/error']);

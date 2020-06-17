@@ -13,6 +13,7 @@ namespace RLE.API.Models
         public  Store Store { get; set; }
         
         public int TabletTypeId { get; set; }
+        public int RepairCounter { get; set; }
         public TabletType TabletType { get; set; }
         // public TabletType TabletType { get; set; }
         // public  ICollection<User> Employee { get; set; }

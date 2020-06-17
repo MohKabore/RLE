@@ -29,11 +29,13 @@ export class FailureReportComponent implements OnInit {
   faliureList: any[] = [];
   tablets: any[];
   repairAction: any[] = [];
+  tabletExId: number;
   noResult = '';
   constructor(private fb: FormBuilder, private authService: AuthService, private userService: UserService, private stockService: StockService, private route: ActivatedRoute, private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
     this.currentUserId = this.authService.decodedToken.nameid;
+    this.tabletExId = null;
     this.route.params.subscribe(params => {
       this.failureId = params.id;
       this.gatFailureDetails();
@@ -51,6 +53,7 @@ export class FailureReportComponent implements OnInit {
         this.failure = res;
         this.getSelectedMaints();
       }
+      console.log(res);
     });
   }
 
@@ -99,7 +102,7 @@ export class FailureReportComponent implements OnInit {
       hotliner2Id: [null, Validators.required],
       startDate: [null, Validators.required],
       startTime: [null, Validators.required],
-      tabletExId: [null],
+      imei: [''],
       failureList2Id: [null, Validators.required],
       repairAction2Id: [null],
       repaired: [null, Validators.required],
@@ -132,10 +135,12 @@ export class FailureReportComponent implements OnInit {
       } else {
         this.noResult = 'aucune tablette trouvée pour ce maintenancier';
       }
-    } , error => {
+    }, error => {
       this.noResult = 'aucune tablette trouvée pour ce maintenancier';
     });
   }
+
+
 
   save() {
     const formData = this.failureForm.value;
@@ -143,6 +148,8 @@ export class FailureReportComponent implements OnInit {
     const startTimeDate = this.failureForm.value.startTime.split(':');
     formData.maintDate = new Date(startDateData[2], startDateData[1] - 1,
       startDateData[0], startTimeDate[0], startTimeDate[1]);
+    formData.tabletId = this.failure.tabletId;
+    formData.tabletExId = this.tabletExId;
     this.stockService.saveMaintenance(this.failureId, this.currentUserId, formData).subscribe(() => {
       this.alertify.success('enregistrement terminé...');
       this.failureForm.reset();
@@ -152,6 +159,28 @@ export class FailureReportComponent implements OnInit {
     }, error => {
       this.router.navigate(['/error']);
     });
+  }
+
+  verifyImei() {
+
+    const imei = this.failureForm.value.imei;
+    this.noResult = '';
+    this.tabletExId = null;
+    if (imei.length === 5) {
+
+      this.stockService.getTabletByImei(imei).subscribe((tablet: any) => {
+        if (tablet === null) {
+          this.noResult = 'imei non trouvé...';
+        } else if (tablet.status === 0) {
+          this.noResult = 'tablette déjà en panne...';
+        } else {
+          this.tabletExId = tablet.id;
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
+
   }
 
 }

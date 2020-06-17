@@ -112,7 +112,8 @@ namespace RLE.API.Data
                     Type = false,
                     Status = 1,
                     Active = false,
-                    TabletTypeId = tabletTypeId
+                    TabletTypeId = tabletTypeId,
+                    RepairCounter=0
                 };
                 Add(tablet);
 
@@ -186,7 +187,7 @@ namespace RLE.API.Data
 
         public async Task<Tablet> GetTabletByImei(string imei)
         {
-            var tablet = await _context.Tablets.FirstOrDefaultAsync(a=>a.Imei == imei);
+            var tablet = await _context.Tablets.Include(a=>a.Store).ThenInclude(a=>a.Employee).ThenInclude(a=>a.Region).FirstOrDefaultAsync(a=>a.Imei == imei);
             if(tablet!=null)
             return tablet;
 
