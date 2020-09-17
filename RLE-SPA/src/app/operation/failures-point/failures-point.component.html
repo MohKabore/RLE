@@ -39,13 +39,15 @@
       </div>
 
       <span *ngIf="noResult" class="text-danger">{{noResult}}</span>
-      <span *ngIf="failures.length>0">{{failures.length}} panne(s) trouvée(s)</span>
+      <span *ngIf="failures.length>0">{{failures.length}} panne(s) trouvée(s) 
+        <button type="button" size="sm" (click)="exportAsXLSX()" mdbBtn color="primary" mdbWavesEffect>exporter</button>
+      </span>
       <mdb-card style="font-size: 12px;padding: 0%;" class="mt-1" *ngFor="let item of failures ; let i = index"
       [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
         <mdb-card-body>
           <span>Region : <b>{{item.region.name}}</b></span>. Departement : <b><span *ngIf="item.departmentId">{{item.department.name}}({{item.department.code}})</span></b>
         <p>
-          IMEI : <b> <span *ngIf="item.tabletId" class="text-danger">{{item.tablet.imei}}</span> <span *ngIf="!item.tabletId" class="text-danger">introuvable</span></b>
+          IMEI : <b> <span *ngIf="item.tabletId" class="text-danger">{{item.tablet.imei}} ({{item.tablet.tabletType.name}})</span> <span *ngIf="!item.tabletId" class="text-danger">introuvable</span></b>
         {{item.failureList1.name}} <span *ngIf="item.note1">({{item.note1}})</span> 
         </p>
         <p>
@@ -56,7 +58,7 @@
           <span *ngIf="item.repaired===4"> Problème résolu</span>
         </p>
         <span *ngIf="item.tabletExId">
-          Tablette de rechange <b>{{item.tabletEx.imei}}</b>
+          Tablette de rechange <b>{{item.tabletEx.imei}}({{item.tabletEx.tabletType.name}})</b>
         </span>
 
         </mdb-card-body>

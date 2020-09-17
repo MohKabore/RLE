@@ -15,6 +15,25 @@ import { Utils } from 'src/app/shared/utils';
 export class SdcardComponent implements OnInit {
   regions: any[];
   maints: any[];
+  tablets1: any[];
+  allTablets1: any[];
+
+  tablets2: any[];
+  allTablets2: any[];
+
+  tablets3: any[];
+  allTablets3: any[];
+
+  tablets4: any[];
+  allTablets4: any[];
+
+  tablets5: any[];
+  allTablets5: any[];
+
+
+  tablets6: any[];
+  allTablets6: any[];
+
   wait = false;
   myDatePickerOptions = Utils.myDatePickerOptions;
   sdNum = '';
@@ -23,12 +42,20 @@ export class SdcardComponent implements OnInit {
   noResult3 = '';
   noResult4 = '';
   noResult5 = '';
+  noResult6 = '';
   currentUserId: number;
   sdcard1: any;
   sdcard2: any;
   sdcard3: any;
   sdcard4: any;
   sdcard5: any;
+  sdcard6: any;
+  tabletId1: number;
+  tabletId2: number;
+  tabletId3: number;
+  tabletId4: number;
+  tabletId5: number;
+  tabletId6: number;
 
   sdcardForm: FormGroup;
 
@@ -50,6 +77,13 @@ export class SdcardComponent implements OnInit {
     this.noResult3 = '';
     this.noResult4 = '';
     this.noResult5 = '';
+    this.noResult6 = '';
+    this.tabletId1 = null;
+    this.tabletId2 = null;
+    this.tabletId3 = null;
+    this.tabletId4 = null;
+    this.tabletId5 = null;
+    this.tabletId6 = null;
 
   }
 
@@ -110,6 +144,11 @@ export class SdcardComponent implements OnInit {
       this.sdcard5.exportDate = Utils.inputDateDDMMYY(this.sdcard5.exportDate, '/');
       sdcardTablets = [...sdcardTablets, this.sdcard5];
     }
+
+    if (this.sdcard6.exportDate) {
+      this.sdcard6.exportDate = Utils.inputDateDDMMYY(this.sdcard6.exportDate, '/');
+      sdcardTablets = [...sdcardTablets, this.sdcard6];
+    }
     sdData.sdcardTablets = sdcardTablets;
     sdData.sdnum = this.sdNum;
     // console.log(sdData);
@@ -131,15 +170,30 @@ export class SdcardComponent implements OnInit {
 
   getImei1(imei1) {
 
+    
     this.noResult1 = '';
+    this.tablets1 = [];
+    this.allTablets1 = [];
     this.sdcard1.tabletId = null;
     if (imei1.length === 5) {
 
-      this.stockService.getTabletByImei(imei1).subscribe((tablet: any) => {
-        if (tablet === null) {
+      this.stockService.getTabletByImei(imei1).subscribe((res: any) => {
+        if (res.length === 0) {
           this.noResult1 = 'imei non trouvé...';
+          this.alertify.error(this.noResult1);
         } else {
-          this.sdcard1.tabletId = tablet.id;
+          if (res.length === 1) {
+            this.sdcard1.tabletId = res[0].id;
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets1 = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets1 = [...this.tablets1, element];
+            }
+          }
+
         }
       }, error => {
         console.log(error);
@@ -150,14 +204,28 @@ export class SdcardComponent implements OnInit {
   getImei2(imei2) {
 
     this.noResult2 = '';
+    this.tablets2 = [];
+    this.allTablets2 = [];
     this.sdcard2.tabletId = null;
     if (imei2.length === 5) {
 
-      this.stockService.getTabletByImei(imei2).subscribe((tablet: any) => {
-        if (tablet === 0) {
+      this.stockService.getTabletByImei(imei2).subscribe((res: any) => {
+        if (res.length === 0) {
           this.noResult2 = 'imei non trouvé...';
+          this.alertify.error(this.noResult2);
         } else {
-          this.sdcard2.tabletId = tablet.id;
+          if (res.length === 1) {
+            this.sdcard2.tabletId = res[0].id;
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets2 = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets2 = [...this.tablets2, element];
+            }
+          }
+
         }
       }, error => {
         console.log(error);
@@ -168,14 +236,28 @@ export class SdcardComponent implements OnInit {
   getImei3(imei3) {
 
     this.noResult3 = '';
+    this.tablets3 = [];
+    this.allTablets3 = [];
     this.sdcard3.tabletId = null;
     if (imei3.length === 5) {
 
-      this.stockService.getTabletByImei(imei3).subscribe((tablet: any) => {
-        if (tablet === 0) {
+      this.stockService.getTabletByImei(imei3).subscribe((res: any) => {
+        if (res.length === 0) {
           this.noResult3 = 'imei non trouvé...';
+          this.alertify.error(this.noResult3);
         } else {
-          this.sdcard3.tabletId = tablet.id;
+          if (res.length === 1) {
+            this.sdcard3.tabletId = res[0].id;
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets3 = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets3 = [...this.tablets3, element];
+            }
+          }
+
         }
       }, error => {
         console.log(error);
@@ -186,14 +268,28 @@ export class SdcardComponent implements OnInit {
   getImei4(imei4) {
 
     this.noResult4 = '';
-    this.sdcard1.tabletId = null;
+    this.tablets4 = [];
+    this.allTablets4 = [];
+    this.sdcard4.tabletId = null;
     if (imei4.length === 5) {
 
-      this.stockService.getTabletByImei(imei4).subscribe((tablet: any) => {
-        if (tablet === 0) {
+      this.stockService.getTabletByImei(imei4).subscribe((res: any) => {
+        if (res.length === 0) {
           this.noResult4 = 'imei non trouvé...';
+          this.alertify.error(this.noResult4);
         } else {
-          this.sdcard4.tabletId = tablet.id;
+          if (res.length === 1) {
+            this.sdcard4.tabletId = res[0].id;
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets4 = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets4 = [...this.tablets4, element];
+            }
+          }
+
         }
       }, error => {
         console.log(error);
@@ -204,20 +300,139 @@ export class SdcardComponent implements OnInit {
   getImei5(imei5) {
 
     this.noResult5 = '';
-    this.sdcard1.tabletId = null;
+    this.tablets5 = [];
+    this.allTablets5 = [];
+    this.sdcard5.tabletId = null;
     if (imei5.length === 5) {
 
-      this.stockService.getTabletByImei(imei5).subscribe((tablet: any) => {
-        if (tablet === 0) {
+      this.stockService.getTabletByImei(imei5).subscribe((res: any) => {
+        if (res.length === 0) {
           this.noResult5 = 'imei non trouvé...';
+          this.alertify.error(this.noResult5);
         } else {
-          this.sdcard5.tabletId = tablet.id;
+          if (res.length === 1) {
+            this.sdcard5.tabletId = res[0].id;
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets5 = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets5 = [...this.tablets5, element];
+            }
+          }
+
         }
       }, error => {
         console.log(error);
       });
     }
   }
+
+  getImei6(imei6) {
+
+    this.noResult6 = '';
+    this.tablets6 = [];
+    this.allTablets6 = [];
+    this.sdcard6.tabletId = null;
+    if (imei6.length === 5) {
+
+      this.stockService.getTabletByImei(imei6).subscribe((res: any) => {
+        if (res.length === 0) {
+          this.noResult6 = 'imei non trouvé...';
+          this.alertify.error(this.noResult6);
+        } else {
+          if (res.length === 1) {
+            this.sdcard6.tabletId = res[0].id;
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets6 = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets6 = [...this.tablets6, element];
+            }
+          }
+
+        }
+      }, error => {
+        console.log(error);
+      });
+    }
+  }
+
+
+  // getImei2(imei2) {
+
+  //   this.noResult2 = '';
+  //   this.sdcard2.tabletId = null;
+  //   if (imei2.length === 5) {
+
+  //     this.stockService.getTabletByImei(imei2).subscribe((tablet: any) => {
+  //       if (tablet === 0) {
+  //         this.noResult2 = 'imei non trouvé...';
+  //       } else {
+  //         this.sdcard2.tabletId = tablet.id;
+  //       }
+  //     }, error => {
+  //       console.log(error);
+  //     });
+  //   }
+  // }
+
+  // getImei3(imei3) {
+
+  //   this.noResult3 = '';
+  //   this.sdcard3.tabletId = null;
+  //   if (imei3.length === 5) {
+
+  //     this.stockService.getTabletByImei(imei3).subscribe((tablet: any) => {
+  //       if (tablet === 0) {
+  //         this.noResult3 = 'imei non trouvé...';
+  //       } else {
+  //         this.sdcard3.tabletId = tablet.id;
+  //       }
+  //     }, error => {
+  //       console.log(error);
+  //     });
+  //   }
+  // }
+
+  // getImei4(imei4) {
+
+  //   this.noResult4 = '';
+  //   this.sdcard1.tabletId = null;
+  //   if (imei4.length === 5) {
+
+  //     this.stockService.getTabletByImei(imei4).subscribe((tablet: any) => {
+  //       if (tablet === 0) {
+  //         this.noResult4 = 'imei non trouvé...';
+  //       } else {
+  //         this.sdcard4.tabletId = tablet.id;
+  //       }
+  //     }, error => {
+  //       console.log(error);
+  //     });
+  //   }
+  // }
+
+  // getImei5(imei5) {
+
+  //   this.noResult5 = '';
+  //   this.sdcard1.tabletId = null;
+  //   if (imei5.length === 5) {
+
+  //     this.stockService.getTabletByImei(imei5).subscribe((tablet: any) => {
+  //       if (tablet === 0) {
+  //         this.noResult5 = 'imei non trouvé...';
+  //       } else {
+  //         this.sdcard5.tabletId = tablet.id;
+  //       }
+  //     }, error => {
+  //       console.log(error);
+  //     });
+  //   }
+  // }
 
 
   inittablets() {
@@ -272,6 +487,40 @@ export class SdcardComponent implements OnInit {
       nistCat1: null,
       nistCat2: null
     };
+    this.sdcard6 = {
+      exportDate: null,
+      imei: '',
+      cat1: null,
+      cat2: null,
+      tabletId: null,
+      numExport: null,
+      nistCat1: null,
+      nistCat2: null
+    };
+  }
+
+  selectTablet1(tabletId) {
+    this.sdcard1.tabletId = tabletId;
+  }
+
+  selectTablet2(tabletId) {
+    this.sdcard2.tabletId = tabletId;
+  }
+
+  selectTablet3(tabletId) {
+    this.sdcard3.tabletId = tabletId;
+  }
+
+  selectTablet4(tabletId) {
+    this.sdcard4.tabletId = tabletId;
+  }
+
+  selectTablet5(tabletId) {
+    this.sdcard5.tabletId = tabletId;
+  }
+
+  selectTablet6(tabletId) {
+    this.sdcard6.tabletId = tabletId;
   }
 
 }

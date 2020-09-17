@@ -64,6 +64,17 @@
             <!-- <mdb-select [options]="tablets" formControlName="tabletId"></mdb-select> -->
           </td>
         </tr>
+
+        <tr *ngIf="tablets?.length>0">
+          <td>choisir la tablette</td>
+          <td>:</td>
+          <td>
+            <div class="md-form form-sm mt-0 mb-0">
+              <mdb-select [options]="tablets" placeholder="choisir la tablette"  (ngModelChange)="selectTablet($event)" formControlName="tabletId"></mdb-select>
+            </div>
+            <!-- <mdb-select [options]="tablets" formControlName="tabletId"></mdb-select> -->
+          </td>
+        </tr>
         <tr>
           <td>Panne*</td>
           <td>:</td>

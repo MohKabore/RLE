@@ -1,9 +1,8 @@
-  
 <div class="mt-5 animated bounceInDown">
     <div class="row d-flex justify-content-center">
         <mdb-card class="col-md-10">
-            <form style="color: #757575;" [formGroup]="searchForm">
-                <div class="form-row">
+            <div class="form-row">
+                <form style="color: #757575;" [formGroup]="searchForm">
                     <div class="col">
                         <div class="md-form form-sm">
                             <input mdbInput type="text" id="imei" formControlName="imei" class="form-control"
@@ -16,39 +15,69 @@
                                         <span *ngIf="!tablet.store.employeeId">dans le {{tablet.store.name}}</span>
                                         <span *ngIf="tablet.store.employeeId">dans le sac de
                                             {{tablet.store.employee.lastName}}
-                                            {{tablet.store.employee.lastName}}({{tablet.store.employee.region.name}})</span>
+                                            {{tablet.store.employee.firstName}}({{tablet.store.employee.region.name}})</span>
                                     </b></span>
                             </div>
                         </div>
                     </div>
-                    <div class="col">
-                        <div class="md-form form-sm">
-                            <button type="button" (click)="searchTabletDetails()" [disabled]="!tablet" size="sm" mdbBtn
-                                color="primary" mdbWavesEffect>rechercher</button>
-                        </div>
-                    </div>
+                </form>
 
+                <div class="col" *ngIf="tablets?.length>0">
+                    <div class="md-form form-sm">
+                        <mdb-select [options]="tablets" (ngModelChange)="selectTablet($event)" placeholder="choisir la tablets" [(ngModel)]="tabletId">
+                        </mdb-select>
+                    </div>
                 </div>
-            </form>
+                <div class="col">
+                    <div class="md-form form-sm">
+                        <button type="button" (click)="searchTabletDetails()" [disabled]="!tablet" size="sm" mdbBtn
+                            color="primary" mdbWavesEffect>rechercher</button>
+                    </div>
+                </div>
+
+            </div>
 
         </mdb-card>
         <mdb-card *ngIf="showSearchDiv" class="col-md-10 mt-2">
-            <table class="table table-striped table-sm" style="font-size: 14px;">
-                <tr>
-                    <th style="width: 20%;">Type</th>
-                    <th style="width: 20%;"> Date</th>
-                    <th>Observation</th>
-                </tr>
-                <tr *ngFor="let item of inventOps ; let i = index"
-                [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
-                <td>{{item.type}}</td>
-                <td>{{item.opDate}}</td>
-                <td> <div [innerHTML]="item.details"></div> 
-                    <button *ngIf="item.inventOpTypeId === 10" type="button" mdbBtn
-                    color="danger" size="sm" mdbWavesEffect
-                    (click)="getSelectedId(item.ecDataId);basicModal.show()">supprimer</button>
-                </td>
-                </tr>
+            <table class="table table-striped table-sm" style="font-size: 12px;">
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">Type</th>
+                        <th style="width: 20%;"> Date</th>
+                        <th>Observation</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let item of inventOps ; let i = index"
+                        [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
+                        <td style="vertical-align: middle;">{{item.type}}</td>
+                        <td style="vertical-align: middle;">
+                            <span
+                                *ngIf="item.inventOpTypeId === 5 || item.inventOpTypeId === 10 || item.inventOpTypeId === 9">
+                                {{item.opDate|date:'dd/MM/yyyy'}} à
+                                {{item.opDate|date:'HH:mm:ss'}}
+                            </span>
+                            <span
+                                *ngIf="item.inventOpTypeId !== 5 && item.inventOpTypeId !== 10 && item.inventOpTypeId !== 9">
+                                {{item.opDate|date:'dd/MM/yyyy'}}
+                            </span>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <div [innerHTML]="item.details"></div>
+                        </td>
+                        <td style="vertical-align: middle;">
+                            <span>
+                                <button *ngIf="currentUserId === item.insertUserId" type="button" mdbBtn class="m-0"
+                                    color="danger" size="sm" mdbWavesEffect
+                                    (click)="getSelectedId(item.ecDataId);basicModal.show()">supprimer</button>
+                                <button *appHasRole="['SuperAdmin', 'Supervisor']" type="button" mdbBtn class="m-0"
+                                    color="danger" size="sm" mdbWavesEffect
+                                    (click)="getSelectedId(item.ecDataId);basicModal.show()">supprimer</button>
+                            </span>
+                        </td>
+                    </tr>
+                </tbody>
                 <!-- <tr *ngFor="let item of inventOps ; let i = index"
                     [@animate]="{value:'*',params:{delay: (i*100)+'ms', y:'50px'}}">
                     <td>

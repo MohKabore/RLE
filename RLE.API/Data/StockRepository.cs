@@ -185,13 +185,16 @@ namespace RLE.API.Data
             }
         }
 
-        public async Task<Tablet> GetTabletByImei(string imei)
+        public async Task<List<Tablet>> GetTabletByImei(string imei)
         {
-            var tablet = await _context.Tablets.Include(a=>a.Store).ThenInclude(a=>a.Employee).ThenInclude(a=>a.Region).FirstOrDefaultAsync(a=>a.Imei == imei);
-            if(tablet!=null)
-            return tablet;
+            var tablets = await _context.Tablets.Include(a=>a.TabletType)
+                                                .Include(a=>a.Store).
+                                                ThenInclude(a=>a.Employee)
+                                                .ThenInclude(a=>a.Region)
+                                                .Where(a=>a.Imei == imei)
+                                                .ToListAsync();
+            return tablets;
 
-            return null;
         }
     }
 }

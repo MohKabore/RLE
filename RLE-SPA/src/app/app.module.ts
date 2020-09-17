@@ -82,6 +82,9 @@ import { TabletDetailComponent } from './operation/tablet-detail/tablet-detail.c
 import { SdcardDetailComponent } from './export/sdcard-detail/sdcard-detail.component';
 import { ExportComponent } from './export/export/export.component';
 import { FailuresPointComponent } from './operation/failures-point/failures-point.component';
+import { SendToRepairComponent } from './stocks/send-to-repair/send-to-repair.component';
+import { EnrolmentPointComponent } from './operation/enrolment-point/enrolment-point.component';
+import { ExportPointComponent } from './export/export-point/export-point.component';
 // import { SignupComponent } from './views/sessions/signup/signup.component';
 registerLocaleData(fr);
 
@@ -139,7 +142,10 @@ export function tokenGetter() {
   TabletDetailComponent,
   SdcardDetailComponent,
   ExportComponent,
-  FailuresPointComponent
+  FailuresPointComponent,
+  SendToRepairComponent,
+  EnrolmentPointComponent,
+  ExportPointComponent
   // SignupComponent
   ],
   imports: [

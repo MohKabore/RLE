@@ -72,7 +72,7 @@
             <span *ngIf="noResult" class="text-danger">{{noResult}}</span>
           </td>
         </tr>
-        <tr *ngIf="tablets?.length>0">
+        <tr>
           <td>tablette de rechange</td>
           <td>:</td>
           <td>
@@ -81,6 +81,16 @@
               <label for="imei">Entrer l'imei</label>
               <span class="text-success" *ngIf="tabletExId"><i class="fa fa-check" aria-hidden="true"></i></span>
               <span class="text-danger" *ngIf="noResult">{{noResult}}</span>
+            </div>
+            <!-- <mdb-select [options]="tablets" formControlName="tabletExId"></mdb-select> -->
+          </td>
+        </tr>
+        <tr *ngIf="tablets?.length>0">
+          <td>Choisir la tablette</td>
+          <td>:</td>
+          <td>
+            <div class="md-form form-sm mt-0 mb-0">
+              <mdb-select [options]="tablets" placeholder="Choisir la tablette" (ngModelChange)="selectTablet($event)" formControlName="tabletExId"></mdb-select>
             </div>
             <!-- <mdb-select [options]="tablets" formControlName="tabletExId"></mdb-select> -->
           </td>

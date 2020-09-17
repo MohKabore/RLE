@@ -13,6 +13,7 @@ namespace RLE.API.Data
         public static void SeedUsers(DataContext context, UserManager<User> userManager, RoleManager<Role> roleManager)
         {
 
+            //roleManager.CreateAsync(new Role { Name = "Idemia" }).Wait();
             
             // var users = context.Users.Where(r => r.TypeEmpId == 3);
             // int step = 0;

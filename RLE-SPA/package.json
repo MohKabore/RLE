@@ -41,6 +41,7 @@
     "easy-pie-chart": "^2.1.7",
     "echarts": "4.2.0-rc.1",
     "feather-icons": "4.7.3",
+    "file-saver": "^2.0.2",
     "font-awesome": "^4.7.0",
     "hammerjs": "^2.0.8",
     "highlight.js": "9.13.1",

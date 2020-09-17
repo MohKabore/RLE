@@ -46,6 +46,9 @@ import { TabletDetailComponent } from './operation/tablet-detail/tablet-detail.c
 import { SdcardDetailComponent } from './export/sdcard-detail/sdcard-detail.component';
 import { ExportComponent } from './export/export/export.component';
 import { FailuresPointComponent } from './operation/failures-point/failures-point.component';
+import { SendToRepairComponent } from './stocks/send-to-repair/send-to-repair.component';
+import { EnrolmentPointComponent } from './operation/enrolment-point/enrolment-point.component';
+import { ExportPointComponent } from './export/export-point/export-point.component';
 
 
 export const appRoutes: Routes = [
@@ -62,44 +65,47 @@ export const appRoutes: Routes = [
         children: [
             { path: 'error', component: ErrorComponent },
             { path: 'demo', component: DemoComponent },
-            { path: 'assignAccount', component: AssignAccountComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
-            { path: 'registrationLocalilties', component: RegistrationLocalitiesComponent, data: { roles: ['Admin', 'SuperAdmin'] } },
-            { path: 'preSelection', component: PreSelectionComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'employees', component: EmployeesComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'opHandling', component: OpHandlingComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'trainingClassResult/:id', component: TrainingClassResultComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'stockEntry', component: StockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'approSphare', component: ApproSpareComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'assignment', component: AssignmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'failure', component: FailureComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'failures', component: FailureReportsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'failuresPoint', component: FailuresPointComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'failureReport/:id', component: FailureReportComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'sdcard', component: SdcardComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'exports', component: ExportComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'sdcardDetails', component: SdcardDetailComponent , data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'ecs', component: EcsComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier'] } },
-            { path: 'tablette', component: TabletDetailComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier'] } },
-            { path: 'ecdata', component: EcDataComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier'] } },
-            { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'retrofitStores', component: RetroStoresComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'retrofitStockEntry', component: RetrofitStockEntryComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'products', component: RetrofitProductsComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'retrofitStockTransfer', component: RetrofitStockAllocationComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'communes', component: MunDetailComponent, data: { roles: ['Admin', 'AgentHotline'] } },
-            { path: 'retrofitStockHistories', component: RetrofitStockHistoriesComponent, data: { roles: ['Admin', 'AgentHotline'] } },
+            { path: 'assignAccount', component: AssignAccountComponent, data: { roles: ['Admin', 'SuperAdmin',  'Supervisor'] } },
+            { path: 'registrationLocalilties', component: RegistrationLocalitiesComponent, data: { roles: ['Admin', 'SuperAdmin',  'Supervisor'] } },
+            { path: 'preSelection', component: PreSelectionComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] } },
+            { path: 'employees', component: EmployeesComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] } },
+            { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] } },
+            { path: 'opHandling', component: OpHandlingComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'formations', component: TrainingsComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'trainingResult', component: TrainedUsersComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'trainingClassResult/:id', component: TrainingClassResultComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] } },
+            { path: 'stockEntry', component: StockAllocationComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'stockAllocation', component: TabletsAllocationComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'approSphare', component: ApproSpareComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'assignment', component: AssignmentComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'failure', component: FailureComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'failures', component: FailureReportsComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'failuresPoint', component: FailuresPointComponent, data: { roles: ['Admin', 'AgentHotline', 'Idemia',  'Supervisor'] } },
+            { path: 'failureReport/:id', component: FailureReportComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'sdcard', component: SdcardComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'exports', component: ExportComponent, data: { roles: ['Admin', 'AgentHotline', 'Idemia',  'Supervisor'] } },
+            { path: 'sdcardDetails', component: SdcardDetailComponent , data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'expressAssignment', component: ExpressAssigmentComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'ecs', component: EcsComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier',  'Supervisor'] } },
+            { path: 'tablette', component: TabletDetailComponent, data: { roles: ['Admin', 'AgentHotline', 'Idemia',  'Supervisor'] } },
+            { path: 'pointExport', component: ExportPointComponent, data: { roles: ['Admin', 'AgentHotline', 'Idemia',  'Supervisor'] } },
+            { path: 'enrolmentPoint', component: EnrolmentPointComponent, data: { roles: ['Admin', 'AgentHotline', 'Idemia',  'Supervisor'] } },
+            { path: 'ecdata', component: EcDataComponent, data: { roles: ['Admin', 'AgentHotline', 'Maintenancier',  'Supervisor'] } },
+            { path: 'backTablet', component: BackTabletComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'sendToRepair', component: SendToRepairComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'retrofitStores', component: RetroStoresComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'retrofitStockEntry', component: RetrofitStockEntryComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'products', component: RetrofitProductsComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'retrofitStockTransfer', component: RetrofitStockAllocationComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'communes', component: MunDetailComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
+            { path: 'retrofitStockHistories', component: RetrofitStockHistoriesComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
             {
-                path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] }
+                path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] }
                 , resolve: { training: TrainingDetailResolver }
             },
-            { path: 'addParticipant/:id', component: PreSelectedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'participants/:id', component: TrainingClassUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
-            { path: 'detailInscription', component: RegistrationDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline'] } },
+            { path: 'addParticipant/:id', component: PreSelectedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] } },
+            { path: 'participants/:id', component: TrainingClassUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] } },
+            { path: 'detailInscription', component: RegistrationDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline',  'Supervisor'] } },
             // { path: '', component: HomeComponent, resolve: { regions: HomeResolver } }
             { path: 'home', component: HomeComponent },
             { path: '', component: HomeComponent }

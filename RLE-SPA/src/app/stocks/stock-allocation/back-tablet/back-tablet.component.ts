@@ -32,6 +32,7 @@ export class BackTabletComponent implements OnInit {
   step = 0;
   currentStep = 0;
   currentIds = [];
+  fromStoreId : number;
 
   stores = environment.mainStores;
   cieStoreId = environment.ceiStoreId;
@@ -128,10 +129,12 @@ export class BackTabletComponent implements OnInit {
   getSourceTablets() {
     this.showTablets = true;
     this.noResult = '';
+    this.fromStoreId =null;
     const fromEmployeeId = this.stockForm.value.fromEmployeeId;
     this.tablets = [];
     this.stockService.getMaintainerTablets(fromEmployeeId).subscribe((res: any[]) => {
       if (res.length > 0) {
+        this.fromStoreId = res[0].storeId;
         for (let i = 0; i < res.length; i++) {
           const element = { value: res[i].id, label: res[i].imei };
           this.tablets = [...this.tablets, element];
@@ -149,8 +152,9 @@ export class BackTabletComponent implements OnInit {
   save() {
     const formData = this.stockForm.value;
     formData.tabletIds = this.tabletIds;
+    formData.fromStoreId = this.fromStoreId;
     formData.mvtDate = Utils.inputDateDDMMYY(formData.mvtDate, '/');
-    this.stockService.saveApproSphare(this.currentUserId, formData).subscribe((res) => {
+    this.stockService.saveBackTablet(this.currentUserId, formData).subscribe((res) => {
       this.alertify.success('enregistrement terminé...');
       this.stockForm.reset();
       this.tabletIds = [];

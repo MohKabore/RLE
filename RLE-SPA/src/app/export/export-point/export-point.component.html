@@ -1,0 +1,97 @@
+<div class="container mt-5" *ngIf="!regionsDetails || !showSearch">
+  <h4>chargement en cours...</h4>
+  <mdb-progress-bar class="progress primary-color-dark" mode="indeterminate"></mdb-progress-bar>
+</div>
+
+
+
+<div class="container mt-5 animated mb-1 bounceInDown" *ngIf="regionsDetails && showSearch">
+  <span *ngIf="noResult" class="text-danger">{{noResult}}</span>
+  <mdb-card *ngIf="regionsDetails">
+    <mdb-card-header class="info-color white-text text-center py-4">
+      <h5>
+        <strong>Point des exports</strong>
+      </h5>
+    </mdb-card-header>
+    <mdb-card-body>
+      <table style="width: 50%;">
+        <tr>
+          <td>Total Tablette</td>
+          <td>:</td>
+          <td> <b>{{totalTablets}}</b> </td>
+        </tr>
+        <tr>
+          <td>Total CAT1</td>
+          <td>:</td>
+          <td> <b>{{totalCat1}}</b> </td>
+        </tr>
+
+        <tr>
+          <td>Total CAT2</td>
+          <td>:</td>
+          <td> <b>{{totalCat2}}</b> </td>
+        </tr>
+
+        <tr>
+          <td>Total </td>
+          <td>:</td>
+          <td> <b>{{totalCat2 + totalCat1}}</b> </td>
+        </tr>
+
+        <tr>
+          <td>Dernière date:</td>
+          <td>:</td>
+          <td> <b>{{latestDate|date:'dd-MM-yyyy'}}</b> </td>
+        </tr>
+      </table>
+    </mdb-card-body>
+  </mdb-card>
+
+  <mdb-card class="mt-2">
+
+    <mdb-card-body>
+      <div class="row d-flex justify-content-center m-0">
+        <form style="color: #757575;" [formGroup]="searchForm">
+          <div class="form-row">
+            <div class="col">
+              <div class="md-form form-sm">
+                <mdb-date-picker name="mydate" [inline]="true" [options]="myDatePickerOptions"
+                  [placeholder]="'date debut'" formControlName="startDate"></mdb-date-picker>
+              </div>
+            </div>
+
+            <div class="col">
+              <div class="md-form form-sm">
+                <mdb-date-picker name="mydate1" [inline]="true" [options]="myDatePickerOptions"
+                  [placeholder]="'date debut'" formControlName="endDate"></mdb-date-picker>
+              </div>
+            </div>
+            <div class="col">
+              <div class="md-form form-sm">
+                <button type="button" (click)="search()"
+                  [disabled]="!searchForm.value.startDate && !searchForm.value.endDate" size="sm" mdbBtn color="primary"
+                  mdbWavesEffect>rechercher</button>
+              </div>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+      <table class="table table-striped  table-sm m-0">
+        <tr>
+          <th>Region</th>
+          <th>CAT 1</th>
+          <th>CAT 2</th>
+          <th>Dernière Date</th>
+        </tr>
+        <tr *ngFor="let region of regionsDetails; let i = index">
+          <td style="width: 30%;">{{region.name}}</td>
+          <td style="width: 20%;">{{region.totalCat1}}</td>
+          <td style="width: 20%;">{{region.totalCat2}}</td>
+          <td style="width: 20%;">{{region.lastestdate|date:'dd-MM-yyyy'}}</td>
+        </tr>
+      </table>
+    </mdb-card-body>
+  </mdb-card>
+</div>

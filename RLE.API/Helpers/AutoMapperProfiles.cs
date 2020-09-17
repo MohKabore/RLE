@@ -88,6 +88,15 @@ namespace RLE.API.Helpers
             CreateMap<SdCardDto, Sdcard>();
             CreateMap<SdCardTabletDto, SdcardTablet>();
             CreateMap<ExportToCreateDto, Export>();
+            CreateMap<Failure, FailureListDto>()
+            .ForMember(dest => dest.FailureDateString, opt =>
+            {
+                opt.MapFrom(src => src.FailureDate.ToString("dd/MM/yyyy", frC));
+            })
+             .ForMember(dest => dest.MaintDateString, opt =>
+            {
+                opt.MapFrom(src => Convert.ToDateTime(src.MaintDate).ToString("dd/MM/yyyy", frC));
+            });
 
 
 

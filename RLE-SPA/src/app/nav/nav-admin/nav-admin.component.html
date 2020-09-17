@@ -8,93 +8,98 @@
   </li> -->
 
   <li class="nav-item dropdown btn-group" dropdown
-    *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">
+    *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline', 'Idemia']">
     <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
       inscriptions
     </a>
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/inscription']"
-        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">inscription</a>
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">inscription</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/preSelection']"
-        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">pré-selection</a>
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">pré-selection</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/opHandling']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">rélocalisation</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">rélocalisation</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/communes']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">communes</a>
-      <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">communes</a>
+      <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin',  'Supervisor']"
         [routerLink]="['/registrationLocalilties']">localité d'inscription</a>
-      <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin']"
+      <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin',  'Supervisor']"
         [routerLink]="['/assignAccount']">assigner compte</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/detailInscription']"
-        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">Point Inscription</a>
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">Point Inscription</a>
      
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/formations']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">formations</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">formations</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/trainingResult']"
-        *appHasRole="['SuperAdmin', 'Admin', 'AgentHotline']">point formations</a>
+        *appHasRole="['SuperAdmin', 'Admin', 'AgentHotline',  'Supervisor']">point formations</a>
     </div>
   </li>
   <li class="nav-item dropdown btn-group" dropdown
-    *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">
+    *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline', 'Idemia',  'Supervisor']">
     <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
       opération
     </a>
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/employees']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier']">membre du personnel</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier',  'Supervisor']">membre du personnel</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/assignment']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">affectation opérateur</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">affectation opérateur</a>
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/expressAssignment']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">affectation nouvel opérateur</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">affectation nouvel opérateur</a>
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/ecs']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">centre d'enrôlement </a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">centre d'enrôlement </a>
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/ecdata']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">point tablette </a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor',  'Supervisor']">point tablette </a>
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/tablette']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Maintenancier']">tablette </a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor', 'Idemia']">tablette </a>
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/enrolmentPoint']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier',  'Supervisor']">point enrolement</a>
       
 
     </div>
   </li>
   <li class="nav-item dropdown btn-group" dropdown
-    *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']">
+    *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline', 'Idemia',  'Supervisor']">
     <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
       stocks
     </a>
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/stockEntry']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">entrée stock</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">entrée stock</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/stockAllocation']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">transfert stock</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">transfert stock</a>
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/approSphare']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">appro Sphare</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">appro Sphare</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/backTablet']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">retour tablette</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">retour tablette</a>
+
+        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/sendToRepair']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">envoi en réparation</a>
     </div>
   </li>
   <li class="nav-item dropdown btn-group" dropdown
-  *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">
+  *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">
   <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
     maintenance
   </a>
   <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
     <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/failure']"
-      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">déclaration panne</a>
+      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">déclaration panne</a>
 
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/failures']"
-      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">pannes déclarées</a>
+      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">pannes déclarées</a>
 
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/failuresPoint']"
-      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">états des pannes</a>
+      *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">états des pannes</a>
   </div>
 </li>
 <li class="nav-item dropdown btn-group" dropdown
-*appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">
+*appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">
 <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
   export
 </a>
@@ -102,32 +107,34 @@
   <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/sdcard']"
     *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Ajout SDCARD</a>
     <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/sdcardDetails']"
-    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">SDCARD</a>
+    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">SDCARD</a>
 
     <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/exports']"
-    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Exports</a>
+    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">Exports</a>
+    <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/pointExport']"
+    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">Point Exports</a>
 
   
 </div>
 </li>
 
   <li class="nav-item dropdown btn-group" dropdown
-    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">
+    *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">
     <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
       rétrofit
     </a>
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStores']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">magasin</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">magasin</a>
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/products']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Materiels</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">Materiels</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStockEntry']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Entrée Stock</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">Entrée Stock</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStockTransfer']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Transfert Stock</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">Transfert Stock</a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/retrofitStockHistories']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline']">Historique</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">Historique</a>
       
     </div>
   </li>

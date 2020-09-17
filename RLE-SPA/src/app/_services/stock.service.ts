@@ -111,6 +111,22 @@ export class StockService {
     return this.http.post(this.baseUrl + 'GetFailures', interval);
   }
 
+  getStoreBrokenTablets(storeId: number) {
+    return this.http.get(this.baseUrl + 'GetBrokenTablets/' + storeId);
+  }
+
+  getEnrolmentData() {
+    return this.http.get(this.baseUrl + 'InscriptionsPoint');
+  }
+
+  getEnrolmentSdCardData() {
+    return this.http.get(this.baseUrl + 'SdCardPoint');
+  }
+
+  getEnrolmentDataByInterval(interval: any) {
+    return this.http.post(this.baseUrl + 'InscriptionsPointByInterval', interval);
+  }
+
 
 
 

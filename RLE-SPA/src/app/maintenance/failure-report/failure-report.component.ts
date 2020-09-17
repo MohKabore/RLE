@@ -31,6 +31,7 @@ export class FailureReportComponent implements OnInit {
   repairAction: any[] = [];
   tabletExId: number;
   noResult = '';
+  allTablets: any[];
   constructor(private fb: FormBuilder, private authService: AuthService, private userService: UserService, private stockService: StockService, private route: ActivatedRoute, private alertify: AlertifyService, private router: Router) { }
 
   ngOnInit() {
@@ -105,6 +106,7 @@ export class FailureReportComponent implements OnInit {
       imei: [''],
       failureList2Id: [null, Validators.required],
       repairAction2Id: [null],
+      tabletExId: [null],
       repaired: [null, Validators.required],
       fieldTech2Id: [null],
       note2: ['']
@@ -161,26 +163,73 @@ export class FailureReportComponent implements OnInit {
     });
   }
 
+  // verifyImei() {
+
+  //   const imei = this.failureForm.value.imei;
+  //   this.noResult = '';
+  //   this.tabletExId = null;
+  //   if (imei.length === 5) {
+
+  //     this.stockService.getTabletByImei(imei).subscribe((tablet: any) => {
+  //       if (tablet === null) {
+  //         this.noResult = 'imei non trouvé...';
+  //       } else if (tablet.status === 0) {
+  //         this.noResult = 'tablette déjà en panne...';
+  //       } else {
+  //         this.tabletExId = tablet.id;
+  //       }
+  //     }, error => {
+  //       console.log(error);
+  //     });
+  //   }
+
+  // }
+
   verifyImei() {
 
     const imei = this.failureForm.value.imei;
     this.noResult = '';
+    this.tablets = [];
+    this.allTablets = [];
     this.tabletExId = null;
     if (imei.length === 5) {
 
-      this.stockService.getTabletByImei(imei).subscribe((tablet: any) => {
-        if (tablet === null) {
+      this.stockService.getTabletByImei(imei).subscribe((res: any) => {
+        if (res.length === 0) {
           this.noResult = 'imei non trouvé...';
-        } else if (tablet.status === 0) {
-          this.noResult = 'tablette déjà en panne...';
+          this.alertify.error(this.noResult);
         } else {
-          this.tabletExId = tablet.id;
+          if (res.length === 1) {
+            this.tabletExId = res[0].id;
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets = [...this.tablets, element];
+            }
+          }
+
+
         }
+
+
       }, error => {
         console.log(error);
       });
     }
 
   }
-
+  selectTablet(tabletId) {
+    this.tabletExId = null;
+    this.noResult='';
+    const tablet = this.allTablets.find(a => a.id === tabletId);
+    if (tablet.status === 0) {
+      this.alertify.error('tablette en panne');
+      this.noResult='tablette en panne';
+    } else {
+     this.tabletExId = tabletId;
+    }
+  }
 }

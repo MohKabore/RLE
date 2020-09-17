@@ -39,6 +39,14 @@ export class AppComponent implements OnInit {
     this.setTimeout();
   }
 
+
+  @HostListener('window:keypress') refreshUserStateKeyPress() {
+    clearTimeout(this.userActivity);
+    this.setTimeout();
+  }
+
+
+
   ngOnInit() {
     const token = localStorage.getItem('token');
     const user: User = JSON.parse(localStorage.getItem('user'));

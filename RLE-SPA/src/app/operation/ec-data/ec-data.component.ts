@@ -26,7 +26,8 @@ export class EcDataComponent implements OnInit {
   myDatePickerOptions = Utils.myDatePickerOptions;
   currentUserId: number;
   wait = false;
-
+  tablets: any[];
+  allTablets: any[];
 
   constructor(private fb: FormBuilder, private stockService: StockService, private router: Router, private alertify: AlertifyService, private authService: AuthService) { }
 
@@ -57,28 +58,70 @@ export class EcDataComponent implements OnInit {
     });
   }
 
+
   verifyImei() {
 
     const imei = this.ecDataForm.value.imei;
     this.noResult = '';
+    this.tablets = [];
+    this.allTablets = [];
     this.tablet = null;
     if (imei.length === 5) {
 
-      this.stockService.getTabletByImei(imei).subscribe((tablet: any) => {
-        if (tablet === null) {
+      this.stockService.getTabletByImei(imei).subscribe((res: any) => {
+        if (res.length === 0) {
           this.noResult = 'imei non trouvé...';
           this.alertify.error(this.noResult);
         } else {
-          this.tablet = tablet;
-          this.alertify.success('imei correcte');
+          if (res.length === 1) {
+            this.tablet = res[0];
+            this.alertify.success('imei correcte');
+          } else {
+            this.allTablets = res;
+            this.alertify.success('plusieurs tablettes trouvées');
+            for (let index = 0; index < res.length; index++) {
+              const element = { value: res[index].id, label: res[index].imei + '(' + res[index].tabletType.name + ')' };
+              this.tablets = [...this.tablets, element];
+            }
+          }
+
 
         }
+
+
       }, error => {
         console.log(error);
       });
     }
 
   }
+
+  selectTablet(tabletId) {
+    this.tablet = this.allTablets.find(a => a.id === tabletId);
+  }
+
+  // verifyImei() {
+
+  //   const imei = this.ecDataForm.value.imei;
+  //   this.noResult = '';
+  //   this.tablet = null;
+  //   if (imei.length === 5) {
+
+  //     this.stockService.getTabletByImei(imei).subscribe((tablet: any) => {
+  //       if (tablet === null) {
+  //         this.noResult = 'imei non trouvé...';
+  //         this.alertify.error(this.noResult);
+  //       } else {
+  //         this.tablet = tablet;
+  //         this.alertify.success('imei correcte');
+
+  //       }
+  //     }, error => {
+  //       console.log(error);
+  //     });
+  //   }
+
+  // }
 
   createEcDataForm() {
     this.ecDataForm = this.fb.group({
@@ -87,6 +130,7 @@ export class EcDataComponent implements OnInit {
        imei: ['', Validators.required],
       cat1: [null, Validators.required],
       cat2: [null, Validators.required],
+      tabletId: [null],
       regionId: [null, Validators.required]
     });
   }
@@ -103,6 +147,7 @@ export class EcDataComponent implements OnInit {
       this.alertify.success('enregistrement terminé...');
       this.ecDataForm.reset();
       this.tablet = null;
+      this.tablets = [];
       this.noResult = '';
       this.wait = false;
 

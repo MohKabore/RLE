@@ -9,7 +9,7 @@
     </mdb-card>
   </div>
   <div *ngIf="!wait" class="row d-flex justify-content-center">
-    <mdb-card class="col-md-10">
+    <mdb-card class="col-md-12">
       <mdb-card-header class="info-color white-text text-center py-4">
         <h5>
           <strong>ENREGISTREMENT SDCARD</strong>
@@ -63,45 +63,92 @@
                   [options]="myDatePickerOptions">
                 </mdb-date-picker>
               </th>
+              <th style="margin: 0;">
+                <mdb-date-picker class="m-0" [(ngModel)]="sdcard6.exportDate" [placeholder]="'choisir la date'"
+                  [options]="myDatePickerOptions">
+                </mdb-date-picker>
+              </th>
 
             </tr>
             <tr>
               <td style="font-size: 12px;vertical-align: middle"> <b>IMEI</b></td>
               <td style="margin: 0;">
                 <div class="md-form m-0">
-                  <input mdbInput type="text" id="form1" (ngModelChange)="getImei1($event)" class="form-control" [(ngModel)]="sdcard1.imei">
+                  <input mdbInput type="text" id="form1" (ngModelChange)="getImei1($event)" class="form-control"
+                    [(ngModel)]="sdcard1.imei">
                 </div>
-                <span class="text-success" *ngIf="sdcard1?.tabletId"><i class="fa fa-check" aria-hidden="true"></i></span>
+                <div class="md-form m-0" *ngIf="tablets1?.length>0">
+                  <mdb-select (ngModelChange)="selectTablet1($event)" [options]="tablets1" [(ngModel)]="tabletId1"
+                    placeholder="Choisir la tablette" label="choisir la tablette"></mdb-select>
+                </div>
+                <span class="text-success" *ngIf="sdcard1?.tabletId"><i class="fa fa-check"
+                    aria-hidden="true"></i></span>
                 <span class="text-danger" *ngIf="noResult1">{{noResult1}}</span>
               </td>
               <td style="margin: 0;">
                 <div class="md-form m-0">
-                  <input mdbInput type="text" id="form2" (ngModelChange)="getImei2($event)" class="form-control" [(ngModel)]="sdcard2.imei">
+                  <input mdbInput type="text" id="form2" (ngModelChange)="getImei2($event)" class="form-control"
+                    [(ngModel)]="sdcard2.imei">
                 </div>
-                <span class="text-success" *ngIf="sdcard2.tabletId"><i class="fa fa-check" aria-hidden="true"></i></span>
+                <div class="md-form m-0" *ngIf="tablets2?.length>0">
+                  <mdb-select (ngModelChange)="selectTablet2($event)" [options]="tablets2" [(ngModel)]="tabletId2"
+                    placeholder="Choisir la tablette" label="choisir la tablette"></mdb-select>
+                </div>
+                <span class="text-success" *ngIf="sdcard2.tabletId"><i class="fa fa-check"
+                    aria-hidden="true"></i></span>
                 <span class="text-danger" *ngIf="noResult2">{{noResult2}}</span>
               </td>
               <td style="margin: 0;">
                 <div class="md-form m-0">
-                  <input mdbInput type="text" id="form3" (ngModelChange)="getImei3($event)" class="form-control" [(ngModel)]="sdcard3.imei">
+                  <input mdbInput type="text" id="form3" (ngModelChange)="getImei3($event)" class="form-control"
+                    [(ngModel)]="sdcard3.imei">
                 </div>
-                <span class="text-success" *ngIf="sdcard3.tabletId"><i class="fa fa-check" aria-hidden="true"></i></span>
+                <div class="md-form m-0" *ngIf="tablets3?.length>0">
+                  <mdb-select (ngModelChange)="selectTablet3($event)" [options]="tablets3" [(ngModel)]="tabletId3"
+                    placeholder="Choisir la tablette" label="choisir la tablette"></mdb-select>
+                </div>
+                <span class="text-success" *ngIf="sdcard3.tabletId"><i class="fa fa-check"
+                    aria-hidden="true"></i></span>
                 <span class="text-danger" *ngIf="noResult3">{{noResult3}}</span>
               </td>
               <td style="margin: 0;">
                 <div class="md-form m-0">
-                  <input mdbInput type="text" id="form4" (ngModelChange)="getImei4($event)" class="form-control" [(ngModel)]="sdcard4.imei">
+                  <input mdbInput type="text" id="form4" (ngModelChange)="getImei4($event)" class="form-control"
+                    [(ngModel)]="sdcard4.imei">
                 </div>
-                <span class="text-success" *ngIf="sdcard4.tabletId"><i class="fa fa-check" aria-hidden="true"></i></span>
+                <div class="md-form m-0" *ngIf="tablets4?.length>0">
+                  <mdb-select (ngModelChange)="selectTablet4($event)" [options]="tablets4" [(ngModel)]="tabletId4"
+                    placeholder="Choisir la tablette" label="choisir la tablette"></mdb-select>
+                </div>
+                <span class="text-success" *ngIf="sdcard4.tabletId"><i class="fa fa-check"
+                    aria-hidden="true"></i></span>
                 <span class="text-danger" *ngIf="noResult4">{{noResult4}}</span>
               </td>
-
               <td style="margin: 0;">
                 <div class="md-form m-0">
-                  <input mdbInput type="text" id="form5" (ngModelChange)="getImei5($event)" class="form-control" [(ngModel)]="sdcard5.imei">
+                  <input mdbInput type="text" id="form5" (ngModelChange)="getImei5($event)" class="form-control"
+                    [(ngModel)]="sdcard5.imei">
                 </div>
-                <span class="text-success" *ngIf="sdcard5.tabletId"><i class="fa fa-check" aria-hidden="true"></i></span>
+                <div class="md-form m-0" *ngIf="tablets5?.length>0">
+                  <mdb-select (ngModelChange)="selectTablet5($event)" [options]="tablets5" [(ngModel)]="tabletId5" placeholder="Choisir la tablette"
+                    label="choisir la tablette"></mdb-select>
+                </div>
+                <span class="text-success" *ngIf="sdcard5.tabletId"><i class="fa fa-check"
+                    aria-hidden="true"></i></span>
                 <span class="text-danger" *ngIf="noResult5">{{noResult5}}</span>
+              </td>
+              <td style="margin: 0;">
+                <div class="md-form m-0">
+                  <input mdbInput type="text" id="form6" (ngModelChange)="getImei6($event)" class="form-control"
+                    [(ngModel)]="sdcard6.imei">
+                </div>
+                <div class="md-form m-0" *ngIf="tablets6?.length>0">
+                  <mdb-select (ngModelChange)="selectTablet6($event)" [options]="tablets6" [(ngModel)]="tabletId6" placeholder="Choisir la tablette"
+                    label="choisir la tablette"></mdb-select>
+                </div>
+                <span class="text-success" *ngIf="sdcard6.tabletId"><i class="fa fa-check"
+                    aria-hidden="true"></i></span>
+                <span class="text-danger" *ngIf="noResult6">{{noResult6}}</span>
               </td>
 
             </tr>
@@ -109,31 +156,41 @@
               <td style="font-size: 12px;vertical-align: middle"><b>CAT 1</b></td>
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard1.tabletId" id="cat11" class="form-control" [(ngModel)]="sdcard1.cat1">
+                  <input mdbInput type="number" [disabled]="!sdcard1.tabletId" id="cat11" class="form-control"
+                    [(ngModel)]="sdcard1.cat1">
+                </div>
+              </td>
+              <td>
+                <div class="md-form m-0">
+                  <input mdbInput type="number" [disabled]="!sdcard2.tabletId" id="cat12" class="form-control"
+                    [(ngModel)]="sdcard2.cat1">
+                </div>
+              </td>
+              <td>
+                <div class="md-form m-0">
+                  <input mdbInput type="number" id="cat13" [disabled]="!sdcard3.tabletId" class="form-control"
+                    [(ngModel)]="sdcard3.cat1">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard2.tabletId"  id="cat12" class="form-control" [(ngModel)]="sdcard2.cat1">
+                  <input mdbInput type="number" [disabled]="!sdcard4.tabletId" id="cat14" class="form-control"
+                    [(ngModel)]="sdcard4.cat1">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="cat13" [disabled]="!sdcard3.tabletId" class="form-control" [(ngModel)]="sdcard3.cat1">
+                  <input mdbInput type="number" id="cat15" [disabled]="!sdcard5.tabletId" class="form-control"
+                    [(ngModel)]="sdcard5.cat1">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard4.tabletId" id="cat14" class="form-control" [(ngModel)]="sdcard4.cat1">
-                </div>
-              </td>
-
-              <td>
-                <div class="md-form m-0">
-                  <input mdbInput type="number" id="cat15" [disabled]="!sdcard5.tabletId" class="form-control" [(ngModel)]="sdcard5.cat1">
+                  <input mdbInput type="number" id="cat16" [disabled]="!sdcard6.tabletId" class="form-control"
+                    [(ngModel)]="sdcard6.cat1">
                 </div>
               </td>
             </tr>
@@ -142,64 +199,87 @@
               <td style="font-size: 12px;vertical-align: middle"><b>CAT 2</b></td>
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard1.tabletId" id="cat21" class="form-control" [(ngModel)]="sdcard1.cat2">
+                  <input mdbInput type="number" [disabled]="!sdcard1.tabletId" id="cat21" class="form-control"
+                    [(ngModel)]="sdcard1.cat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard2.tabletId" id="cat22" class="form-control" [(ngModel)]="sdcard2.cat2">
+                  <input mdbInput type="number" [disabled]="!sdcard2.tabletId" id="cat22" class="form-control"
+                    [(ngModel)]="sdcard2.cat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="cat23" [disabled]="!sdcard3.tabletId" class="form-control" [(ngModel)]="sdcard3.cat2">
+                  <input mdbInput type="number" id="cat23" [disabled]="!sdcard3.tabletId" class="form-control"
+                    [(ngModel)]="sdcard3.cat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard4.tabletId" id="cat24" class="form-control" [(ngModel)]="sdcard4.cat2">
+                  <input mdbInput type="number" [disabled]="!sdcard4.tabletId" id="cat24" class="form-control"
+                    [(ngModel)]="sdcard4.cat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard5.tabletId"  id="cat25" class="form-control" [(ngModel)]="sdcard5.cat2">
+                  <input mdbInput type="number" [disabled]="!sdcard5.tabletId" id="cat25" class="form-control"
+                    [(ngModel)]="sdcard5.cat2">
+                </div>
+              </td>
+
+              <td>
+                <div class="md-form m-0">
+                  <input mdbInput type="number" [disabled]="!sdcard6.tabletId" id="cat26" class="form-control"
+                    [(ngModel)]="sdcard6.cat2">
                 </div>
               </td>
             </tr>
-
             <tr>
               <td style="font-size: 12px;vertical-align: middle"><b>Numero Export</b></td>
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard1.tabletId" id="num1" class="form-control" [(ngModel)]="sdcard1.numExport">
+                  <input mdbInput type="number" [disabled]="!sdcard1.tabletId" id="num1" class="form-control"
+                    [(ngModel)]="sdcard1.numExport">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard2.tabletId" id="num2" class="form-control" [(ngModel)]="sdcard2.numExport">
+                  <input mdbInput type="number" [disabled]="!sdcard2.tabletId" id="num2" class="form-control"
+                    [(ngModel)]="sdcard2.numExport">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" [disabled]="!sdcard3.tabletId" id="num3" class="form-control" [(ngModel)]="sdcard3.numExport">
+                  <input mdbInput type="number" [disabled]="!sdcard3.tabletId" id="num3" class="form-control"
+                    [(ngModel)]="sdcard3.numExport">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="num4" [disabled]="!sdcard4.tabletId" class="form-control" [(ngModel)]="sdcard4.numExport">
+                  <input mdbInput type="number" id="num4" [disabled]="!sdcard4.tabletId" class="form-control"
+                    [(ngModel)]="sdcard4.numExport">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="num5" [disabled]="!sdcard5.tabletId" class="form-control" [(ngModel)]="sdcard5.numExport">
+                  <input mdbInput type="number" id="num5" [disabled]="!sdcard5.tabletId" class="form-control"
+                    [(ngModel)]="sdcard5.numExport">
+                </div>
+              </td>
+
+              <td>
+                <div class="md-form m-0">
+                  <input mdbInput type="number" id="num6" [disabled]="!sdcard6.tabletId" class="form-control"
+                    [(ngModel)]="sdcard6.numExport">
                 </div>
               </td>
             </tr>
@@ -208,31 +288,42 @@
               <td style="font-size: 12px;vertical-align: middle"><b>NIST(CAT 1)</b></td>
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="ncat21" [disabled]="!sdcard1.tabletId" class="form-control" [(ngModel)]="sdcard1.nistCat1">
+                  <input mdbInput type="number" id="ncat21" [disabled]="!sdcard1.tabletId" class="form-control"
+                    [(ngModel)]="sdcard1.nistCat1">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="ncat22"  [disabled]="!sdcard2.tabletId"class="form-control" [(ngModel)]="sdcard2.nistCat1">
+                  <input mdbInput type="number" id="ncat22" [disabled]="!sdcard2.tabletId" class="form-control"
+                    [(ngModel)]="sdcard2.nistCat1">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="ncat23" [disabled]="!sdcard3.tabletId" class="form-control" [(ngModel)]="sdcard3.nistCat1">
+                  <input mdbInput type="number" id="ncat23" [disabled]="!sdcard3.tabletId" class="form-control"
+                    [(ngModel)]="sdcard3.nistCat1">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="ncat24" [disabled]="!sdcard4.tabletId" class="form-control" [(ngModel)]="sdcard4.nistCat1">
+                  <input mdbInput type="number" id="ncat24" [disabled]="!sdcard4.tabletId" class="form-control"
+                    [(ngModel)]="sdcard4.nistCat1">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="ncat25" [disabled]="!sdcard5.tabletId" class="form-control" [(ngModel)]="sdcard5.nistCat1">
+                  <input mdbInput type="number" id="ncat25" [disabled]="!sdcard5.tabletId" class="form-control"
+                    [(ngModel)]="sdcard5.nistCat1">
+                </div>
+              </td>
+              <td>
+                <div class="md-form m-0">
+                  <input mdbInput type="number" id="ncat26" [disabled]="!sdcard6.tabletId" class="form-control"
+                    [(ngModel)]="sdcard6.nistCat1">
                 </div>
               </td>
             </tr>
@@ -241,39 +332,53 @@
               <td style="font-size: 12px;vertical-align: middle"><b>NIST(CAT 2)</b></td>
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="nncat21" [disabled]="!sdcard1.tabletId" class="form-control" [(ngModel)]="sdcard1.nistCat2">
+                  <input mdbInput type="number" id="nncat21" [disabled]="!sdcard1.tabletId" class="form-control"
+                    [(ngModel)]="sdcard1.nistCat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="nncat22" class="form-control" [disabled]="!sdcard2.tabletId" [(ngModel)]="sdcard2.nistCat2">
+                  <input mdbInput type="number" id="nncat22" class="form-control" [disabled]="!sdcard2.tabletId"
+                    [(ngModel)]="sdcard2.nistCat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="nncat23" [disabled]="!sdcard3.tabletId" class="form-control" [(ngModel)]="sdcard3.nistCat2">
+                  <input mdbInput type="number" id="nncat23" [disabled]="!sdcard3.tabletId" class="form-control"
+                    [(ngModel)]="sdcard3.nistCat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="nncat24" [disabled]="!sdcard4.tabletId" class="form-control" [(ngModel)]="sdcard4.nistCat2">
+                  <input mdbInput type="number" id="nncat24" [disabled]="!sdcard4.tabletId" class="form-control"
+                    [(ngModel)]="sdcard4.nistCat2">
                 </div>
               </td>
 
               <td>
                 <div class="md-form m-0">
-                  <input mdbInput type="number" id="nncat25" [disabled]="!sdcard5.tabletId" class="form-control" [(ngModel)]="sdcard5.nistCat2">
+                  <input mdbInput type="number" id="nncat25" [disabled]="!sdcard5.tabletId" class="form-control"
+                    [(ngModel)]="sdcard5.nistCat2">
+                </div>
+              </td>
+
+              <td>
+                <div class="md-form m-0">
+                  <input mdbInput type="number" id="nncat26" [disabled]="!sdcard6.tabletId" class="form-control"
+                    [(ngModel)]="sdcard6.nistCat2">
                 </div>
               </td>
             </tr>
             <tr>
               <td colspan="6">
-                  <div class="row d-flex justify-content-center">
-                    <button [disabled]="!sdcardForm.valid || !sdcard1.tabletId || !sdcard1.exportDate" (click)="basicModal.show();generateSdnum()" type="button" mdbBtn color="primary" mdbWavesEffect size="sm">enregistrer</button>
-                  </div>
+                <div class="row d-flex justify-content-center">
+                  <button [disabled]="!sdcardForm.valid || !sdcard1.tabletId || !sdcard1.exportDate"
+                    (click)="basicModal.show();generateSdnum()" type="button" mdbBtn color="primary" mdbWavesEffect
+                    size="sm">enregistrer</button>
+                </div>
               </td>
             </tr>
 
@@ -301,7 +406,7 @@
       </div>
       <div class="modal-body">
         <h4>terminer l'enregistrement de la sdcard <b> {{this.sdNum}}</b> ?</h4>
-       
+
       </div>
       <div class="modal-footer">
         <button type="button" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close"
