@@ -1,3 +1,4 @@
+import { City } from './city';
 import { User } from './user';
 
 export class TrainingClass {
@@ -5,6 +6,8 @@ export class TrainingClass {
   name: string;
   regionId: number;
   trainingId: number;
+  sessionName: string;
+
   regionName: string;
   departmentId: number;
   departmentName: string;
@@ -17,6 +20,10 @@ export class TrainingClass {
   totalTrainers: number;
   totalParticipants: number;
   trainers: User[];
+  cities: City[];
   participants: User[];
   trainerIds: [];
+  trainingDate: Date;
+  totalTrained: number;
+  summarized : boolean;
 }

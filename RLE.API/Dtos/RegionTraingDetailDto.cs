@@ -2,6 +2,10 @@ namespace RLE.API.Dtos
 {
     public class RegionTraingDetailDto
     {
+        public RegionTraingDetailDto()
+        {
+            PrctRegistered = 0;
+        }
         public int Id { get; set; }
         public string Name { get; set; }
         public int TotalRegistered { get; set; }
@@ -11,6 +15,7 @@ namespace RLE.API.Dtos
         public int NbEmpNeeded { get; set; }
         public int TotalRegisteredPrct { get; set; }
         public int TotalReserveToHave { get; set; }
+        public double PrctRegistered { get; set; }
 
     }
 }

@@ -100,6 +100,8 @@ namespace RLE.API.Data {
         public  DbSet<RetrofitStockMvtInventOp>  RetrofitStockMvtInventOps { get; set; }
         public  DbSet<TabletType>  TabletTypes { get; set; }
         public  DbSet<EcData>  EcData { get; set; }
+        public  DbSet<Session>  Sessions { get; set; }
+        public  DbSet<TrainingClassCity>  trainingClassCities { get; set; }
 
 
 

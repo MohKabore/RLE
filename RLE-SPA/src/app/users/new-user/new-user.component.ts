@@ -7,7 +7,7 @@ import { environment } from 'src/environments/environment';
 import * as XLSX from 'xlsx';
 import { debounceTime } from 'rxjs/operators';
 import { UserService } from 'src/app/_services/user.service';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 
 
 
@@ -28,6 +28,7 @@ export class NewUserComponent implements OnInit {
   searchForm: FormGroup;
   @Input() user: any;
   regions: any = [];
+  typeEmpId = null;
   depts: any = [];
   cities: any = [];
   typeEmps: any = [];
@@ -48,8 +49,10 @@ export class NewUserComponent implements OnInit {
   maintenancierTypeId = environment.maintenancierTypeId;
   userExist = false;
   isMaintenancier = false;
+  isTrainingClass = false;
   isHotliner = false;
   regionId: number;
+  trainingClassId: number;
   departmentId: number;
   resCityId: number;
   importedUsers: any = [];
@@ -64,7 +67,7 @@ export class NewUserComponent implements OnInit {
 
 
 
-  constructor(private fb: FormBuilder, private router: Router, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
+  constructor(private fb: FormBuilder, private router: Router, private userService: UserService, private route: ActivatedRoute, private authService: AuthService, private alertify: AlertifyService) { }
 
   ngOnInit() {
     if (this.user) {
@@ -81,6 +84,20 @@ export class NewUserComponent implements OnInit {
       this.getCities();
     } else {
       this.editionMode = 'add';
+      this.route.params.subscribe(params => {
+        if (params['regionId'] !== undefined) {
+          this.regionId = params['regionId'];
+          this.getDepartments();
+          this.getRegions();
+        }
+
+        if (params['trainingClassId'] !== undefined) {
+          this.trainingClassId = params['trainingClassId'];
+          this.isTrainingClass = true;
+          this.typeEmpId = 3;
+
+        }
+      });
       this.initializeFormModel();
     }
 
@@ -116,7 +133,7 @@ export class NewUserComponent implements OnInit {
       resCityId: null,
       departmentId: null,
       regionId: this.regionId,
-      typeEmpId: null,
+      typeEmpId: this.typeEmpId,
       maritalStatusId: null,
       educationalTrackId: null,
       studyLevelId: null,
@@ -128,7 +145,7 @@ export class NewUserComponent implements OnInit {
       cni: '',
       passport: '',
       iddoc: ''
-    }
+    };
 
   }
 
@@ -262,7 +279,7 @@ export class NewUserComponent implements OnInit {
   getDepartments() {
     this.depts = [];
     this.cities = [];
-    if (this.editionMode === 'add' && !this.isMaintenancier) {
+    if (this.editionMode === 'add' && !this.isMaintenancier && this.trainingClassId === null) {
       this.regionId = this.userForm.value.regionId;
     }
     this.authService.getInscDeptsByRegionid(this.regionId).subscribe((res: any[]) => {
@@ -294,7 +311,7 @@ export class NewUserComponent implements OnInit {
     let departmentId: number;
     if (this.editionMode === 'add') {
       this.departmentId = this.userForm.value.departmentId;
-    } 
+    }
     this.authService.getInscCitiesByDeptid(this.departmentId).subscribe((res: any[]) => {
       for (let i = 0; i < res.length; i++) {
         const element = { value: res[i].id, label: res[i].name };
@@ -345,10 +362,14 @@ export class NewUserComponent implements OnInit {
   saveUser() {
     this.waitDiv = true;
     const dataToSave = this.userForm.value;
+    dataToSave.trainingClassId = this.trainingClassId;
+    if(!dataToSave.regionId) {
+      dataToSave.regionId=this.regionId;
+    }
     if (dataToSave.dateOfBirth) {
       dataToSave.dateOfBirth = Utils.inputDateDDMMYY(dataToSave.dateOfBirth, '/');
     }
-
+console.log(dataToSave);
     if (this.editionMode === 'add') {
       if (this.authService.loggedIn() === true) {
         this.authService.addUser(dataToSave, this.authService.decodedToken.nameid).subscribe((userid: number) => {

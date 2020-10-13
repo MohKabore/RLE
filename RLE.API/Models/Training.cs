@@ -10,6 +10,7 @@ namespace RLE.API.Models
         public int? RegionId { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
+        public DateTime? TrainingDate { get; set; }
         public byte Status { get; set; }
         public byte Active { get; set; }
 

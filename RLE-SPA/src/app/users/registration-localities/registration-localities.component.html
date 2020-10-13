@@ -1,10 +1,72 @@
 <div class="container mt-5 animated fadeInDown">
-  <div class="d-flex justify-content-center">
-    <div class="spinner-border" role="status" *ngIf="regions.length===0">
+  <div>
+    <div class="spinner-border" role="status" *ngIf="regionsDetails.length===0">
       <span class="sr-only">Loading...</span>
     </div>
 
-    <div *ngIf="regions.length>0" class="row">
+    <div *ngIf="regionsDetails.length>0">
+      <mdb-card>
+        <mdb-card-body>
+          <mdb-card-title>
+            <h4>Quotas régions</h4>
+          </mdb-card-title>
+          <form style="color: #757575;" [formGroup]="regionForm">
+            <div class="row">
+              <div class="col-md-12">
+                <div class="md-form form-sm mt-2 mb-0">
+                  <mdb-select id="regionId" [options]="regionsDetails" (ngModelChange)="getRegionDetails()"
+                    style="width: 100%;" placeholder="regions" formControlName="regionId">
+                  </mdb-select>
+                </div>
+
+                <div class="md-form form-sm mt-2 mb-0">
+                  <mdb-select id="departmentId" [options]="departmentsDetails" (ngModelChange)="getCities()"
+                    style="width: 100%;" placeholder="departement" formControlName="departmentId">
+                  </mdb-select>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+        </mdb-card-body>
+
+      </mdb-card>
+
+      <div class="animated fadeInUp mt-2" *ngIf="cities.length>0">
+        <table mdbTable #tableEl="mdbTable" stickyHeader="true" hover="true" striped="true" class="z-depth-1">
+          <thead class="sticky-top">
+            <tr>
+              <th>#</th>
+              <th>sous-préfecture / commune</th>
+              <th>quota opérateur</th>
+              <!-- <th>option</th> -->
+              <!-- <th>etat(inscription)</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr mdbTableCol *ngFor="let city of cities; let k = index">
+              <th>{{k+1}}</th>
+              <td>{{city.name}}</td>
+              <td>
+                <input type="number" id="form{{k}}" [(ngModel)]="city.nbEmpNeeded" class="form-control form-sm">
+              </td>
+            </tr>
+            <tr>
+              <td colspan="3" align="center">
+                <button type="button" size="sm" mdbBtn color="primary" (click)="basicModal1.show()" mdbWavesEffect> enregistrer</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+
+
+    </div>
+
+
+    <!-- <div *ngIf="regions.length>0" class="row">
 
       <div class="col-md-12" *ngFor="let region of regions; let i = index">
         <mdb-accordion [multiple]="true">
@@ -90,7 +152,7 @@
         </mdb-accordion>
       </div>
 
-    </div>
+    </div> -->
   </div>
 </div>
 
@@ -128,5 +190,28 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+
+
+
+<div mdbModal #basicModal1="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal1.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">CONFIRMATION</h4>
+      </div>
+      <div class="modal-body">
+        <h3>Confirmez-vous l'enregistrement ?</h3>
+      </div>
+      <div class="modal-footer">
+        <button type="button" (click)="basicModal1.hide()" mdbBtn color="light" size="sm" class="waves-light" aria-label="Close" (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
+        <button type="button" (click)="basicModal1.hide()" mdbBtn color="primary" size="sm" class="relative waves-light" mdbWavesEffect>enregistrer</button>
+      </div>
+    </div>
   </div>
 </div>

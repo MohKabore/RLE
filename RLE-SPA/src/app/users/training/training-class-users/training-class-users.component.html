@@ -1,56 +1,64 @@
 <div class="container mt-5 animated bounceInUp">
-  <table class="table-condensed mb-3 mt-2" style="width: 50%;">
-    <tr>
-      <td>Nom de la Salle</td>
-      <td>:</td>
-      <td>
-        <b> &nbsp;{{trainingClass?.name}} </b>
-      </td>
-    </tr>
-    <tr>
-      <td>Période</td>
-      <td>:</td>
-      <td>
-        <b> &nbsp;du {{trainingClass?.startDate | date : 'dd-MM-yyyy'}} au
-          {{trainingClass?.endDate | date : 'dd-MM-yyyy'}} </b>
-      </td>
-    </tr>
-    <tr>
-      <td>Localisation</td>
-      <td>:</td>
-      <td>
-        <b>{{trainingClass?.departmentName}}/{{trainingClass?.cityName}}</b>
-      </td>
-    <tr>
-      <td>
-        <span *ngIf="trainingClass?.trainers.length===1">Formateur</span>
-        <span *ngIf="trainingClass?.trainers.length>1">Formateurs</span>
-      </td>
-      <td>:</td>
-      <td>
-        <b>&nbsp;<span *ngFor="let trainer of trainingClass?.trainers">{{trainer.lastName}}
-            {{trainer.firstName}} <span *ngIf="trainingClass.trainers.length>1"> - </span> </span>
-        </b>
-      </td>
-    </tr>
-    <tr>
-      <td>Total Participants</td>
-      <td>:</td>
-      <td>
-        <b> &nbsp;{{participants.length}} </b>
-      </td>
-    </tr>
-  </table>
-
-  <button type="button" size="sm" mdbBtn color="primary" [disabled]="participants.length===0" mdbWavesEffect
-    (click)="basicModal.show();showDiv(true)">imprimer</button>
-  <button type="button" *ngIf="trainingClass?.status===0" [disabled]="isSelected.length===0" size="sm" mdbBtn
-    color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
-  <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
-    [routerLink]="['/formation/', trainingClass?.trainingId]"> <i class="fa fa-arrow-left"></i> </button>
+  <mdb-card>
+    <mdb-card-body>
+      <table class="table-condensed mb-3 mt-2" style="width: 50%;">
+        <tr>
+          <td>Salle</td>
+          <td>:</td>
+          <td>
+            <b> &nbsp;{{trainingClass?.name}} ({{trainingClass?.departmentName}}/{{trainingClass?.cityName}}) </b>
+          </td>
+        </tr>
+        <tr>
+          <td>Date</td>
+          <td>:</td>
+          <td>
+            <b>{{trainingClass?.trainingDate}} </b>
+          </td>
+        </tr>
+        <tr>
+          <td>CEL(s)</td>
+          <td>:</td>
+          <td>
+            <b> <span *ngFor="let city of trainingClass?.cities">{{city.name}} / </span></b>
+          </td>
+        <tr>
+          <td>
+            <span *ngIf="trainingClass?.trainers.length===1">Formateur</span>
+            <span *ngIf="trainingClass?.trainers.length>1">Formateurs</span>
+          </td>
+          <td>:</td>
+          <td>
+            <b>&nbsp;<span *ngFor="let trainer of trainingClass?.trainers">{{trainer.lastName}}
+                {{trainer.firstName}} <span *ngIf="trainingClass.trainers.length>1"> - </span> </span>
+            </b>
+          </td>
+        </tr>
+        <tr>
+          <td>Participants</td>
+          <td>:</td>
+          <td>
+            <b> &nbsp;{{trainingClass?.totalTrained}} </b>
+          </td>
+        </tr>
+        <tr>
+          <td>Inscrit(s)</td>
+          <td>:</td>
+          <td>
+            <b> &nbsp;{{participants.length}} </b>
+          </td>
+        </tr>
+      </table>
+      <button type="button" size="sm" mdbBtn   color="primary" mdbWavesEffect [routerLink]="['/inscription/', trainingClass?.id, trainingClass?.regionId]">ajouter</button>
+      <button type="button" *ngIf="trainingClass?.status===0" [disabled]="isSelected.length===0" size="sm" mdbBtn
+      color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
     <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
-    [routerLink]="['/trainingClassResult/', trainingClass?.id]"  *ngIf="trainingClass?.status===1"> point de la formation</button>
-
+      [routerLink]="['/formation/', trainingClass?.trainingId]"> retour </button>
+  
+    
+    </mdb-card-body>
+  </mdb-card>
+ 
   <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="participants.length>0">
     <thead>
       <tr>
@@ -76,15 +84,17 @@
     </tbody>
   </table>
 
-
+  <div *ngIf="participants.length===0" class=" alert alert-info mt-1">
+    Aucune personne trouvée...
+    </div>
 </div>
 
 <div class="container" id="test" *ngIf="show">
   <table class="table-condensed mt-1" style="width: 100%;  border-collapse: collapse; border-spacing: 0;">
     <tr>
-      <td valign="top" rowspan="4"   style="width:50%;"   class="text-left" >
-        <img style="width:40%; height: 50%;" class="mt-0"src="../../../../assets/images/at.png" alt="">
-        <ngx-qrcode class ="mb-5"id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value] = "qrcodename">    
+      <td valign="top" rowspan="4" style="width:50%;" class="text-left">
+        <img style="width:40%; height: 50%;" class="mt-0" src="../../../../assets/images/at.png" alt="">
+        <ngx-qrcode class="mb-5" id="qrCodeImage" [qrc-element-type]="elementType" [qrc-value]="qrcodename">
         </ngx-qrcode>
       </td>
       <td style="width:15%"> <span style="font-size: 20px;">Nom de la Salle</span> </td>
@@ -92,7 +102,7 @@
       <td style="width:30%">
         <b> &nbsp;<span style="font-size: 20px;">{{trainingClass?.name}}</span> </b>
       </td>
-      
+
     </tr>
     <tr>
       <td><span style="font-size: 20px;">Date </span> </td>
@@ -122,82 +132,126 @@
         </b>
       </td>
     </tr>
-    
+
   </table>
 
+  <div class="alert alert-info" *ngIf="participants.length===0">
+    <span>aucune personne trouvée</span>
+  </div>
+  <div *ngIf="participants.length>0">
+    <table mdbTable class="table-bordered" class="z-depth-1">
+      <thead>
+        <tr style="border-bottom: 1px solid black;">
+          <th>#</th>
+          <th style="font-size:20px;">Nom</th>
+          <th style="font-size:20px;">Prénom(s)</th>
+          <th style="font-size:20px;">Contact(s)</th>
+          <th style="font-size:20px;">Emargement</th>
+          <th style="font-size:20px;">Obsv.</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let el of participants; let i = index" style="border-bottom: 1px solid black;">
+          <th scope="row">{{i+1}}</th>
+          <td><b style="font-size:20px;">{{el.lastName}}</b></td>
+          <td><b style="font-size:20px;"> {{el.firstName}}</b></td>
+          <td><b style="font-size:20px;">{{el.phoneNumber}} <span *ngIf="el.secondPhoneNumber"> /
+                {{el.secondPhoneNumber}}</span></b></td>
+          <td></td>
+          <td></td>
+        </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+1}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-  <table mdbTable class="table-bordered" class="z-depth-1">
-    <thead>
-      <tr style="border-bottom: 1px solid black;">
-        <th>#</th>
-        <th style="font-size:20px;">Nom</th>
-        <th style="font-size:20px;">Prénom(s)</th>
-        <th style="font-size:20px;">Contact(s)</th>
-        <th style="font-size:20px;">Emargement</th>
-        <th style="font-size:20px;">Obsv.</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr *ngFor="let el of participants; let i = index" style="border-bottom: 1px solid black;">
-      <th scope="row" >{{i+1}}</th>
-        <td><b style="font-size:20px;" >{{el.lastName}}</b></td>
-        <td><b style="font-size:20px;" > {{el.firstName}}</b></td>
-        <td><b style="font-size:20px;">{{el.phoneNumber}} <span *ngIf="el.secondPhoneNumber"> /
-              {{el.secondPhoneNumber}}</span></b></td>
-        <td></td>
-        <td></td>
-      </tr>
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+1}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+2}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+2}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+3}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+3}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+4}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+4}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+5}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+5}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+6}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+6}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+7}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+7}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+8}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+8}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+9}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
 
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+9}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
-
-      <tr  style="border-bottom: 1px solid black;">
-        <th scope="row" >{{participants.length+10}}</th>
-        <td></td><td></td><td></td><td></td><td></td>
-      </tr>
-    </tbody>
-  </table>
+        <tr style="border-bottom: 1px solid black;">
+          <th scope="row">{{participants.length+10}}</th>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
 
 </div>

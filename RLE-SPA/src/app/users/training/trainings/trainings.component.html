@@ -6,9 +6,14 @@
           <mdb-card-body>
             <form [formGroup]="searchForm">
               <div class="md-form">
-                <mdb-select [options]="regions" id="regionId" (ngModelChange)="getTrainings()" placeholder="Region"
+                <mdb-select  [options]="regions"  id="regionId" (ngModelChange)="getTrainings()" placeholder="Region"
                   formControlName="regionId">
                 </mdb-select>
+                <!-- <div class="md-form">
+                  <input mdbInput type="text" id="regionId" class="form-control" formControlName="regionId">
+                  <label for="regionId">Example label</label>
+                </div> -->
+                <!-- {{searchForm.value.regionId}} -->
               </div>
             </form>
           </mdb-card-body>
@@ -24,38 +29,89 @@
               <div *ngIf="noResult || trainings.length>0">
                 <button type="button" mdbBtn color="success" size="sm" mdbWavesEffect
                   (click)="basicModal.show();showtrainingForm(null)">ajouter</button>
-                  <div class="col-md-12">
-                    <hr>
+                <div class="col-md-12">
+                  <hr>
+                </div>
+                <div *ngIf="noResult">
+                  {{noResult}}
+                </div>
+                <div class="row" *ngIf="trainings.length>0">
+                  <div *ngFor="let tr of trainings" class="col-md-3 mt-1">
+
+                    <mdb-card>
+                      <mdb-card-body class="mb-0 mt-1 pb-0">
+                        <p class="text-center p-0"> <a [routerLink]="['/formation/', tr.id]"
+                            *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']"> <b>{{tr.name}} </b>
+                          </a> </p>
+                        <table style="font-size: 12px;" class="m-0 p-0">
+                          <tr>
+                            <td> <b>date </b> </td>
+                            <td>:</td>
+                            <td>
+                              {{tr.strTrainingDate}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <b>scéances</b>
+                            </td>
+                            <td>:</td>
+                            <td>
+                              {{tr.totalClasses}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <b>présents</b>
+                            </td>
+                            <td>:</td>
+                            <td>
+                              {{tr.totalParticipants}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <b>cloturés </b>
+                            </td>
+                            <td>:</td>
+                            <td>
+                              {{tr.totalClosed}}
+                            </td>
+                          </tr>
+                          <tr>
+                            <td>
+                              <b>terminés</b>
+                            </td>
+                            <td>:</td>
+                            <td>
+                              {{tr.totalSummarized}}
+                            </td>
+                          </tr>
+                          <!-- <tr>
+                            <td colspan="3" align="center">
+                              <hr>
+                            </td>
+                          </tr> -->
+                          <tr>
+                            <td colspan="3" align="center" >
+                              <button title="editer"
+                            (click)="basicModal.show();showtrainingForm(tr)" type="button" size="sm" mdbBtn
+                            color="success" mdbWavesEffect><i class="fas fa-edit"></i></button>
+                          <button *ngIf="tr.totalClasses===0" title="supprimer" type="button"
+                            (click)="deleteTraining(tr.id)" size="sm" mdbBtn color="danger" mdbWavesEffect><i
+                              class="fas fa-trash"></i></button>
+                            </td>
+                          </tr>
+                        </table>
+                      
+
+                      </mdb-card-body>
+                    </mdb-card>
                   </div>
-                  <div *ngIf="noResult">
-                    {{noResult}}
-                  </div>
-                  <div class="row" *ngIf="trainings.length>0">
-                    <div *ngFor="let tr of trainings" class="col-md-3 mt-1">
-    
-                      <mdb-card>
-                        <mdb-card-body class="text-center p-0">
-                          <p> <a  [routerLink]="['/formation/', tr.id]" 
-                              *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline']"> <b>{{tr.name}} </b>
-                            </a> </p>
-                          <p style="font-size: 12px;">salle(s) : {{tr.totalClasses}} </p>
-                          <p style="font-size: 12px;">formateur(s) : {{tr.totalTrainers}} </p>
-                          <p style="font-size: 12px;">participant(s) : {{tr.totalParticipants}} </p>
-                          <hr>
-                          <p style="font-size: 12px;"> <button title="editer"
-                              (click)="basicModal.show();showtrainingForm(tr)" type="button" size="sm" mdbBtn
-                              color="success" mdbWavesEffect><i class="fas fa-edit"></i></button>
-                            <button *ngIf="tr.totalClasses===0" title="supprimer" type="button" (click)="deleteTraining(tr.id)"
-                              size="sm" mdbBtn color="danger" mdbWavesEffect><i class="fas fa-trash"></i></button></p>
-    
-    
-                        </mdb-card-body>
-                      </mdb-card>
-                    </div>
-                  </div>
+                </div>
 
               </div>
-              
+
             </div>
 
           </mdb-card-body>
@@ -82,7 +138,15 @@
 
             <mdb-card-body class="px-lg-5 pt-0">
               <form class="text-center" style="color: #757575;" [formGroup]="trainingForm">
-
+                <div class="md-form form-sm">
+                  <mdb-date-picker name="mydate" [inline]="true" [options]="myDatePickerOptions"
+                  [placeholder]="'choisir la date'" formControlName="trainingDate"></mdb-date-picker>
+                </div>
+                <!-- <div class="md-form form-sm">
+                  <input type="text" required class="form-control" id="trainingDate" formControlName="trainingDate"
+                    [textMask]="{mask: birthDateMask}" mdbInput>
+                  <label for="trainingDate">date de la formation* (JJ/MM/AAAA)</label>
+                </div> -->
                 <div class="md-form">
                   <input type="text" id="name" class="form-control" formControlName="name" mdbInput>
                   <label for="name">Nom de la formation</label>

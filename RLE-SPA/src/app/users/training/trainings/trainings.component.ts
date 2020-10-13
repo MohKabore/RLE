@@ -5,6 +5,7 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Training } from 'src/app/_models/training';
 import { Utils } from 'src/app/shared/utils';
+import { ActivatedRoute } from '@angular/router';
 
 
 @Component({
@@ -33,19 +34,31 @@ export class TrainingsComponent implements OnInit {
   page = 1;
   pageSize = 50;
   currentUserId: number;
-  constructor(private fb: FormBuilder, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
+  myDatePickerOptions = Utils.myDatePickerOptions;
+
+
+
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private userService: UserService, private authService: AuthService, private alertify: AlertifyService) { }
 
 
   ngOnInit() {
-    this.currentUserId = this.authService.decodedToken.nameid;
-    if (!this.authService.isMaintenancier()) {
-      this.getRegions();
-      this.showRegions = true;
-      this.createSearchForms();
-    } else {
-      this.regionId = this.authService.currentUser.regionId;
-      this.getTrainings();
-    }
+    this.route.params.subscribe(params => {
+      this.regionId = params['id'];
+      this.currentUserId = this.authService.decodedToken.nameid;
+      if (!this.authService.isMaintenancier()) {
+        this.getRegions();
+        this.createSearchForms();
+        if (params['id'] !== undefined) {
+          this.getTrainings();
+        }
+
+        this.showRegions = true;
+      } else {
+        this.regionId = this.authService.currentUser.regionId;
+        this.getTrainings();
+      }
+    });
+
   }
 
   getRegions() {
@@ -81,7 +94,7 @@ export class TrainingsComponent implements OnInit {
   showtrainingForm(model) {
     if (model === null) {
       this.editionMode = 'add';
-      this.trainingModel = { name: '', description: '' };
+      this.trainingModel = { name: '', description: '', trainingDate: null };
     } else {
       this.trainingModel = model;
       this.editionMode = 'edit';
@@ -93,7 +106,9 @@ export class TrainingsComponent implements OnInit {
   createTainingForms() {
     this.trainingForm = this.fb.group({
       name: [this.trainingModel.name, Validators.required],
-      description: [this.trainingModel.description]
+      description: [this.trainingModel.description],
+      trainingDate: [this.trainingModel.trainingDate]
+
     });
   }
 
@@ -109,12 +124,13 @@ export class TrainingsComponent implements OnInit {
     this.trainingId = null;
     const training = this.trainingForm.value;
     training.regionId = this.regionId;
+    training.trainingDate = Utils.inputDateDDMMYY(training.trainingDate, '/');
 
 
 
     if (continuer === false) {
       this.userService.addTraining(training, this.currentUserId).subscribe(() => {
-        this.alertify.success('formation ajouté...');
+        this.alertify.success('formation ajoutée...');
         this.getTrainings();
       }, error => {
         console.log(error);
@@ -135,6 +151,7 @@ export class TrainingsComponent implements OnInit {
 
   editTraining() {
     const training = this.trainingForm.value;
+    training.trainingDate = Utils.inputDateDDMMYY(training.trainingDate, '/');
     this.userService.editTraining(training, this.trainingModel.id, this.currentUserId).subscribe(() => {
       this.getTrainings();
       this.alertify.success('modification enregistrée...');
@@ -145,7 +162,7 @@ export class TrainingsComponent implements OnInit {
 
   createSearchForms() {
     this.searchForm = this.fb.group({
-      regionId: [null],
+      regionId: [this.regionId]
     });
   }
 
@@ -154,7 +171,7 @@ export class TrainingsComponent implements OnInit {
       name: ['', Validators.required],
       trainerIds: [null, Validators.required],
       departmentId: [null, Validators.required],
-      cityId: [null,  Validators.required],
+      cityId: [null, Validators.required],
       startDate: [null, Validators.required],
       endDate: [null, Validators.required]
     });
@@ -222,14 +239,14 @@ export class TrainingsComponent implements OnInit {
   }
 
   deleteTraining(trainingId) {
-   if (confirm('voulez-vous vraiment supprimer cette formation ??')) {
-    this.userService.deleteTraining(trainingId, this.currentUserId).subscribe(() => {
-      this.getTrainings();
-      this.alertify.success('supppression terminée...');
-    }, error => {
-      console.log(error);
-    });
-   }
+    if (confirm('voulez-vous vraiment supprimer cette formation ??')) {
+      this.userService.deleteTraining(trainingId, this.currentUserId).subscribe(() => {
+        this.getTrainings();
+        this.alertify.success('supppression terminée...');
+      }, error => {
+        console.log(error);
+      });
+    }
   }
 
 }

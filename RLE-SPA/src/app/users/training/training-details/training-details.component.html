@@ -3,8 +3,9 @@
     <div class="col-md-12">
       <mdb-card>
         <mdb-card-body>
+        
           <p>
-            <b class="text-center">{{training.name}} <span
+            <b class="text-center">  {{training.regionName}} ({{training.name}} : {{training.trainingDate}} )<span
                 *ngIf="training.description">({{training.description}})</span></b>
           </p>
           <hr>
@@ -18,21 +19,28 @@
               </td>
             </tr>
             <tr>
+              <td>Date</td>
+              <td>:</td>
+              <td>
+                <b> {{training.trainingDate}}</b>
+              </td>
+            </tr>
+            <!-- <tr>
               <td>formateurs(s)</td>
               <td>:</td>
               <td>
                 <b>{{training.totalTrainers}}</b>
               </td>
-            </tr>
+            </tr> -->
             <tr>
-              <td>salle(s) de formation</td>
+              <td>scéances de formation</td>
               <td>:</td>
               <td>
                 <b>{{training.totalClasses}}</b>
               </td>
             </tr>
             <tr>
-              <td>participant(s)</td>
+              <td>Présent(s)</td>
               <td>:</td>
               <td>
                 <b> {{training.totalParticipants}}</b>
@@ -42,7 +50,7 @@
           <hr>
           <button type="button" size="sm" mdbBtn color="success" (click)="basicModal.show();showModal(null)"
             mdbWavesEffect>ajouter salle de formation</button>
-          <button type="button" size="sm" mdbBtn color="light" [routerLink]="['/formations']" mdbWavesEffect> <i
+          <button type="button" size="sm" mdbBtn color="light" [routerLink]="['/formations/',regionId]" mdbWavesEffect> <i
               class="fa fa-arrow-left"></i> </button>
 
 
@@ -50,13 +58,13 @@
       </mdb-card>
     </div>
     <div class="mt-2 col-md-4" *ngFor="let class of training.trainingClasses; let i = index">
-      <mdb-card class="">
+      <mdb-card >
         <mdb-card-body>
-          <p class="text-center"><b>{{class.name}}</b></p>
+          <p class="text-center"><b>{{class.name}} ({{class.sessionName}})  {{class.summarized}}</b></p>
           <hr>
-          <table style="font-size: 12px;">
+          <table style="font-size: 12px; width: 100%;">
             <tr>
-              <td>Localisation</td>
+              <td>Lieu</td>
               <td>:</td>
               <td>
                 <b>
@@ -67,53 +75,56 @@
             </tr>
 
             <tr>
-              <td>formateurs</td>
+              <td>formateur(s)</td>
               <td>:</td>
               <td>
-                <b>
-                  <span *ngFor="let trainer of class.trainers">{{trainer.lastName}}
-                    {{trainer.firstName}}/</span>
-                </b>
+                  <mdb-badge color="cyan" *ngFor="let trainer of class.trainers" class="ml-1"> {{trainer.lastName}} {{trainer.firstName}}
+                  </mdb-badge>
               </td>
             </tr>
+
             <tr>
-              <td>Date Debut</td>
+              <td>CEL(s)</td>
               <td>:</td>
               <td>
-                <b>{{class.startDate}} </b>
+                <mdb-badge color="blue" *ngFor="let city of class.cities" style="color: black;" class="ml-1"> 
+                  {{city.name}}
+                </mdb-badge>
+
+               
               </td>
             </tr>
+           
             <tr>
-              <td>Date fin</td>
+              <td>Présents</td>
               <td>:</td>
               <td>
-                <b>{{class.endDate}} </b>
-              </td>
-            </tr>
-            <tr>
-              <td>Date participants</td>
-              <td>:</td>
-              <td>participants
                 <b>{{class.totalParticipants}} </b>
               </td>
             </tr>
             <tr>
-              <td class="text-center" colspan="3">
+              <td class="text-center" colspan="3" >
                 <hr>
-                <button *ngIf="class.status===0" type="button" [routerLink]="['/addParticipant/', class.id]"  title="ajouter participant" size="sm" mdbBtn
-                  color="success" mdbWavesEffect  ><i class="fa fa-plus"></i></button>
+                <!-- <button *ngIf="class.status===0" type="button" [routerLink]="['/addParticipant/', class.id]"  title="ajouter participant" size="sm" mdbBtn
+                  color="success" mdbWavesEffect  ><i class="fa fa-plus"></i></button> -->
                 <button type="button" [routerLink]="['/participants/', class.id]" title="liste des participants"
                   size="sm" *ngIf="class.totalParticipants" mdbBtn color="light" mdbWavesEffect><i class="fa fa-user"></i></button>
-                <button *ngIf="class.status===0" type="button" title="modifier" (click)="basicModal.show();showModal(class)" size="sm" mdbBtn
+                <button *ngIf="class.status===0  && !class.summarized" type="button" title="modifier" (click)="basicModal.show();showModal(class)" size="sm" mdbBtn
                   color="success" mdbWavesEffect><i class="fa fa-edit"></i></button>
-                  <button type="button" *ngIf="class.totalParticipants>0 && class.status===0"
+                    <button type="button" *ngIf="class.status===0"
                   title="cloturer la formation" size="sm"  (click)="closeTraining(class.id,i)" mdbBtn color="primary" mdbWavesEffect><i
                     class="fas fa-hourglass-end"></i></button>
 
-                    <button type="button" *ngIf="class.status===1"
-                      title="faire le point de la formation" size="sm" [routerLink]="['/trainingClassResult/', class.id]"  mdbBtn color="primary" mdbWavesEffect><i
+                    <button type="button" *ngIf="class.status===1  && !class.summarized"
+                      title="faire le point de la formation" size="sm" (click)="basicModal1.show();getTrainingClassCities(class.id,i)"  mdbBtn color="primary" mdbWavesEffect><i
                         class="fas fa-file"></i></button>
-                <button type="button" *ngIf="class.totalParticipants===0" (click)="deleteTrainingClass(class.id,i)"
+
+                        <button type="button" *ngIf="class.status===1  && !class.summarized"
+                        title="fermer la salle de formation" size="sm" (click)="closeTrainingClass(class.id,i)"  mdbBtn color="success" mdbWavesEffect>
+                        <i class="fab fa-angellist"></i>
+                      </button>
+
+                <button type="button" *ngIf="class.status===0 && !class.summarized" (click)="deleteTrainingClass(class.id,i)"
                   title="ajouter supprimer" size="sm" mdbBtn color="danger" mdbWavesEffect><i
                     class="fa fa-trash"></i></button>
               </td>
@@ -138,7 +149,7 @@
   <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-body">
-        <form class="text-center" style="color: #757575;" [formGroup]="trainngClassForm">
+        <form class="text-center mt-2" style="color: #757575; font-size: 10px;" [formGroup]="trainngClassForm">
           <div class="md-from form-sm">
             <mdb-select [options]="maints" id="trainerIds" formControlName="trainerIds" [multiple]="true"
               [highlightFirst]="false" placeholder="formateur(s)"></mdb-select>
@@ -152,21 +163,30 @@
             <mdb-select [options]="depts" id="departmentId" (ngModelChange)="getCities(null)" placeholder="département"
               formControlName="departmentId"></mdb-select>
           </div>
+        
           <div class="md-form form-sm">
             <mdb-select [options]="cities" id="cityId" placeholder="ville ou commune" formControlName="cityId">
             </mdb-select>
           </div>
           <div class="md-form form-sm">
+            <mdb-select [options]="sessions" id="sessionId"  placeholder="session" formControlName="sessionId">
+            </mdb-select>
+          </div>
+          <div class="md-form form-sm">
+            <mdb-select [options]="usersCities" id="cityIds" [multiple]=true placeholder="cel concernée(s)" formControlName="cityIds">
+            </mdb-select>
+          </div>
+          <!-- <div class="md-form form-sm">
             <input type="text" class="form-control" id="startDate" formControlName="startDate"
               [textMask]="{mask: birthDateMask}" mdbInput>
             <label for="startDate">date du début* (JJ/MM/AAAA)</label>
-          </div>
+          </div> -->
 
-          <div class="md-form form-sm">
+          <!-- <div class="md-form form-sm">
             <input type="text" class="form-control" id="endDate" formControlName="endDate"
               [textMask]="{mask: birthDateMask}" mdbInput>
             <label for="endDate">date de fin* (JJ/MM/AAAA)</label>
-          </div>
+          </div> -->
         </form>
       </div>
       <div class="modal-footer">
@@ -177,5 +197,49 @@
       </div>
     </div>
 
+  </div>
+</div>
+
+
+
+<div mdbModal #basicModal1="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal1.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+        <h4 class="modal-title w-100" id="myModalLabel">Modal title</h4>
+      </div>
+      <div class="modal-body">
+        <table *ngIf="trainingClassCities?.length>0" mdbTable #tableEl="mdbTable" stickyHeader="true" small="true" stripped="true" striped="true" class="z-depth-1">
+          <thead class="sticky-top">
+            <tr>
+              <th>#</th>
+              <th>CEL</th>
+              <th>Nombre attendu(formé)</th>
+              <th>participants</th>
+              <!-- <th>etat(inscription)</th> -->
+            </tr>
+          </thead>
+          <tbody>
+            <tr mdbTableCol *ngFor="let trClass of trainingClassCities; let k = index">
+              <th>{{k+1}}</th>
+              <td>{{trClass.cityName}}</td>
+              <td> {{trClass.nbEmpNeeded}} ({{trClass.total}})</td>
+              <td>
+                <input type="number" id="form{{k}}" [(ngModel)]="trClass.totalTrained" class="form-control form-sm">
+              </td>
+            </tr>
+          </tbody>
+        </table>
+
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" size="sm" mdbBtn color="light" class="waves-light" aria-label="Close" (click)="basicModal1.hide()" mdbWavesEffect>fermer</button>
+        <button type="button" size="sm" mdbBtn color="primary" class="relative waves-light" (click)="resumeClass();basicModal1.hide()" mdbWavesEffect>enregistrer</button>
+      </div>
+    </div>
   </div>
 </div>

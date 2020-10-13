@@ -5,17 +5,14 @@
     </mdb-card-body>
   </mdb-card>
 </div>
-<div class="row container animated bounceInDown mt-4" *ngIf="!waitDiv">
-
+<div class="container animated bounceInDown mt-4" *ngIf="!waitDiv">
   <div class="col-md-12" *ngIf="!showExport">
-
-
     <mdb-card class="p-2">
       <mdb-card-body>
         <mdb-card-title>
           <h4 class="text-center">
-            <p class="text-title" *ngIf="editionMode==='add'">ENREGISTREMENT MEMBRE DU PERSONNEL </p>
-            <p class="text-title" *ngIf="editionMode==='edit'">MODIFICATION MEMBRE DU PERSONNEL </p>
+            <p class="text-title" *ngIf="editionMode==='add'">ENREGISTREMENT DE PERSONNE </p>
+            <p class="text-title" *ngIf="editionMode==='edit'">MODIFICATION DE PERSONNE </p>
           </h4>
         </mdb-card-title>
         <form *ngIf="editionMode==='add'">
@@ -29,7 +26,7 @@
         <hr>
         <form style="color: #757575;" [formGroup]="userForm">
           <div class="row">
-            <div class="col-md-2">
+            <!-- <div class="col-md-2">
               <div class="font-weight-300 mb-2  d-flex justify-content-center">photo de profil</div>
               <div class="row">
                 <div class="col-md-12 d-flex justify-content-center mb-2">
@@ -49,8 +46,8 @@
                   </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-10">
+            </div> -->
+            <div class="col-md-12">
               <div class="row">
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
@@ -147,14 +144,14 @@
 
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="typeEmpId" [options]="typeEmps" placeholder="Poste" formControlName="typeEmpId">
+                    <mdb-select id="typeEmpId" [options]="typeEmps" [disabled]="isTrainingClass" placeholder="Poste" formControlName="typeEmpId">
                     </mdb-select>
                   </div>
                 </div>
 
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="studyLevelId" [options]="studyLevels" placeholder="niveau d'étude"
+                    <mdb-select id="studyLevelId" [options]="studyLevels"  placeholder="niveau d'étude"
                       formControlName="studyLevelId">
                     </mdb-select>
                   </div>
@@ -170,7 +167,7 @@
 
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="regionId" [options]="regions" [disabled]="isMaintenancier" placeholder="region*"
+                    <mdb-select id="regionId" [options]="regions" [disabled]="isMaintenancier || isTrainingClass" placeholder="region*"
                       formControlName="regionId" (ngModelChange)="getDepartments()">
                     </mdb-select>
                   </div>

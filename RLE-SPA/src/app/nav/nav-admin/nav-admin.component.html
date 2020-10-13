@@ -15,23 +15,23 @@
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/inscription']"
         *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">inscription</a>
-        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/preSelection']"
-        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">pré-selection</a>
+        <!-- <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/preSelection']"
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">pré-selection</a> -->
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/opHandling']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">rélocalisation</a>
-        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/communes']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">communes</a>
+        <!-- <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/communes']"
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">communes</a> -->
       <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin',  'Supervisor']"
         [routerLink]="['/registrationLocalilties']">localité d'inscription</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" *appHasRole="['Admin',  'Supervisor']"
         [routerLink]="['/assignAccount']">assigner compte</a>
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/detailInscription']"
-        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">Point Inscription</a>
+        *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline',  'Supervisor']">Point formations</a>
      
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/formations']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">formations</a>
-      <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/trainingResult']"
-        *appHasRole="['SuperAdmin', 'Admin', 'AgentHotline',  'Supervisor']">point formations</a>
+      <!-- <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/trainingResult']"
+        *appHasRole="['SuperAdmin', 'Admin', 'AgentHotline',  'Supervisor']">point formations</a> -->
     </div>
   </li>
   <li class="nav-item dropdown btn-group" dropdown
@@ -42,7 +42,7 @@
     <div class="dropdown-menu dropdown-primary dropdown-menu-left" role="menu">
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/employees']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier',  'Supervisor']">membre du personnel</a>
-        <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/assignment']"
+        <!-- <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/assignment']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">affectation opérateur</a>
 
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/expressAssignment']"
@@ -57,12 +57,12 @@
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/tablette']"
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor', 'Idemia']">tablette </a>
         <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/enrolmentPoint']"
-        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier',  'Supervisor']">point enrolement</a>
+        *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Maintenancier',  'Supervisor']">point enrolement</a> -->
       
 
     </div>
   </li>
-  <li class="nav-item dropdown btn-group" dropdown
+  <!-- <li class="nav-item dropdown btn-group" dropdown
     *appHasRole="['SuperAdmin', 'Admin', 'Maintenancier', 'AgentHotline', 'Idemia',  'Supervisor']">
     <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
       stocks
@@ -97,8 +97,8 @@
       <a class="dropdown-item" (click)="closeNavOnClick()" [routerLink]="['/failuresPoint']"
       *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">états des pannes</a>
   </div>
-</li>
-<li class="nav-item dropdown btn-group" dropdown
+</li> -->
+<!-- <li class="nav-item dropdown btn-group" dropdown
 *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">
 <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
   export
@@ -116,9 +116,9 @@
 
   
 </div>
-</li>
+</li> -->
 
-  <li class="nav-item dropdown btn-group" dropdown
+  <!-- <li class="nav-item dropdown btn-group" dropdown
     *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline', 'Idemia',  'Supervisor']">
     <a dropdownToggle type="button" class="nav-link text-muted dropdown-toggle waves-light" mdbWavesEffect>
       rétrofit
@@ -137,6 +137,6 @@
         *appHasRole="['SuperAdmin', 'Admin',  'AgentHotline',  'Supervisor']">Historique</a>
       
     </div>
-  </li>
+  </li> -->
 
 </ul>

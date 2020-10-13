@@ -130,7 +130,7 @@ namespace RLE.API.Controllers
         [HttpGet("AllDepartments")]
         public async Task<IActionResult> AllDepartments()
         {
-            var departments = await _context.Departments.OrderBy(a=>a.Name).ToListAsync();
+            var departments = await _context.Departments.OrderBy(a => a.Name).ToListAsync();
             return Ok(departments);
         }
 
@@ -141,7 +141,7 @@ namespace RLE.API.Controllers
             return Ok(failureList);
         }
 
-         [HttpGet("RepairAction")]
+        [HttpGet("RepairAction")]
         public async Task<IActionResult> RepairAction()
         {
             var repairActions = await _context.RepairActions.ToListAsync();
@@ -806,8 +806,8 @@ namespace RLE.API.Controllers
                 var roleName = "";
                 if (user.TypeEmpId == 1)
                     roleName = "admin";
-                else if(user.TypeEmpId == 11)
-                 roleName = "AgentHotline";
+                else if (user.TypeEmpId == 11)
+                    roleName = "AgentHotline";
                 else
                 {
                     var role = await _context.Roles.FirstOrDefaultAsync(a => a.Id == user.TypeEmpId);
@@ -1035,6 +1035,16 @@ namespace RLE.API.Controllers
 
             if (result.Succeeded)
             {
+                if (userForRegisterDto.TrainingClassId != null)
+                {
+                    var empClass = new EmployeeClass
+                    {
+                        EmployeeId = userToCreate.Id,
+                        TrainingClassId = Convert.ToInt32(userForRegisterDto.TrainingClassId)
+                    };
+                    _repo.Add(empClass);
+                    await _repo.SaveAll();
+                }
                 return Ok(userToCreate.Id);
             }
 
@@ -1047,11 +1057,12 @@ namespace RLE.API.Controllers
         {
             var userName = Guid.NewGuid();
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
+            userToCreate.Version = 1;
             userToCreate.PreSelected = true;
-            if(userToCreate.TypeEmpId==2)
-            userToCreate.Selected=true;
-            if(userToCreate.TypeEmpId ==9)
-            userToCreate.TypeEmpId = typeOperatorId;
+            if (userToCreate.TypeEmpId == 2)
+                userToCreate.Selected = true;
+            if (userToCreate.TypeEmpId == 9)
+                userToCreate.TypeEmpId = typeOperatorId;
             userToCreate.UserName = userName.ToString();
             userToCreate.ValidationCode = userName.ToString();
             var result = await _userManager.CreateAsync(userToCreate, password);
@@ -1081,6 +1092,17 @@ namespace RLE.API.Controllers
                     UserHistoryTypeId = _config.GetValue<int>("AppSettings:AddUserHistorytypeId")
                 };
                 _repo.Add(uh);
+
+                if (userForRegisterDto.TrainingClassId != null)
+                {
+                    var empClass = new EmployeeClass
+                    {
+                        TrainingClassId = Convert.ToInt32(userForRegisterDto.TrainingClassId),
+                        EmployeeId = userToCreate.Id
+                    };
+                _repo.Add(empClass);
+
+                }
                 await _repo.SaveAll();
 
                 return Ok(userToCreate.Id);
@@ -1161,7 +1183,7 @@ namespace RLE.API.Controllers
 
         [HttpPost("{userId}/AddPhotoForUser")]
         public async Task<IActionResult> AddPhotoForUser(int userId,
-            [FromForm]PhotoForCreationDto photoForCreationDto)
+            [FromForm] PhotoForCreationDto photoForCreationDto)
         {
 
             var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(a => a.Id == userId); ;

@@ -35,6 +35,7 @@ namespace RLE.API.Dtos
         public int? ZoneId { get; set; }
 
         public int? RegionId { get; set; }
+        public int? TrainingClassId { get; set; }
 
         public int? DepartmentId { get; set; }
 

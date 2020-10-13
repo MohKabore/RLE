@@ -74,7 +74,7 @@ namespace RLE.API.Models
         public byte Paid { get; set; }
         public DateTime InsertDate { get; set; }
         public DateTime UpdateDate { get; set; }
-        public byte[] Version { get; set; }
+        public byte? Version { get; set; }
 
         // prelectionné mais pas encore séléctionné apres formation
         public bool PreSelected { get; set; }

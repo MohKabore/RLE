@@ -5,7 +5,6 @@ import { AuthService } from 'src/app/_services/auth.service';
 import { UserService } from 'src/app/_services/user.service';
 import { AlertifyService } from 'src/app/_services/alertify.service';
 import { Training } from 'src/app/_models/training';
-import { Utils } from 'src/app/shared/utils';
 import { TrainingClass } from 'src/app/_models/trainingClass';
 
 
@@ -21,9 +20,13 @@ export class TrainingDetailsComponent implements OnInit {
   maints: any[] = [];
   depts: any[] = [];
   cities: any[] = [];
+  usersCities: any[] = [];
+  trainingClassCities: any[];
+  sessions: any[] = [];
   classModel: any = {};
   training: Training;
   currentUserId: number;
+  idx: number;
   editionMode = '';
   birthDateMask = [/\d/, /\d/, '/', /\d/, /\d/, '/', /\d/, /\d/, /\d/, /\d/];
 
@@ -46,8 +49,27 @@ export class TrainingDetailsComponent implements OnInit {
       trainerIds: [this.classModel.trainerIds, Validators.required],
       departmentId: [this.classModel.departmentId],
       cityId: [this.classModel.cityId],
-      startDate: [this.classModel.startDate, Validators.required],
-      endDate: [this.classModel.endDate, Validators.required]
+      sessionId: [this.classModel.sessionId, Validators.required],
+      cityIds: [this.classModel.cityIds, Validators.required]
+    });
+  }
+
+  getUsersCities() {
+    this.userService.getCitiesByregionId(this.regionId).subscribe((res: any[]) => {
+      this.usersCities = [];
+      for (let index = 0; index < res.length; index++) {
+        const element = { value: res[index].id, label: res[index].name };
+        this.usersCities = [...this.usersCities, element];
+      }
+    });
+  }
+  getSessions() {
+    this.userService.getSessionsList().subscribe((res: any[]) => {
+      this.sessions = [];
+      for (let index = 0; index < res.length; index++) {
+        const element = { value: res[index].id, label: res[index].name };
+        this.sessions = [...this.sessions, element];
+      }
     });
   }
 
@@ -97,6 +119,8 @@ export class TrainingDetailsComponent implements OnInit {
   showModal(model) {
     this.getSelectedMaints();
     this.getDepartments();
+    this.getUsersCities();
+    this.getSessions();
     this.trainngClassForm.reset();
     if (!model) {
       this.editionMode = 'add';
@@ -124,10 +148,11 @@ export class TrainingDetailsComponent implements OnInit {
     const trainingClass = this.trainngClassForm.value;
     trainingClass.regionId = this.regionId;
     trainingClass.trainingid = this.trainingId;
-    trainingClass.startDate = Utils.inputDateDDMMYY(trainingClass.startDate, '/');
-    trainingClass.endDate = Utils.inputDateDDMMYY(trainingClass.endDate, '/');
+    // trainingClass.startDate = Utils.inputDateDDMMYY(trainingClass.startDate, '/');
+    // trainingClass.endDate = Utils.inputDateDDMMYY(trainingClass.endDate, '/');
     this.userService.addtrainingClass(trainingClass, this.currentUserId).subscribe((newClass: TrainingClass) => {
       this.training.trainingClasses = [... this.training.trainingClasses, newClass];
+      this.training.totalClasses +=1;
       this.alertify.success('salle de formation ajoutée...');
       this.trainngClassForm.reset();
     }, error => {
@@ -139,8 +164,8 @@ export class TrainingDetailsComponent implements OnInit {
     const trainingClass = this.trainngClassForm.value;
     trainingClass.trainingId = this.trainingId;
     trainingClass.regionId = this.regionId;
-    trainingClass.startDate = Utils.inputDateDDMMYY(trainingClass.startDate, '/');
-    trainingClass.endDate = Utils.inputDateDDMMYY(trainingClass.endDate, '/');
+    // trainingClass.startDate = Utils.inputDateDDMMYY(trainingClass.startDate, '/');
+    // trainingClass.endDate = Utils.inputDateDDMMYY(trainingClass.endDate, '/');
     this.userService.editTrainingClass(trainingClass, this.classModel.id, this.currentUserId).subscribe((classFromApi: TrainingClass) => {
       const idx = this.training.trainingClasses.findIndex(a => a.id === classFromApi.id);
       this.training.trainingClasses[idx] = classFromApi;
@@ -155,7 +180,23 @@ export class TrainingDetailsComponent implements OnInit {
     if (confirm('voulez-vous vraiment supprimez cette salle ?')) {
       this.userService.deleteTrainingClass(trainingClassId, this.currentUserId).subscribe(() => {
         this.training.trainingClasses.splice(idx, 1);
-        this.alertify.success('suppression terminé...');
+        this.training.totalClasses -= 1;
+        let totalClass =0;
+        for (let i = 0; i < this.training.trainingClasses.length; i++) {
+          const element = this.training.trainingClasses[i];
+          totalClass += element.totalParticipants;
+        }
+        this.training.totalParticipants = totalClass;
+        this.alertify.success('suppression terminée...');
+      });
+    }
+  }
+
+  closeTrainingClass(trainingClassId, idx) {
+    if (confirm('voulez-vous vraiment fermmer definitivement cette salle ?')) {
+      this.userService.summaryTrainingClass(trainingClassId, this.currentUserId).subscribe(() => {
+        this.training.trainingClasses[idx].summarized = true;
+        this.alertify.success('formation terminée...');
       });
     }
   }
@@ -168,6 +209,35 @@ export class TrainingDetailsComponent implements OnInit {
       });
     }
   }
+
+  getTrainingClassCities(trainingClassId: number, idx: number) {
+    this.idx = idx;
+    this.trainingClassCities = [];
+    this.userService.getTrainingClassCities(trainingClassId).subscribe((res: any[]) => {
+      this.trainingClassCities = res;
+    });
+  }
+  resumeClass() {
+    this.userService.resumeTrainingClass(this.trainingClassCities).subscribe(() => {
+      let total = 0, totalClass=0;
+      for (let i = 0; i < this.trainingClassCities.length; i++) {
+        const element = this.trainingClassCities[i];
+        total += element.totalTrained;
+      }
+      this.training.trainingClasses[this.idx].totalParticipants = total;
+
+      for (let i = 0; i < this.training.trainingClasses.length; i++) {
+        const element = this.training.trainingClasses[i];
+        totalClass += element.totalParticipants;
+      }
+      this.training.totalParticipants = totalClass;
+      this.alertify.success('enregistrement terminé...');
+    }, error => {
+      console.log(error);
+    });
+  }
+
+
 
 
 }

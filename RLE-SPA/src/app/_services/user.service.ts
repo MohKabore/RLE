@@ -176,6 +176,15 @@ export class UserService {
   getRegionTrainings(regionId: number) {
     return this.http.get(this.baseUrl + 'users/' + regionId + '/RegionTrainings');
   }
+
+  getCitiesByregionId(regionId: number) {
+    return this.http.get(this.baseUrl + 'users/' + regionId + '/RegionCities');
+  }
+
+  getSessionsList() {
+    return this.http.get(this.baseUrl + 'users/GetSessions');
+  }
+
   searchEmps(params) {
     return this.http.post(this.baseUrl + 'users/SearchNewEmps', params);
   }
@@ -252,6 +261,14 @@ export class UserService {
     return this.http.get<Region[]>(this.baseUrl + 'users/AllRegions');
   }
 
+  allRegionsQuotas(): Observable<Region[]> {
+    return this.http.get<Region[]>(this.baseUrl + 'users/GetAllRegionsQuota');
+  }
+
+  regionQuotasDetails(regionid: number): Observable<Department[]> {
+    return this.http.get<Department[]>(this.baseUrl + 'users/GetRegionQuotaDetails/' + regionid);
+  }
+
   updateRegionState(regionId: number) {
     return this.http.put(this.baseUrl + 'users/' + regionId + '/UpdateRegionState', {});
   }
@@ -276,8 +293,16 @@ export class UserService {
     return this.http.get(this.baseUrl + 'users/TrainingClassParticipants/' + trainingClassId);
   }
 
+  getTrainingClassCities(trainingClassId) {
+    return this.http.get(this.baseUrl + 'users/TrainingClassCities/' + trainingClassId);
+  }
+
   deleteTrainingClass(trainingClassid, insertUserId) {
     return this.http.put(this.baseUrl + 'users/' + trainingClassid + '/DeleteTrainingClass/' + insertUserId, {});
+  }
+
+  summaryTrainingClass(trainingClassid, insertUserId) {
+    return this.http.put(this.baseUrl + 'users/' + trainingClassid + '/SummaryTrainingClass/' + insertUserId, {});
   }
 
   closeTrainingClass(trainingClassid, insertUserId) {
@@ -329,9 +354,17 @@ export class UserService {
     return this.http.put(this.baseUrl + 'users/UpdateUser/' + userId, user);
   }
 
-  
+
   createMunicipality(mun: any) {
     return this.http.post(this.baseUrl + 'users/CreateMunicipality', mun);
+  }
+
+  resumeTrainingClass(trainingClass) {
+    return this.http.post(this.baseUrl + 'users/ResumeTrainingClass', trainingClass);
+  }
+
+  getTrainings(interval: any) {
+    return this.http.post(this.baseUrl + 'users/GetTrainings', interval);
   }
 
 }

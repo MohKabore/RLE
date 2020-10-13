@@ -15,8 +15,8 @@ namespace RLE.API.Models
         public int TrainingId { get; set; }
         public DateTime? EtastartDate { get; set; }
         public DateTime? EtaendDate { get; set; }
-        public DateTime StartDate { get; set; }
-        public DateTime EndDate { get; set; }
+        public DateTime? StartDate { get; set; }
+        public DateTime? EndDate { get; set; }
         public byte Status { get; set; }
         public bool Active { get; set; }
 
@@ -25,6 +25,9 @@ namespace RLE.API.Models
         public  Municipality Municipality { get; set; }
         public  Region Region { get; set; }
         public  Training Training { get; set; }
+        public int? SessionId { get; set; }
+        public Session Session { get; set; }
+        public bool Summarized { get; set; }
         // public  ICollection<TrainerClass> TrainerClass { get; set; }
     }
 }
