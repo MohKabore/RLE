@@ -12,6 +12,7 @@ namespace RLE.API.Dtos
             TotalClasses = 0;
             TotalSummarized = 0;
             TotalClosed = 0;
+            TotalTrained = 0;
         }
         public int Id { get; set; }
         public string Name { get; set; }
@@ -24,6 +25,7 @@ namespace RLE.API.Dtos
         public int TotalSummarized { get; set; } 
         public int TotalClosed{ get; set; } 
         public int TotalParticipants { get; set; } 
+        public int TotalTrained { get; set; } 
         public string TrainingDate { get; set; }
 
         public List<TrainingClassDetailDto> TrainingClasses { get; set; }

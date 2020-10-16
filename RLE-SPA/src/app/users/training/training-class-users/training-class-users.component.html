@@ -20,7 +20,9 @@
           <td>CEL(s)</td>
           <td>:</td>
           <td>
-            <b> <span *ngFor="let city of trainingClass?.cities">{{city.name}} / </span></b>
+            <mdb-badge color="blue"  pill="true" *ngFor="let city of trainingClass?.cities" style="color: black;" class="ml-1"> 
+              {{city.name}}
+            </mdb-badge>
           </td>
         <tr>
           <td>
@@ -29,9 +31,10 @@
           </td>
           <td>:</td>
           <td>
-            <b>&nbsp;<span *ngFor="let trainer of trainingClass?.trainers">{{trainer.lastName}}
-                {{trainer.firstName}} <span *ngIf="trainingClass.trainers.length>1"> - </span> </span>
-            </b>
+
+            <mdb-badge color="cyan" *ngFor="let trainer of trainingClass?.trainers" class="ml-1"> {{trainer.lastName}} {{trainer.firstName}}
+            </mdb-badge>
+
           </td>
         </tr>
         <tr>
@@ -49,9 +52,15 @@
           </td>
         </tr>
       </table>
-      <button type="button" size="sm" mdbBtn   color="primary" mdbWavesEffect [routerLink]="['/inscription/', trainingClass?.id, trainingClass?.regionId]">ajouter</button>
-      <button type="button" *ngIf="trainingClass?.status===0" [disabled]="isSelected.length===0" size="sm" mdbBtn
+      <button type="button" size="sm" mdbBtn   color="primary" *ngIf="!trainingClass?.summarized" mdbWavesEffect [routerLink]="['/inscription/', trainingClass?.id, trainingClass?.regionId]">ajouter</button>
+      <button type="button" *ngIf="!trainingClass?.summarized" [disabled]="isSelected.length===0" size="sm" mdbBtn
       color="danger" mdbWavesEffect (click)="basicModal.show();showDiv(false)">retirer</button>
+
+      <button type="button" size="sm" mdbBtn color="success" (click)="selectUsers()"
+      [disabled]="isSelected.length===0" *ngIf="!trainingClass?.summarized" mdbWavesEffect>déclarer apte</button>
+  <button type="button" size="sm" mdbBtn color="light" *ngIf="!trainingClass?.summarized" (click)="removeSelectedUsers()"
+      [disabled]="isSelected.length==0" mdbWavesEffect>annuler la sélection</button>
+
     <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
       [routerLink]="['/formation/', trainingClass?.trainingId]"> retour </button>
   
@@ -59,6 +68,7 @@
     </mdb-card-body>
   </mdb-card>
  
+<mdb-card class="mt-1 p-1">
   <table id="tableSortExample" mdbTable class="z-depth-1" *ngIf="participants.length>0">
     <thead>
       <tr>
@@ -69,9 +79,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let el of participants; let i = index">
-        <th scope="row">
-          <mdb-checkbox [(ngModel)]="el.pris" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
+      <tr *ngFor="let el of participants; let i = index"
+      [ngClass]="{'alert alert-success': el.selected}"
+      >
+        <th scope="row"  >
+          <mdb-checkbox [disabled]="trainingClass?.summarized" [(ngModel)]="el.pris" (change)="select(el.id)">{{i+1}}</mdb-checkbox>
         </th>
         <td>{{el.lastName}}</td>
         <td>{{el.firstName}}</td>
@@ -83,6 +95,8 @@
       </tr>
     </tbody>
   </table>
+  </mdb-card>
+ 
 
   <div *ngIf="participants.length===0" class=" alert alert-info mt-1">
     Aucune personne trouvée...

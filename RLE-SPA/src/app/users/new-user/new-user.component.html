@@ -15,38 +15,16 @@
             <p class="text-title" *ngIf="editionMode==='edit'">MODIFICATION DE PERSONNE </p>
           </h4>
         </mdb-card-title>
-        <form *ngIf="editionMode==='add'">
+        <!-- <form *ngIf="editionMode==='add'">
           <div class="file-field md-form">
             <div mdbBtn color="primary" size="sm" class="waves-light" mdbWavesEffect>
               <span>importer</span>
               <input type="file" mdbFileSelect (change)="onFileChange($event)" accept=".xlsx, .xls">
             </div>
           </div>
-        </form>
-        <hr>
+        </form> -->
         <form style="color: #757575;" [formGroup]="userForm">
           <div class="row">
-            <!-- <div class="col-md-2">
-              <div class="font-weight-300 mb-2  d-flex justify-content-center">photo de profil</div>
-              <div class="row">
-                <div class="col-md-12 d-flex justify-content-center mb-2">
-                  <div class="file-path-wrapper m-0 p-1">
-                    <img [src]="userPhotoUrl || '../../../assets/user.png'" style="width: 100px; height: 100px;"
-                      class="rounded-circle imgUpload" alt="">
-                  </div>
-                </div>
-                <div class="col-md-12 d-flex justify-content-center">
-                  <div class="m-0">
-                    <div class="file-field md-form m-0">
-                      <div mdbBtn color="light" size="sm" class="waves-light" mdbWavesEffect>
-                        <span style="font-size: 10px;">choisir la photo</span>
-                        <input type="file" accept='image/*' mdbFileSelect (change)="parentImgResult($event)">
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div> -->
             <div class="col-md-12">
               <div class="row">
                 <div class="col-md-4">
@@ -64,75 +42,21 @@
                 </div>
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="gender" [options]="sexe" placeholder="sexe*" formControlName="gender"></mdb-select>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <input type="text" class="form-control" id="dateofBirth" formControlName="dateOfBirth"
-                      [textMask]="{mask: birthDateMask}" mdbInput>
-                    <label for="dateofBirth">date de naissance (JJ/MM/AAAA)</label>
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <input type="text" class="form-control" id="birthPlace" formControlName="birthPlace"
-                      class="form-control" mdbInput>
-                    <label for="birthPlace">Lieu de naissance</label>
-                  </div>
-                </div>
-
-                <div class="col-md-3">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="maritalStatusId" [options]="maritalStatus" placeholder="situation matrimonial"
-                      formControlName="maritalStatusId"></mdb-select>
-                  </div>
-                </div>
-                <div class="col-md-3">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <input type="text" class="form-control" id="nbChild" formControlName="nbChild" class="form-control"
-                      mdbInput>
-                    <label for="nbChild">Nombre d'enfant</label>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <input type="text" class="form-control" id="email" formControlName="email" class="form-control"
-                      mdbInput>
-                    <label for="email">email</label>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="md-form form-sm mt-2 mb-0">
                     <input type="text" class="form-control" id="phoneNumber" [textMask]="{mask: phoneMask}"
                       formControlName="phoneNumber" class="form-control" mdbInput>
                     <label for="phoneNumber">cellulaire*</label>
                   </div>
+
                 </div>
-                <div class="col-md-4">
+               
+                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
                     <input type="text" class="form-control" id="sphone" [textMask]="{mask: phoneMask}"
                       formControlName="secondPhoneNumber" class="form-control" mdbInput>
                     <label for="sphone">deuxieme Contact</label>
                   </div>
                 </div>
-                <div class="col-md-4">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <input type="text" class="form-control" id="cni" [textMask]="{mask: cniMask}" formControlName="cni"
-                      class="form-control" mdbInput>
-                    <label for="cni">Numero CNI</label>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <input type="text" class="form-control" id="passport" formControlName="passport"
-                      class="form-control" mdbInput>
-                    <label for="passport">Numero Passpost</label>
-                  </div>
-                </div>
+            
 
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
@@ -149,21 +73,7 @@
                   </div>
                 </div>
 
-                <div class="col-md-4">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="studyLevelId" [options]="studyLevels"  placeholder="niveau d'étude"
-                      formControlName="studyLevelId">
-                    </mdb-select>
-                  </div>
-                </div>
-
-                <div class="col-md-4">
-                  <div class="md-form form-sm mt-2 mb-0">
-                    <mdb-select id="educationalTrackId" [options]="educationTracks" placeholder="filière d'étude"
-                      formControlName="educationalTrackId">
-                    </mdb-select>
-                  </div>
-                </div>
+               
 
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
@@ -188,6 +98,11 @@
                     </mdb-select>
                   </div>
                 </div>
+                <div class="col-md-4">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <mdb-checkbox  formControlName="selected">Sélectionné</mdb-checkbox>
+                  </div>
+                </div>
 
               </div>
             </div>
@@ -197,7 +112,7 @@
             <div class="col-md-12">
               <div class="d-flex justify-content-center">
                 <button mdbBtn size="sm" color="success" [disabled]="!userForm.valid"
-                  (click)="[basicModal.show(), verifyIfExist()]">enregistrer</button>
+                  (click)="[basicModal.show()]">enregistrer</button>
 
                 <button mdbBtn size="sm" *ngIf="editionMode==='edit'" color="light"
                   (click)="returnToList()">annuler</button>
@@ -312,7 +227,7 @@
 <div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-lg" role="document">
-    <div class="modal-content" *ngIf="!waitForValidation">
+    <div class="modal-content" >
       <div class="modal-header">
         <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
           <span aria-hidden="true">×</span>

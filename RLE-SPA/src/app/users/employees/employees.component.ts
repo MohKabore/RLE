@@ -63,6 +63,7 @@ export class EmployeesComponent implements OnInit {
     this.showDetails = true;
     this.user = null;
     this.userService.getEmployeeDetails(userid).subscribe((res: User) => {
+      console.log(res);
       this.user = res;
     }, error => {
       console.log(error);

@@ -49,7 +49,7 @@ import { RegistrationLocalitiesComponent } from './users/registration-localities
 // import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
 import { TrainingClassUsersComponent } from './users/training/training-class-users/training-class-users.component';
 // import { TrainedUsersComponent } from './users/training/trained-users/trained-users.component';
-// import { NotFoundComponent } from './Home/not-found/not-found.component';
+import { NotFoundComponent } from './Home/not-found/not-found.component';
 // import { StockAllocationComponent } from './stocks/stock-allocation/stock-allocation.component';
 import { ErrorComponent } from './Home/error/error.component';
 // import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
@@ -112,7 +112,7 @@ export function tokenGetter() {
     // PreSelectedUsersComponent,
     TrainingClassUsersComponent,
     // TrainedUsersComponent,
-    // NotFoundComponent,
+     NotFoundComponent,
     // StockAllocationComponent,
     ErrorComponent,
   // TabletsAllocationComponent,

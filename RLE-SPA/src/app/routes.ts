@@ -18,12 +18,12 @@ import { DemoComponent } from './Home/demo/demo.component';
 import { ForgotComponent } from './views/sessions/forgot/forgot.component';
 import { ResetPasswordComponent } from './registration/reset-password/reset-password.component';
 import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
-import { EcsComponent } from './operation/ecs/ecs.component';
+// import { EcsComponent } from './operation/ecs/ecs.component';
 import { OpHandlingComponent } from './operation/assignment/assignment/op-handling/op-handling.component';
 // import { PreSelectionComponent } from './users/new-user/pre-selection/pre-selection.component';
 // import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
 // import { TrainedUsersComponent } from './users/training/trained-users/trained-users.component';
-// import { NotFoundComponent } from './Home/not-found/not-found.component';
+import { NotFoundComponent } from './Home/not-found/not-found.component';
 // import { StockAllocationComponent } from './stocks/stock-allocation/stock-allocation.component';
 // import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
 // import { TrainingClassResultComponent } from './users/training/training-class-result/training-class-result.component';
@@ -101,10 +101,10 @@ export const appRoutes: Routes = [
             // { path: 'retrofitStockTransfer', component: RetrofitStockAllocationComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
             // { path: 'communes', component: MunDetailComponent, data: { roles: ['Admin', 'AgentHotline', 'Supervisor'] } },
             // { path: 'retrofitStockHistories', component: RetrofitStockHistoriesComponent, data: { roles: ['Admin', 'AgentHotline',  'Supervisor'] } },
-             {
+            {
                 path: 'formation/:id', component: TrainingDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] }
                 , resolve: { training: TrainingDetailResolver }
-             },
+            },
             // { path: 'addParticipant/:id', component: PreSelectedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
             { path: 'participants/:id', component: TrainingClassUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
             { path: 'detailInscription', component: RegistrationDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },

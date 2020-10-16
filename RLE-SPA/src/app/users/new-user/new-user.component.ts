@@ -137,6 +137,7 @@ export class NewUserComponent implements OnInit {
       maritalStatusId: null,
       educationalTrackId: null,
       studyLevelId: null,
+      selected: 0,
       phoneNumber: '',
       secondPhoneNumber: '',
       birthPlace: '',
@@ -153,11 +154,12 @@ export class NewUserComponent implements OnInit {
     this.userForm = this.fb.group({
       lastName: [this.formModel.lastName, Validators.required],
       firstName: [this.formModel.firstName, Validators.required],
-      gender: [this.formModel.gender, Validators.required],
+      gender: [this.formModel.gender],
       dateOfBirth: [this.formModel.dateOfBirth],
       resCityId: [this.formModel.resCityId],
       departmentId: [this.formModel.departmentId, Validators.required],
       regionId: [this.regionId, Validators.required],
+      selected: [this.formModel.selected],
       typeEmpId: [this.formModel.typeEmpId, Validators.required],
       maritalStatusId: [this.formModel.maritalStatusId],
       educationalTrackId: [this.formModel.educationalTrackId],
@@ -282,6 +284,9 @@ export class NewUserComponent implements OnInit {
     if (this.editionMode === 'add' && !this.isMaintenancier && this.trainingClassId === null) {
       this.regionId = this.userForm.value.regionId;
     }
+    if(!this.regionId) {
+      this.regionId = this.userForm.value.regionId;
+    }
     this.authService.getInscDeptsByRegionid(this.regionId).subscribe((res: any[]) => {
       for (let i = 0; i < res.length; i++) {
         const element = { value: res[i].id, label: res[i].name };
@@ -363,15 +368,15 @@ export class NewUserComponent implements OnInit {
     this.waitDiv = true;
     const dataToSave = this.userForm.value;
     dataToSave.trainingClassId = this.trainingClassId;
-    if(!dataToSave.regionId) {
-      dataToSave.regionId=this.regionId;
+    if (!dataToSave.regionId) {
+      dataToSave.regionId = this.regionId;
     }
     if (dataToSave.dateOfBirth) {
       dataToSave.dateOfBirth = Utils.inputDateDDMMYY(dataToSave.dateOfBirth, '/');
     }
-console.log(dataToSave);
     if (this.editionMode === 'add') {
       if (this.authService.loggedIn() === true) {
+        dataToSave.gender=0;
         this.authService.addUser(dataToSave, this.authService.decodedToken.nameid).subscribe((userid: number) => {
           if (userid && this.userPhotoUrl) {
             // enregistrement de la photo
@@ -379,13 +384,14 @@ console.log(dataToSave);
           } else {
             this.alertify.success('enregistrement terminé...');
             this.userForm.reset();
-            if (this.isMaintenancier) {
-              // this.getDepartments();
-              this.createUserForms();
-            } else {
-              this.getRegions();
+            // if (this.isMaintenancier) {
+            //   // this.getDepartments();
+            //   this.createUserForms();
+            // } else {
+            //   this.getRegions();
 
-            }
+            // }
+            this.ngOnInit();
             this.waitDiv = false;
           }
         });

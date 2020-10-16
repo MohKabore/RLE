@@ -13,5 +13,6 @@ export class Training {
   totalTrainers: number;
   totalParticipants: number;
   trainingDate: Date;
+  totalTrained: number;
   trainingClasses: TrainingClass[];
 }

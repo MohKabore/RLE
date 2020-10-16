@@ -5,7 +5,6 @@ import { FormGroup, FormBuilder } from '@angular/forms';
 import { Region } from 'src/app/_models/region';
 import { UserService } from 'src/app/_services/user.service';
 import { Utils } from 'src/app/shared/utils';
-import { read } from 'fs';
 
 @Component({
   selector: 'app-registration-details',

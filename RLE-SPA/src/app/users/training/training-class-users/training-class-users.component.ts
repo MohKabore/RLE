@@ -21,7 +21,7 @@ export class TrainingClassUsersComponent implements OnInit {
   participants: any[] = [];
   isSelected: any = [];
   showConfirmation = false;
-
+  currentUserId: number;
   qrcodename: string;
   title = 'generate-qrcode';
   elementType: 'url' | 'canvas' | 'img' = 'url';
@@ -35,12 +35,12 @@ export class TrainingClassUsersComponent implements OnInit {
   constructor(private authService: AuthService, private route: ActivatedRoute, private alertify: AlertifyService, private userService: UserService) { }
 
   ngOnInit() {
-
+    this.currentUserId = this.authService.decodedToken.nameid;
     this.route.params.subscribe(params => {
       this.trainingClassid = params.id;
       this.getTrainingClassParticipants();
       this.getTrainingClassDetails(this.trainingClassid);
-      this.generateQRCode();
+      // this.generateQRCode();
     });
 
   }
@@ -103,10 +103,10 @@ export class TrainingClassUsersComponent implements OnInit {
 
   select(e) {
     const idx = this.isSelected.indexOf(e);
-    if (idx) {
+    if (idx < 0) {
       this.isSelected = [...this.isSelected, e];
     } else {
-      this.isSelected.splice(idx,1);
+      this.isSelected.splice(idx, 1);
     }
   }
 
@@ -123,7 +123,7 @@ export class TrainingClassUsersComponent implements OnInit {
       for (let i = 0; i < this.isSelected.length; i++) {
         const userId = this.isSelected[i];
         const idx = this.participants.findIndex(a => a.id === userId);
-        this.participants.splice(idx,1);
+        this.participants.splice(idx, 1);
       }
       this.isSelected = [];
       this.alertify.success('enregistrement terminé...');
@@ -137,5 +137,31 @@ export class TrainingClassUsersComponent implements OnInit {
   }
   downloadImage() {
     this.href = document.getElementsByTagName('img')[0].src;
+  }
+
+  selectUsers() {
+    if (confirm('confirmez-vous la selection ??')) {
+      let userids = [];
+      for (let i = 0; i < this.isSelected.length; i++) {
+        const element = this.isSelected[i].userId;
+        userids = [...userids, element];
+      }
+      this.userService.selectUsers(this.isSelected, this.currentUserId).subscribe((res) => {
+        this.isSelected = [];
+        this.alertify.success('enregistrement terminé...');
+        this.ngOnInit();
+      });
+    }
+  }
+
+  removeSelectedUsers() {
+    if (confirm('confirmez-vous la désélection ??')) {
+     
+      this.userService.unSelectUsers(this.isSelected, this.currentUserId).subscribe((res) => {
+        this.alertify.success('enregistrement terminé...');
+        this.isSelected = [];
+        this.ngOnInit();
+      });
+    }
   }
 }

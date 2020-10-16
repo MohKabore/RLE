@@ -742,13 +742,14 @@ namespace RLE.API.Controllers
                                                                         .Where(t => t.TrainingClassId == trClass.Id)
                                                                         .ToListAsync();
                     //liste des participants
-                    // var totalParticipants = _context.EmployeeClasses.Where(a => a.TrainingClassId == trClass.Id).ToList().Count();
+                     var tparticipants = _context.EmployeeClasses.Where(a => a.TrainingClassId == trClass.Id).ToList().Count();
                     var trDetail = new TrainingClassDetailDto
                     {
                         Id = trClass.Id,
                         Name = trClass.Name,
                         TrainingId = trClass.TrainingId,
-                        TotalParticipants = usersCities.Sum(c => c.TotalTrained),
+                        TotalTrained = usersCities.Sum(c => c.TotalTrained),
+                        TotalParticipants = tparticipants,
                         RegionName = trClass.Region.Name,
                         DepartmentName = trClass.Department?.Name,
                         CityName = trClass.City?.Name,
@@ -776,6 +777,7 @@ namespace RLE.API.Controllers
                 // trainingToReturn.TotalTrainers = tt.ToList().Distinct().Count();
                 trainingToReturn.TotalClasses = trainingToReturn.TrainingClasses.Count();
                 trainingToReturn.TotalParticipants = trainingToReturn.TrainingClasses.Sum(a => a.TotalParticipants);
+                trainingToReturn.TotalTrained = trainingToReturn.TrainingClasses.Sum(a => a.TotalTrained);
                 return Ok(trainingToReturn);
             }
 
@@ -1470,6 +1472,7 @@ namespace RLE.API.Controllers
                 if (trClass != null)
                     _repo.Delete(trClass);
                 var p = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+                p.Version=0;
                 p.OnTraining = false;
                 _repo.Update(p);
                 var uh = new UserHistory
@@ -1779,7 +1782,7 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> SearchEmployees(EmpSearchModelDto searchModel)
         {
             var users = new List<User>();
-            string req = "select * from AspnetUsers  where Id <> 1 and LastName + ' ' + firstName Like '%" + searchModel.EmpName + "%'";
+            string req = "select * from AspnetUsers  where Id <> 1 and version=1 and LastName + ' ' + firstName Like '%" + searchModel.EmpName + "%'";
             if (searchModel.TypeEmpId != null)
                 req += " and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
             if (searchModel.RegionId != null)
@@ -1822,33 +1825,20 @@ namespace RLE.API.Controllers
             if (user != null)
             {
                 var userToReturn = _mapper.Map<UserForListDto>(user);
-                if (userToReturn.Step == 1)
-                    userToReturn.Details = "Pré-sélectionné(e)";
-                else
-                {
-                    var trainingClass = (await _context.EmployeeClasses.Include(a => a.TrainingClass)
+                  var trainingClass = await _context.EmployeeClasses.Include(a => a.TrainingClass)
                                                                         .Include(a => a.TrainingClass.Region)
                                                                         .Include(a => a.TrainingClass.Department)
                                                                         .Include(a => a.TrainingClass.City)
                                                                         .Include(a => a.TrainingClass.Training)
-                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId));
-                    if (userToReturn.Step == 2)
-                        userToReturn.Details = "Programmé(e) pour formation.";
-                    if (userToReturn.Step == 3)
-                        userToReturn.Details = "Formé(e):";
-                    if (userToReturn.Step == 4 && userToReturn.Reserved == true)
-                        userToReturn.Details = "Réserviste:";
-                    if (userToReturn.Step == 4 && userToReturn.Selected == true)
-                        userToReturn.Details = "Sélectionné(e):";
-                    if (userToReturn.Step >= 4 && userToReturn.Active == true)
-                        userToReturn.Details = "En activité:";
-
-                    if (trainingClass != null)
+                                                                        .Include(a => a.TrainingClass.Session)
+                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId);
+                    if (trainingClass!=null)
                     {
-                        userToReturn.Details += " (" + trainingClass.TrainingClass.Training.Name + " du " + trainingClass.TrainingClass.StartDate?.ToString("dd/MM/yyyy", frC)
-                         + ". Lieu de la formation " + trainingClass.TrainingClass.Department.Name + " - " + trainingClass.TrainingClass.City.Name + ")";
+                    userToReturn.Details ="formé(e) le " +trainingClass.TrainingClass.Training.TrainingDate.Value.ToString("dddd dd MMMM", frC) +
+                    " ,"+trainingClass.TrainingClass.Name+"("+trainingClass.TrainingClass.Session.Name+"). Lieu : "+
+                    trainingClass.TrainingClass.Department.Name + "/"+ trainingClass.TrainingClass.City.Name;
                     }
-                }
+                    
                 return Ok(userToReturn);
             }
             return NotFound();
