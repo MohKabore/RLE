@@ -367,4 +367,8 @@ export class UserService {
     return this.http.post(this.baseUrl + 'users/GetTrainings', interval);
   }
 
+  updateCities(cities) {
+    return this.http.post(this.baseUrl + 'users/UpdateCities', cities);
+  }
+
 }

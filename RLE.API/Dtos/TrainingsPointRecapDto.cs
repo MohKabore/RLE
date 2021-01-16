@@ -11,6 +11,7 @@ namespace RLE.API.Dtos
             NbEmpNeeded =0;
             TotalRegisteredPrct =0;
             TotalReserveToHave =0;
+            TotalInserted = 0;
         }
         public int TotalRegistered { get; set; }
         public int TotalOnTraining { get; set; }
@@ -19,6 +20,7 @@ namespace RLE.API.Dtos
           public int NbEmpNeeded { get; set; }
         public int TotalRegisteredPrct { get; set; }
         public int TotalReserveToHave { get; set; }
+        public int TotalInserted { get; set; }
 
     }
 }

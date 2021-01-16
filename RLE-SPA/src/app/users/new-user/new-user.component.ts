@@ -156,7 +156,7 @@ export class NewUserComponent implements OnInit {
       firstName: [this.formModel.firstName, Validators.required],
       gender: [this.formModel.gender],
       dateOfBirth: [this.formModel.dateOfBirth],
-      resCityId: [this.formModel.resCityId],
+      resCityId: [this.formModel.resCityId, Validators.required],
       departmentId: [this.formModel.departmentId, Validators.required],
       regionId: [this.regionId, Validators.required],
       selected: [this.formModel.selected],

@@ -66,7 +66,7 @@ export const appRoutes: Routes = [
             { path: 'error', component: ErrorComponent },
             { path: 'demo', component: DemoComponent },
             { path: 'assignAccount', component: AssignAccountComponent, data: { roles: ['Admin', 'SuperAdmin', 'Supervisor'] } },
-            { path: 'registrationLocalilties', component: RegistrationLocalitiesComponent, data: { roles: ['Admin', 'SuperAdmin', 'Supervisor'] } },
+            { path: 'registrationLocalilties', component: RegistrationLocalitiesComponent, data: { roles: ['Admin', 'SuperAdmin', 'Supervisor', 'AgentHotline'] } },
             // { path: 'preSelection', component: PreSelectionComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
             { path: 'employees', component: EmployeesComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
             { path: 'inscription', component: NewUserComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },

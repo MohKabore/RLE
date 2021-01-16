@@ -224,13 +224,13 @@ export class TrainingDetailsComponent implements OnInit {
         const element = this.trainingClassCities[i];
         total += element.totalTrained;
       }
-      this.training.trainingClasses[this.idx].totalParticipants = total;
+      this.training.trainingClasses[this.idx].totalTrained = total;
 
       for (let i = 0; i < this.training.trainingClasses.length; i++) {
         const element = this.training.trainingClasses[i];
-        totalClass += element.totalParticipants;
+        totalClass += element.totalTrained;
       }
-      this.training.totalParticipants = totalClass;
+      this.training.totalTrained = totalClass;
       this.alertify.success('enregistrement terminé...');
     }, error => {
       console.log(error);

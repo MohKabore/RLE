@@ -153,23 +153,17 @@ export class RegistrationLocalitiesComponent implements OnInit {
       this.getAllregionQuotas();
       this.getRegionDetails();
       this.getCities();
-      // const regionId = this.regionForm.value.regionId;
-      // const departmentId = this.regionForm.value.departmentId;
-      // this.regions[this.regionIdx].departments[this.departmentIdx].cities[this.cityIdx].nbEmpNeeded = cityToSave.nbEmpNeeded;
-      // const currentdeptCities = this.regions[this.regionIdx].departments[this.departmentIdx].cities;
-      // let currentdept = this.regions[this.regionIdx].departments[this.departmentIdx];
-      // currentdept.nbEmpNeeded = currentdeptCities.reduce((acc, curr) => acc + Number(curr.nbEmpNeeded), 0);
-
-      // const currentregDepts = this.regions[this.regionIdx].departments;
-      // let currentreg = this.regions[this.regionIdx];
-      // currentreg.nbEmpNeeded = currentregDepts.reduce((acc, curr) => acc + Number(curr.nbEmpNeeded), 0);
-
-      // var toNumber = ['1', '2', '3', '4', '5'];
-      // var sumNumber = toNumber.reduce((acc, cur) => acc + Number(cur), 0)
-      // console.log(sumNumber);
       this.alertify.success('modification enrégistrée...');
     });
 
+  }
+
+  updateCities() {
+    console.log(this.cities);
+    this.userService.updateCities(this.cities).subscribe(() => {
+      this.alertify.success('enregistrement terminée...');
+      this.getAllregionQuotas();
+    });
   }
 
 }

@@ -62,7 +62,7 @@
                   <div class="md-form form-sm mt-2 mb-0">
                     <input type="text" class="form-control" id="iddoc" formControlName="iddoc" class="form-control"
                       mdbInput>
-                    <label for="iddoc">Autre Piece</label>
+                    <label for="iddoc">Numéro Piece</label>
                   </div>
                 </div>
 
@@ -101,6 +101,13 @@
                 <div class="col-md-4">
                   <div class="md-form form-sm mt-2 mb-0">
                     <mdb-checkbox  formControlName="selected">Sélectionné</mdb-checkbox>
+                  </div>
+                </div>
+                <div class="col-md-4" *ngIf="!trainingClassId">
+                  <div class="md-form form-sm mt-2 mb-0">
+                    <input type="text" class="form-control" id="email" formControlName="email" class="form-control"
+                      mdbInput>
+                    <label for="iddoc">Email</label>
                   </div>
                 </div>
 

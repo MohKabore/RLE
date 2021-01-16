@@ -358,8 +358,8 @@ namespace RLE.API.Controllers
                     CityName = classToCreate.City?.Name,
                     CityId = classToCreate.CityId,
                     DepartmentId = classToCreate.DepartmentId,
-
                     RegionId = classToCreate.RegionId,
+                    TotalTrained =0,
                     // StartDate = classToCreate.StartDate?.ToString("dd/MM/yyyy", frC),
                     // EndDate = classToCreate.EndDate?.ToString("dd/MM/yyyy", frC),
                     Trainers = _mapper.Map<List<UserForListDto>>(trainers)
@@ -742,7 +742,7 @@ namespace RLE.API.Controllers
                                                                         .Where(t => t.TrainingClassId == trClass.Id)
                                                                         .ToListAsync();
                     //liste des participants
-                     var tparticipants = _context.EmployeeClasses.Where(a => a.TrainingClassId == trClass.Id).ToList().Count();
+                    var tparticipants = _context.EmployeeClasses.Where(a => a.TrainingClassId == trClass.Id).ToList().Count();
                     var trDetail = new TrainingClassDetailDto
                     {
                         Id = trClass.Id,
@@ -974,7 +974,7 @@ namespace RLE.API.Controllers
             var allTrcities = await _context.trainingClassCities.Include(d => d.City)
                                                                 .ThenInclude(d => d.Department)
                                                                 .ToListAsync();
-
+            var allUsersClasses = await _context.EmployeeClasses.ToListAsync();
             var allRegions = await _context.Regions.OrderBy(a => a.Name).ToListAsync();
             var regionsToReturn = new List<RegionTraingDetailDto>();
             var recap = new TrainingsPointRecapDto
@@ -1008,6 +1008,7 @@ namespace RLE.API.Controllers
 
                 regionsToReturn.Add(r);
             }
+            recap.TotalInserted = allUsersClasses.Count();
             return Ok(new
             {
                 regions = regionsToReturn,
@@ -1472,7 +1473,7 @@ namespace RLE.API.Controllers
                 if (trClass != null)
                     _repo.Delete(trClass);
                 var p = await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
-                p.Version=0;
+                p.Version = 0;
                 p.OnTraining = false;
                 _repo.Update(p);
                 var uh = new UserHistory
@@ -1540,6 +1541,9 @@ namespace RLE.API.Controllers
                                                             .Where(t => t.TrainingClassId == trainingClassId).ToListAsync();
             var cityIds = trCities.Select(t => t.CityId).ToList();
             var cities = await _context.trainingClassCities.Include(s => s.City).Where(t => cityIds.Contains(t.CityId)).ToListAsync();
+
+            var inscrpitionQuota = (await _context.Quotas.FirstOrDefaultAsync(a => a.Id == _config.GetValue<int>("AppSettings:InscriptionQuota"))).Percentage;
+
             var details = new List<CityQuotaDetailDto>();
             foreach (var d in trCities)
             {
@@ -1549,7 +1553,8 @@ namespace RLE.API.Controllers
                     TotalTrained = d.TotalTrained,
                     CityName = cities.FirstOrDefault(c => c.CityId == d.CityId).City.Name,
                     Total = cities.Where(s => s.CityId == d.CityId).Sum(s => s.TotalTrained),
-                    NbEmpNeeded = cities.FirstOrDefault(c => c.CityId == d.CityId).City.NbEmpNeeded
+                    // NbEmpNeeded = cities.FirstOrDefault(c => c.CityId == d.CityId).City.NbEmpNeeded
+                    NbEmpNeeded = (int)Math.Round((cities.FirstOrDefault(c => c.CityId == d.CityId).City.NbEmpNeeded)*inscrpitionQuota)
                 });
             }
             return Ok(details);
@@ -1825,20 +1830,20 @@ namespace RLE.API.Controllers
             if (user != null)
             {
                 var userToReturn = _mapper.Map<UserForListDto>(user);
-                  var trainingClass = await _context.EmployeeClasses.Include(a => a.TrainingClass)
-                                                                        .Include(a => a.TrainingClass.Region)
-                                                                        .Include(a => a.TrainingClass.Department)
-                                                                        .Include(a => a.TrainingClass.City)
-                                                                        .Include(a => a.TrainingClass.Training)
-                                                                        .Include(a => a.TrainingClass.Session)
-                                                                        .FirstOrDefaultAsync(a => a.EmployeeId == userId);
-                    if (trainingClass!=null)
-                    {
-                    userToReturn.Details ="formé(e) le " +trainingClass.TrainingClass.Training.TrainingDate.Value.ToString("dddd dd MMMM", frC) +
-                    " ,"+trainingClass.TrainingClass.Name+"("+trainingClass.TrainingClass.Session.Name+"). Lieu : "+
-                    trainingClass.TrainingClass.Department.Name + "/"+ trainingClass.TrainingClass.City.Name;
-                    }
-                    
+                var trainingClass = await _context.EmployeeClasses.Include(a => a.TrainingClass)
+                                                                      .Include(a => a.TrainingClass.Region)
+                                                                      .Include(a => a.TrainingClass.Department)
+                                                                      .Include(a => a.TrainingClass.City)
+                                                                      .Include(a => a.TrainingClass.Training)
+                                                                      .Include(a => a.TrainingClass.Session)
+                                                                      .FirstOrDefaultAsync(a => a.EmployeeId == userId);
+                if (trainingClass != null)
+                {
+                    userToReturn.Details = "formé(e) le " + trainingClass.TrainingClass.Training.TrainingDate.Value.ToString("dddd dd MMMM", frC) +
+                    " ," + trainingClass.TrainingClass.Name + "(" + trainingClass.TrainingClass.Session.Name + "). Lieu : " +
+                    trainingClass.TrainingClass.Department.Name + "/" + trainingClass.TrainingClass.City.Name;
+                }
+
                 return Ok(userToReturn);
             }
             return NotFound();
@@ -1927,7 +1932,15 @@ namespace RLE.API.Controllers
             return BadRequest();
 
         }
+        [HttpPost("UpdateCities")]
+        public async Task<IActionResult> UpdateCities(List<City> cities)
+        {
+            _context.UpdateRange(cities);
+            if (await _repo.SaveAll())
+                return Ok();
 
+            return BadRequest();
+        }
 
     }
 
