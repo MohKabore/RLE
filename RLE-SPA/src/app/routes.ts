@@ -24,6 +24,7 @@ import { OpHandlingComponent } from './operation/assignment/assignment/op-handli
 // import { PreSelectedUsersComponent } from './users/new-user/pre-selected-users/pre-selected-users.component';
 // import { TrainedUsersComponent } from './users/training/trained-users/trained-users.component';
 import { NotFoundComponent } from './Home/not-found/not-found.component';
+import { TrainingClassPhotosComponent } from './users/training/trainingClass-Photos/trainingClass-Photos.component';
 // import { StockAllocationComponent } from './stocks/stock-allocation/stock-allocation.component';
 // import { TabletsAllocationComponent } from './stocks/stock-allocation/tablets-allocation/tablets-allocation.component';
 // import { TrainingClassResultComponent } from './users/training/training-class-result/training-class-result.component';
@@ -106,7 +107,8 @@ export const appRoutes: Routes = [
                 , resolve: { training: TrainingDetailResolver }
             },
             // { path: 'addParticipant/:id', component: PreSelectedUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
-            { path: 'participants/:id', component: TrainingClassUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
+            // { path: 'participants/:id', component: TrainingClassUsersComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
+            { path: 'participants/:id', component: TrainingClassPhotosComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
             { path: 'detailInscription', component: RegistrationDetailsComponent, data: { roles: ['Admin', 'Maintenancier', 'AgentHotline', 'Supervisor'] } },
             // // { path: '', component: HomeComponent, resolve: { regions: HomeResolver } }
             { path: 'home', component: HomeComponent },

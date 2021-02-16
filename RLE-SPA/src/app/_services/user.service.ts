@@ -91,6 +91,8 @@ export class UserService {
   SetMainPhoto(userId: number, id: number) {
     return this.http.post(this.baseUrl + 'users/' + userId + '/photos/' + id + '/setMain', {});
   }
+
+
   // // enregistrement d'un nouveau teacher
   // addUser(user: User) {
   //   return this.http.post(this.baseUrl + 'users/' + 'AddUser', user);
@@ -369,6 +371,17 @@ export class UserService {
 
   updateCities(cities) {
     return this.http.post(this.baseUrl + 'users/UpdateCities', cities);
+  }
+
+  addTrainingPhotos(trainingClassId: number, photo: any) {
+    return this.http.post(this.baseUrl + 'users/' + trainingClassId + '/AddTrainingPhotos', photo);
+  }
+
+  deletePhoto(photoId: number) {
+    return this.http.post(this.baseUrl + 'users/DeletePhoto/' + photoId, {});
+  }
+  trainingClassPhotos( trainingClassId: number) {
+    return this.http.get(this.baseUrl + 'users/TrainingClassPhotos/' + trainingClassId);
   }
 
 }

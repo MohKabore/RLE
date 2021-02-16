@@ -359,7 +359,7 @@ namespace RLE.API.Controllers
                     CityId = classToCreate.CityId,
                     DepartmentId = classToCreate.DepartmentId,
                     RegionId = classToCreate.RegionId,
-                    TotalTrained =0,
+                    TotalTrained = 0,
                     // StartDate = classToCreate.StartDate?.ToString("dd/MM/yyyy", frC),
                     // EndDate = classToCreate.EndDate?.ToString("dd/MM/yyyy", frC),
                     Trainers = _mapper.Map<List<UserForListDto>>(trainers)
@@ -572,6 +572,94 @@ namespace RLE.API.Controllers
                 recap = recap
             });
         }
+
+        [HttpPost("{trainingClassId}/AddTrainingPhotos")]
+        public async Task<IActionResult> AddTrainingPhotos(int trainingClassId, [FromForm] PhotoForCreationDto photos)
+        {
+            foreach (var curPhoto in photos.Photos)
+            {
+                var file = curPhoto;
+
+                var uploadResult = new ImageUploadResult();
+
+                if (file.Length > 0)
+                {
+                    using (var stream = file.OpenReadStream())
+                    {
+                        var uploadParams = new ImageUploadParams()
+                        {
+
+                            File = new FileDescription(file.Name, stream),
+                            // Transformation = new Transformation()
+                            //     .Width(500).Height(400).Crop("fill").Gravity("face"),
+
+                        };
+                        uploadParams.Folder = "albatros/";
+
+                        uploadResult = _cloudinary.Upload(uploadParams);
+                    }
+                }
+
+                var photoToCreate = new Photo
+                {
+                    Url = uploadResult.Uri.ToString(),
+                    PublicId = uploadResult.PublicId,
+                    IsMain = false,
+                    IsApproved = false,
+                    TrainingClassId = trainingClassId,
+                    DateAdded = DateTime.Now
+                };
+                _repo.Add(photoToCreate);
+            }
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest();
+
+        }
+
+
+        [HttpPost("DeletePhoto/{id}")]
+        public async Task<IActionResult> DeletePhoto( int id)
+        {
+           var photoFromRepo = await _context.Photos.FirstOrDefaultAsync(p=>p.Id == id);
+
+           
+           
+            if (photoFromRepo.PublicId != null)
+            {
+                var deleteParams = new DeletionParams(photoFromRepo.PublicId);
+
+                var result = _cloudinary.Destroy(deleteParams);
+
+                if (result.Result == "ok")
+                {
+                    _repo.Delete(photoFromRepo);
+                }
+            }
+
+            if (photoFromRepo.PublicId == null)
+            {
+                _repo.Delete(photoFromRepo);
+            }
+
+            if (await _repo.SaveAll())
+                return Ok();
+
+            return BadRequest("Failed to delete the photo");
+        }
+
+        [HttpGet("TrainingClassPhotos/{trainingClassId}")]
+        public async Task<IActionResult> TrainingClassPhotos(int trainingClassId)
+        {
+            var photos = await _context.Photos.Where(a=>a.TrainingClassId == trainingClassId).ToListAsync();
+           
+                var photosToReturn =  _mapper.Map<List<PhotoforDetailDto>>(photos);
+                return Ok(photosToReturn);
+           }
+
+
         [HttpGet("Hotliners")]
         public async Task<IActionResult> Hotliners()
         {
@@ -741,6 +829,7 @@ namespace RLE.API.Controllers
                     var usersCities = await _context.trainingClassCities.Include(t => t.City)
                                                                         .Where(t => t.TrainingClassId == trClass.Id)
                                                                         .ToListAsync();
+                    int totalPhotos =( await _context.Photos.Where(a=>a.TrainingClassId == trClass.Id).ToListAsync()).Count();
                     //liste des participants
                     var tparticipants = _context.EmployeeClasses.Where(a => a.TrainingClassId == trClass.Id).ToList().Count();
                     var trDetail = new TrainingClassDetailDto
@@ -748,7 +837,7 @@ namespace RLE.API.Controllers
                         Id = trClass.Id,
                         Name = trClass.Name,
                         TrainingId = trClass.TrainingId,
-                        TotalTrained = usersCities.Sum(c => c.TotalTrained),
+                        // TotalTrained = usersCities.Sum(c => c.TotalTrained),
                         TotalParticipants = tparticipants,
                         RegionName = trClass.Region.Name,
                         DepartmentName = trClass.Department?.Name,
@@ -768,7 +857,8 @@ namespace RLE.API.Controllers
                         // Participants = new List<UserForListDto>(),
                         Trainers = _mapper.Map<List<UserForListDto>>(trainers),
                         Cities = usersCities.Select(c => c.City).ToList(),
-                        TotalTrainers = trainers.Count()
+                        TotalTrainers = trainers.Count(),
+                        TotalPhotos = totalPhotos
                     };
                     // trainingToReturn.TotalClasses = +1;
                     trainingToReturn.TrainingClasses.Add(trDetail);
@@ -777,7 +867,8 @@ namespace RLE.API.Controllers
                 // trainingToReturn.TotalTrainers = tt.ToList().Distinct().Count();
                 trainingToReturn.TotalClasses = trainingToReturn.TrainingClasses.Count();
                 trainingToReturn.TotalParticipants = trainingToReturn.TrainingClasses.Sum(a => a.TotalParticipants);
-                trainingToReturn.TotalTrained = trainingToReturn.TrainingClasses.Sum(a => a.TotalTrained);
+                // trainingToReturn.TotalTrained = trainingToReturn.TrainingClasses.Sum(a => a.TotalTrained);
+                 trainingToReturn.TotalPhotos = trainingToReturn.TrainingClasses.Sum(a => a.TotalPhotos);
                 return Ok(trainingToReturn);
             }
 
@@ -969,7 +1060,7 @@ namespace RLE.API.Controllers
             var quotas = await _context.Quotas.ToListAsync();
             var inscrpitionQuota = quotas.FirstOrDefault(a => a.Id == _config.GetValue<int>("AppSettings:InscriptionQuota")).Percentage;
             //  int operatorTypeId = _config.GetValue<int>("AppSettings:OperatorTypeId");
-            //  var allOperators = await _context.Users.Where(u => u.TypeEmpId == operatorTypeId && u.Nok == 0 && u.ResCityId != null && u.Version != 0).ToListAsync();
+            //  var allOperators = await _context.Users.Where(u => u.TypeEmpId == operatorTypeId && u.Nok == 0 && u.ResCityId != null && u.Version ==2).ToListAsync();
             var allcities = await _context.Cities.Include(d => d.Department).ToListAsync();
             var allTrcities = await _context.trainingClassCities.Include(d => d.City)
                                                                 .ThenInclude(d => d.Department)
@@ -1554,7 +1645,7 @@ namespace RLE.API.Controllers
                     CityName = cities.FirstOrDefault(c => c.CityId == d.CityId).City.Name,
                     Total = cities.Where(s => s.CityId == d.CityId).Sum(s => s.TotalTrained),
                     // NbEmpNeeded = cities.FirstOrDefault(c => c.CityId == d.CityId).City.NbEmpNeeded
-                    NbEmpNeeded = (int)Math.Round((cities.FirstOrDefault(c => c.CityId == d.CityId).City.NbEmpNeeded)*inscrpitionQuota)
+                    NbEmpNeeded = (int)Math.Round((cities.FirstOrDefault(c => c.CityId == d.CityId).City.NbEmpNeeded) * inscrpitionQuota)
                 });
             }
             return Ok(details);
@@ -1787,7 +1878,7 @@ namespace RLE.API.Controllers
         public async Task<IActionResult> SearchEmployees(EmpSearchModelDto searchModel)
         {
             var users = new List<User>();
-            string req = "select * from AspnetUsers  where Id <> 1 and version=1 and LastName + ' ' + firstName Like '%" + searchModel.EmpName + "%'";
+            string req = "select * from AspnetUsers  where Id <> 1 and version=2 and LastName + ' ' + firstName Like '%" + searchModel.EmpName + "%'";
             if (searchModel.TypeEmpId != null)
                 req += " and TypeEmpId=" + Convert.ToInt32(searchModel.TypeEmpId);
             if (searchModel.RegionId != null)

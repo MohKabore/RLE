@@ -1057,7 +1057,7 @@ namespace RLE.API.Controllers
         {
             var userName = Guid.NewGuid();
             var userToCreate = _mapper.Map<User>(userForRegisterDto);
-            userToCreate.Version = 1;
+            userToCreate.Version = 2;
             userToCreate.PreSelected = true;
             if (userToCreate.TypeEmpId == 2)
                 userToCreate.Selected = true;
@@ -1181,56 +1181,56 @@ namespace RLE.API.Controllers
         }
 
 
-        [HttpPost("{userId}/AddPhotoForUser")]
-        public async Task<IActionResult> AddPhotoForUser(int userId,
-            [FromForm] PhotoForCreationDto photoForCreationDto)
-        {
+        // [HttpPost("{userId}/AddPhotoForUser")]
+        // public async Task<IActionResult> AddPhotoForUser(int userId,
+        //     [FromForm] PhotoForCreationDto photoForCreationDto)
+        // {
 
-            var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(a => a.Id == userId); ;
-            user.TempData = 2;
+        //     var user = await _context.Users.Include(p => p.Photos).FirstOrDefaultAsync(a => a.Id == userId); ;
+        //     user.TempData = 2;
 
-            var file = photoForCreationDto.File;
+        //     var file = photoForCreationDto.File;
 
-            var uploadResult = new ImageUploadResult();
+        //     var uploadResult = new ImageUploadResult();
 
-            if (file.Length > 0)
-            {
-                using (var stream = file.OpenReadStream())
-                {
-                    var uploadParams = new ImageUploadParams()
-                    {
-                        File = new FileDescription(file.Name, stream),
-                        Transformation = new Transformation()
-                            .Width(300).Height(300).Crop("fill").Gravity("face")
-                    };
+        //     if (file.Length > 0)
+        //     {
+        //         using (var stream = file.OpenReadStream())
+        //         {
+        //             var uploadParams = new ImageUploadParams()
+        //             {
+        //                 File = new FileDescription(file.Name, stream),
+        //                 Transformation = new Transformation()
+        //                     .Width(300).Height(300).Crop("fill").Gravity("face")
+        //             };
 
-                    uploadResult = _cloudinary.Upload(uploadParams);
-                }
-            }
+        //             uploadResult = _cloudinary.Upload(uploadParams);
+        //         }
+        //     }
 
-            photoForCreationDto.Url = uploadResult.Uri.ToString();
-            string photoUrl = uploadResult.Uri.ToString();
-            photoForCreationDto.PublicId = uploadResult.PublicId;
+        //     photoForCreationDto.Url = uploadResult.Uri.ToString();
+        //     string photoUrl = uploadResult.Uri.ToString();
+        //     photoForCreationDto.PublicId = uploadResult.PublicId;
 
 
-            var photo = _mapper.Map<Photo>(photoForCreationDto);
-            photo.IsMain = true;
-            photo.IsApproved = true;
+        //     var photo = _mapper.Map<Photo>(photoForCreationDto);
+        //     photo.IsMain = true;
+        //     photo.IsApproved = true;
 
-            foreach (var p in user.Photos)
-            {
-                p.IsMain = false;
-            }
-            user.Photos.Add(photo);
+        //     foreach (var p in user.Photos)
+        //     {
+        //         p.IsMain = false;
+        //     }
+        //     user.Photos.Add(photo);
 
-            if (await _repo.SaveAll())
-                return Ok(new
-                {
-                    photoUrl = photoUrl
-                });
+        //     if (await _repo.SaveAll())
+        //         return Ok(new
+        //         {
+        //             photoUrl = photoUrl
+        //         });
 
-            return BadRequest("Could not add the photo");
-        }
+        //     return BadRequest("Could not add the photo");
+        // }
 
         [HttpPost("OperatorExist")]
         public async Task<IActionResult> OperatorExist(UserForVerification userToVerify)

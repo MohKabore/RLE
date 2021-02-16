@@ -1,0 +1,152 @@
+<div class=" mt-5" *ngIf="wait">
+  <mdb-card>
+    <mdb-card-body>
+      <h3>Veuillez patienter...</h3>
+    </mdb-card-body>
+  </mdb-card>
+</div>
+<div class="row">
+  <div class="col-md-3">
+    <mdb-card class="mt-5 animated fadeInLeft">
+      <mdb-card-body>
+
+        <table style="font-size: 12px; width: 100%;">
+       
+
+          <tr>
+            <td colspan="3" align="center"><u>formateur(s)</u></td>
+          </tr>
+          <tr>
+            <td colspan="3">
+              <mdb-badge color="cyan" *ngFor="let trainer of trainingClass.trainers" class="ml-1"> {{trainer.lastName}}
+                {{trainer.firstName}}
+              </mdb-badge>
+            </td>
+          </tr>
+          <tr>
+            <td colspan="3" align="center"><u>commune ou sp</u></td>
+          </tr>
+
+          <tr>
+            <td colspan="3">
+              <mdb-badge color="blue" pill="true" *ngFor="let city of trainingClass.cities" style="color: black;"
+                class="ml-1">
+                {{city.name}}
+              </mdb-badge>
+            </td>
+          </tr>
+
+          <tr style="font-size: 20px;">
+            <td style="width: 15%;">Présents </td>
+            <td style="width: 1%;">:</td>
+            <td align="left">
+               <b>{{trainingClass.totalTrained}}</b>
+            </td>
+          </tr>
+
+         
+          <tr>
+            <td class="text-center" colspan="3">
+              <hr>
+              <button type="button" size="sm" mdbBtn color="light" mdbWavesEffect
+              [routerLink]="['/formation/', trainingClass?.trainingId]"> retour </button>
+            </td>
+          </tr>
+        </table>
+
+      </mdb-card-body>
+    </mdb-card>
+  </div>
+  <div class="col-md-9">
+    <div class="container mt-5 animated fadeInDown" *ngIf="!wait">
+      <mdb-card class="p-0">
+        <mdb-card-body class="p-0">
+          <form>
+            <div class="file-field md-form" *ngIf="!trainingClass.summarized">
+              <div mdbBtn floating="true" size="md" color="amber" mdbWavesEffect>
+                <mdb-icon fas icon="cloud-upload-alt" aria-hidden="true"></mdb-icon>
+                <input type="file" accept="image/*" mdbFileSelect [multiple]="true" (change)="getPhotos($event)">
+              </div>
+              <div class="file-path-wrapper mt-3">
+                <input class="file-path" type="text" placeholder="téléchargez votre image ici" [value]="fileNames"
+                  readonly>
+                <!-- <input class="file-path"  type="text" placeholder="téléchargez votre image ici" [value]="showFiles()"> -->
+              </div>
+              <div class="file-path-wrapper mt-3">
+                <button mdbBtn type="button" color="success" [disabled]="files.length===0" size="sm" class="waves-light"
+                  (click)="startUpload()" mdbWavesEffect>enregistrer</button>
+                <button type="button" mdbBtn color="danger" [disabled]="files.length===0" (click)="resetFiles()"
+                  size="sm" mdbWavesEffect>annuler</button>
+              </div>
+            </div>
+            <span *ngIf="files.length>0"> {{files.length}} photo(s) sélectionnée(s)</span>
+
+          </form>
+
+        </mdb-card-body>
+      </mdb-card>
+
+      <div class="row mt-2" style="background-color: whitesmoke;" *ngIf="!showImage">
+        <div *ngIf="!noPhoto && photos.length===0">
+          <h3>patienter...</h3>
+        </div>
+        <div *ngIf="noPhoto">
+          <h3>Aucune photo enrégistrée...</h3>
+        </div>
+        <div class="col-md-3" *ngFor="let photo of photos">
+
+
+          <div class="card mb-4">
+            <div class="card-img-wrapper">
+              <img (dblclick)="displayPhoto(photo)" class="card-img-top"
+                src="{{photo.url || '../../../assets/user.png'}}" alt="{{photo.description}}">
+              <ul class="list-inline member-icons animate text-center">
+                <li class="list-inline-item"><button class="btn btn-primary" title="voir"
+                    (click)="displayPhoto(photo)"><i class="fa fa-search"></i></button></li>
+                <li class="list-inline-item"><button class="btn btn-danger" [disabled]="trainingClass.summarized"
+                    (click)="selectPhotoId(photo.id);basicModal.show()"><i class="fa fa-trash"></i></button></li>
+              </ul>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+      <div *ngIf="showImage" class="row animated bounceInDown">
+        <div class="col-md-12 ">
+          <button type="button" (click)="hidePhoto()" mdbBtn color="primary" mdbWavesEffect>retour</button>
+
+          <img src="{{currentPhoto?.url}}" style="width: 100%;">
+        </div>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+
+<div mdbModal #basicModal="mdbModal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myBasicModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="basicModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+
+      </div>
+      <div class="modal-body">
+        <h3 class="text-danger">voulez-vous vraiment supprimer cette photo ?</h3>
+      </div>
+      <div class="modal-footer">
+        <button size="sm" type="button" mdbBtn color="light" class="waves-light" aria-label="Close"
+          (click)="basicModal.hide()" mdbWavesEffect>annuler</button>
+        <button size="sm" type="button" (click)="deletePhoto();basicModal.hide()" mdbBtn color="danger"
+          class="relative waves-light" mdbWavesEffect>supprimer</button>
+      </div>
+    </div>
+  </div>
+</div>

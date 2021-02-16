@@ -25,5 +25,6 @@ export class TrainingClass {
   trainerIds: [];
   trainingDate: Date;
   totalTrained: number;
+  totalPhotos: number;
   summarized: boolean;
 }

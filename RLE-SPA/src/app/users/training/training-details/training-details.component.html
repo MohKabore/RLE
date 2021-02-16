@@ -1,4 +1,4 @@
-<div class="container mt-5">
+<div class="container mt-5 animated animated bounceIn">
   <div class="row">
     <div class="col-md-12">
       <mdb-card>
@@ -41,10 +41,10 @@
             </tr>
 
             <tr>
-              <td>Insérés</td>
+              <td>Photos</td>
               <td>:</td>
               <td>
-                <b> {{training.totalParticipants}}</b>
+                <b> {{training.totalPhotos}}</b>
               </td>
             </tr>
           </table>
@@ -107,10 +107,10 @@
             </tr>
 
             <tr style="font-size: 20px;">
-              <td >Insérés</td>
+              <td >Photos</td>
               <td>:</td>
               <td>
-              <b>{{class.totalParticipants}}</b>
+              <b>{{class.totalPhotos}}</b>
               </td>
 
             </tr>
@@ -119,9 +119,10 @@
                 <hr>
                 <!-- <button *ngIf="class.status===0" type="button" [routerLink]="['/addParticipant/', class.id]"  title="ajouter participant" size="sm" mdbBtn
                   color="success" mdbWavesEffect  ><i class="fa fa-plus"></i></button> -->
-                <button type="button" [routerLink]="['/participants/', class.id]" title="liste des participants"
-                  size="sm" *ngIf="!class.summarized && class.status===1" mdbBtn color="light" mdbWavesEffect><i
-                    class="fa fa-user"></i></button>
+                <button type="button" [routerLink]="['/participants/', class.id]" title="photos en pièces jointes"
+                  size="sm" *ngIf="!class.summarized" mdbBtn color="light" mdbWavesEffect>
+                  <i class="fa fa-camera" aria-hidden="true"></i>
+                </button>
                 <button *ngIf="class.status===0  && !class.summarized" type="button" title="modifier"
                   (click)="basicModal.show();showModal(class)" size="sm" mdbBtn color="success" mdbWavesEffect><i
                     class="fa fa-edit"></i></button>
@@ -198,10 +199,10 @@
             </tr>
 
             <tr style="font-size: 20px;">
-              <td >Insérés</td>
+              <td >Photos</td>
               <td>:</td>
               <td>
-              <b>{{class.totalParticipants}}</b>
+              <b>{{class.totalPhotos}}</b>
               </td>
 
             </tr>
@@ -210,9 +211,15 @@
                 <hr>
                 <!-- <button *ngIf="class.status===0" type="button" [routerLink]="['/addParticipant/', class.id]"  title="ajouter participant" size="sm" mdbBtn
                   color="success" mdbWavesEffect  ><i class="fa fa-plus"></i></button> -->
-                <button type="button" [routerLink]="['/participants/', class.id]" title="liste des participants"
+             
+             
+                  <!-- <button type="button" [routerLink]="['/participants/', class.id]" title="liste des participants"
                   size="sm" *ngIf="class.totalParticipants" mdbBtn color="light" mdbWavesEffect><i
-                    class="fa fa-user"></i></button>
+                    class="fa fa-user"></i></button> -->
+
+                    <button type="button" [routerLink]="['/participants/', class.id]" title="liste des participants"
+                    size="sm" *ngIf="class.totalParticipants" mdbBtn color="light" mdbWavesEffect><i
+                      class="fa fa-user"></i></button>
                 <button *ngIf="class.status===0  && !class.summarized" type="button" title="modifier"
                   (click)="basicModal.show();showModal(class)" size="sm" mdbBtn color="success" mdbWavesEffect><i
                     class="fa fa-edit"></i></button>

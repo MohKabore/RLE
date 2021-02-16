@@ -51,7 +51,7 @@ namespace RLE.API.Helpers
                 opt.MapFrom(src => src.Municipality.City.Department.Region.Code + "-" + src.Municipality.City.Department.Code + "-"
                             + src.Municipality.City.Code + "-" + src.Municipality.Code + "-" + src.Code);
             })
-            
+
             ;
 
             CreateMap<RetrofitStoreProduct, ProductDto>()
@@ -71,6 +71,7 @@ namespace RLE.API.Helpers
             CreateMap<TrainingClassCreationDto, TrainingClass>();
             CreateMap<CityUpdateDto, City>();
             CreateMap<TrainingClass, TrainingClassDetailDto>();
+            CreateMap<Photo, PhotoforDetailDto>();
             // .ForMember(dest => dest.StartDate, opt =>
             // {
             //     opt.MapFrom(src => src.StartDate?.ToString("dd/MM/yyyy", frC));
@@ -81,7 +82,7 @@ namespace RLE.API.Helpers
             // });
             CreateMap<UserForUpdateDto, User>();
             CreateMap<NewEcDto, EnrolmentCenter>();
-             CreateMap<MunicipalityForCreationDto, Municipality>();
+            CreateMap<MunicipalityForCreationDto, Municipality>();
             CreateMap<Tablet, TabletDetailDto>();
             CreateMap<FailureToSaveDto, Failure>();
             CreateMap<EcDataToSaveDto, EcData>();

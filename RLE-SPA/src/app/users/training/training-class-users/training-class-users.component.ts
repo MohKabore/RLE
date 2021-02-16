@@ -156,7 +156,7 @@ export class TrainingClassUsersComponent implements OnInit {
 
   removeSelectedUsers() {
     if (confirm('confirmez-vous la désélection ??')) {
-     
+
       this.userService.unSelectUsers(this.isSelected, this.currentUserId).subscribe((res) => {
         this.alertify.success('enregistrement terminé...');
         this.isSelected = [];

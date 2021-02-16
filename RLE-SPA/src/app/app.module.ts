@@ -71,6 +71,7 @@ import { DemoComponent } from './Home/demo/demo.component';
 // import { RetrofitProductsComponent } from './retrofit/retro-stores/retrofit-products/retrofit-products.component';
 import { ResetPasswordResolver } from './_resolvers/reset-password.resolver';
 import { MemberPasswordSettingComponent } from './registration/member-password-setting/member-password-setting.component';
+import { TrainingClassPhotosComponent } from './users/training/trainingClass-Photos/trainingClass-Photos.component';
 // import { EcsComponent } from './operation/ecs/ecs.component';
 // import { MunDetailComponent } from './operation/mun-detail/mun-detail.component';
 // import { FailureComponent } from './maintenance/failure/failure.component';
@@ -113,6 +114,7 @@ export function tokenGetter() {
     TrainingClassUsersComponent,
     // TrainedUsersComponent,
      NotFoundComponent,
+     TrainingClassPhotosComponent,
     // StockAllocationComponent,
     ErrorComponent,
   // TabletsAllocationComponent,

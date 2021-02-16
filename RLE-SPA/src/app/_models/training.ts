@@ -14,5 +14,6 @@ export class Training {
   totalParticipants: number;
   trainingDate: Date;
   totalTrained: number;
+  totalPhotos: number;
   trainingClasses: TrainingClass[];
 }
